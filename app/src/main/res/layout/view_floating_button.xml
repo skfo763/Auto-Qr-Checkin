@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_floating_widget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00000000">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/floating_widget_parent"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_margin="4dp"
+            android:background="@drawable/floating_open_button_background"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/floating_widget_open"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00000000"
+                android:elevation="3dp"
+                app:layout_constraintVertical_chainStyle="packed"
+                android:filterTouchesWhenObscured="true"
+                app:layout_constraintBottom_toTopOf="@+id/floating_widget_text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_drawable_qrcode" />
+
+            <TextView
+                android:id="@+id/floating_widget_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/floating_button_title"
+                android:textSize="10sp"
+                android:textColor="#4e4e4e"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/floating_widget_open"
+                tools:ignore="SmallSp" />
+
+            <ProgressBar
+                android:id="@+id/floating_widget_progess"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:visibility="gone"
+                android:indeterminateTint="#323232"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/floating_widget_close"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginBottom="40dp"
+            android:elevation="4dp"
+            android:padding="4dp"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_baseline_close_24"
+            android:background="@drawable/floating_close_button_background"
+            app:layout_constraintStart_toStartOf="@id/floating_widget_parent"
+            app:layout_constraintBottom_toBottomOf="@id/floating_widget_parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>

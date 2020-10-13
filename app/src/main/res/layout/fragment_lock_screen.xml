@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.skfo763.auto_qr_checkin.lockscreen.activity.LockScreenActivity">
+
+    <data>
+        <variable
+            name="parentViewModel"
+            type="com.skfo763.auto_qr_checkin.lockscreen.viewmodel.LockScreenViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/lock_screen_fragment_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.skfo763.component.qrwebview.QrCheckInWebView
+            android:id="@+id/lock_screen_fragment_qr_webview"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            availableHost="@{parentViewModel.availableHost}"
+            availablePath="@{parentViewModel.availablePath}"
+            checkInUrl="@{parentViewModel.urlForCheckIn}"
+            onInvalidUrlLoaded="@{parentViewModel.onFailedUrlLoaded}"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/lock_screen_nav_host"
+    app:startDestination="@id/lockScreenFragment">
+    <fragment
+        android:id="@+id/lockScreenFragment"
+        android:name="com.skfo763.auto_qr_checkin.lockscreen.fragment.LockScreenFragment"
+        android:label="LockScreenFragment" />
+</navigation>

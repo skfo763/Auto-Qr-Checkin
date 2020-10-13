@@ -1,0 +1,219 @@
+package com.skfo763.auto_qr_checkin.lockscreen.viewmodel
+
+import android.os.Bundle
+import android.util.Log
+import android.widget.CompoundButton
+import androidx.hilt.Assisted
+import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.skfo763.auto_qr_checkin.lockscreen.service.LockScreenService
+import com.skfo763.auto_qr_checkin.lockscreen.usecase.LockScreenActivityUseCase
+import com.skfo763.base.BaseViewModel
+import com.skfo763.base.BuildConfig
+import com.skfo763.component.floatingwidget.FloatingWidgetService
+import com.skfo763.component.floatingwidget.FloatingWidgetView.Companion.CURR_X
+import com.skfo763.component.floatingwidget.FloatingWidgetView.Companion.CURR_Y
+import com.skfo763.component.playcore.InAppReviewManager
+import com.skfo763.component.tracker.FirebaseAnalyticsCustom
+import com.skfo763.repository.lockscreen.LockScreenRepository
+import com.skfo763.repository.model.LanguageState
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import java.lang.IllegalStateException
+import java.util.*
+import kotlin.random.Random.Default.nextInt
+
+class LockScreenViewModel @ViewModelInject constructor(
+    private val repository: LockScreenRepository,
+    private val inAppReviewManager: InAppReviewManager,
+    @Assisted private val savedStateHandle: SavedStateHandle
+) : BaseViewModel<LockScreenActivityUseCase>() {
+
+    private val random = Random()
+
+    private val _isLockScreenChecked = MutableLiveData<Boolean>()
+    private val _isWidgetChecked = MutableLiveData<Boolean>()
+    private val _deleteAdsState = MutableLiveData<Boolean>()
+    private val _appTitle = MutableLiveData<String>()
+    private val _appIcon = MutableLiveData<Int>()
+    private val _availableHost = MutableLiveData<List<String>?>()
+    private val _availablePath = MutableLiveData<List<String>?>()
+    private val _urlForCheckIn = MutableLiveData<String?>()
+    private val _isLoading = MutableLiveData<Boolean>()
+    private val _versionName = MutableLiveData(BuildConfig.VERSION_NAME)
+
+    val isLockScreenChecked: LiveData<Boolean> = _isLockScreenChecked
+    val isWidgetChecked: LiveData<Boolean> = _isWidgetChecked
+    val deleteAdsState: LiveData<Boolean> = _deleteAdsState
+    val appTitle: LiveData<String> = _appTitle
+    val appIcon: LiveData<Int> = _appIcon
+    val availableHost: LiveData<List<String>?> = _availableHost
+    val availablePath: LiveData<List<String>?> = _availablePath
+    val urlForCheckIn: LiveData<String?> = _urlForCheckIn
+    val isLoading: LiveData<Boolean> = _isLoading
+    val versionName: LiveData<String> = _versionName
+
+    private val setLockScreenDataToCurrentSwitchState: (isChecked: Boolean) -> Unit = {
+        viewModelScope.launch {
+            repository.setLockFeatureState(it)
+        }
+    }
+
+    private val setWidgetDataToCurrentSwitchState: (isChecked: Boolean) -> Unit = {
+        viewModelScope.launch {
+            repository.setWidgetFeatureState(it)
+        }
+    }
+
+    private val setAdsDelete: (isDeleted: Boolean) -> Unit = {
+        viewModelScope.launch {
+            repository.setDeleteAdsState(it)
+        }
+    }
+
+    private val setLanguage: (LanguageState) -> Unit = {
+        viewModelScope.launch {
+            repository.setLanguageState(it)
+        }
+    }
+
+    private val setServiceStateWithCheckState: (isChecked: Boolean) -> Unit = {
+        if(it) {
+            useCase.startForegroundService(LockScreenService::class.java)
+        } else {
+            useCase.stopService(LockScreenService::class.java)
+        }
+    }
+
+    val onFailedUrlLoaded: (invalidUrl: String?) -> Unit = {
+        useCase.finishActivity()
+    }
+
+    val setLockScreenSwitchToSavedState = {
+        viewModelScope.launch {
+            repository.getCurrentLockFeatureState().collect { isChecked ->
+                _isLockScreenChecked.value = isChecked
+            }
+        }
+    }
+
+    val setWidgetSwitchToSavedState = {
+        viewModelScope.launch {
+            repository.getCurrentWidgetFeatureState().collect { isChecked ->
+                _isWidgetChecked.value = isChecked
+            }
+        }
+    }
+
+    val onLockScreenSwitchStateChanged: (CompoundButton, Boolean) -> Unit = { _, isChecked ->
+        setLockScreenDataToCurrentSwitchState(isChecked)
+        setServiceStateWithCheckState(isChecked)
+    }
+
+    val onWidgetSwitchStateChanged: (CompoundButton, Boolean) -> Unit = { _, isChecked ->
+        setWidgetDataToCurrentSwitchState(isChecked)
+    }
+
+    val onPushSwitchStateChanged: (CompoundButton, Boolean) -> Unit = { _, isChecked ->
+        setWidgetDataToCurrentSwitchState(isChecked)
+    }
+
+    val onDeleteAdsClicked = {
+        // TODO(광고 제거 버튼 클릭 로직 추가)
+    }
+
+    val onLanguageChangeClicked = {
+        // TODO(언어 설정 변경 로직 추가)
+    }
+
+    val onReviewClicked = {
+        _isLoading.value = true
+        viewModelScope.launch {
+            repository.getPlayStoreUrl().collect { url ->
+                _isLoading.value = false
+                useCase.openUrl(url)
+            }
+        }
+    }
+
+    val onShareClicked = {
+        _isLoading.value = true
+        viewModelScope.launch {
+            repository.getPlayStoreUrl().collect {
+                _isLoading.value = false
+                useCase.sendUrl(it)
+            }
+        }
+    }
+
+    val onVersionClicked = {
+        // TODO(버전 클릭 시 로직 추가)
+    }
+
+    fun deleteFloatingButton() {
+        if(isWidgetChecked.value == true) {
+            useCase.stopService(FloatingWidgetService::class.java)
+        }
+    }
+
+    fun createFloatingButton() {
+        if(isWidgetChecked.value == true) {
+            val bundle = Bundle().apply {
+                putInt(CURR_X, useCase.getIntentValue<Int>(CURR_X) ?: 200)
+                putInt(CURR_Y, useCase.getIntentValue<Int>(CURR_Y) ?: 400)
+            }
+            useCase.startForegroundService(FloatingWidgetService::class.java, bundle)
+        }
+    }
+
+    init {
+        setLockScreenSwitchToSavedState()
+        setWidgetSwitchToSavedState()
+    }
+
+    fun setQrCheckIn() {
+        _isLoading.value = true
+        viewModelScope.launch {
+            repository.getNaverQrCheckInUrl().collect {
+                _availableHost.value = it.availableHost
+                _availablePath.value = it.availablePath
+                _urlForCheckIn.value = it.url
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun inAppReview() {
+        if(random.nextInt(5) == 0) {
+            inAppReviewManager.launchReviewFlow({
+                if(it) {
+                    sendReviewCompleteEvent(true)
+                } else {
+                    sendReviewCompleteEvent(false)
+                }
+            }) {
+                FirebaseCrashlytics.getInstance().recordException(it)
+            }
+        }
+    }
+
+    private fun sendReviewCompleteEvent(complete: Boolean) {
+        useCase.logAnalyticsEvent(
+            FirebaseAnalyticsCustom.Event.IN_APP_REVIEW,
+            Bundle().apply {
+                putBoolean(FirebaseAnalyticsCustom.Param.REVIEW_COMPLETE, true)
+            }
+        )
+    }
+
+    fun sendCheckStateProperty() {
+        useCase.sendUserProperty("lock_screen_enabled", if(_isLockScreenChecked.value == true) "true" else "false")
+        useCase.sendUserProperty("widget_enabled", if(_isWidgetChecked.value == true) "true" else "false")
+    }
+
+}
