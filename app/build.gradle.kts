@@ -11,6 +11,10 @@ plugins {
 }
 
 android {
+    defaultConfig {
+        applicationId = com.skfo763.gradle.global.AppVersion.applicationId
+    }
+
     @Suppress("UnstableApiUsage")
     buildFeatures {
         dataBinding = true

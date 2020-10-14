@@ -7,7 +7,7 @@ object Sdk {
 }
 
 object AppVersion {
-    const val applicationId = "com.skfo763.auto_qr_checkin"
-    const val versionCode = 1000008
-    const val versionName = "1.0.8"
+    const val applicationId = "com.skfo763.qrcheckin"
+    const val versionCode = 100100
+    const val versionName = "1.1.0"
 }

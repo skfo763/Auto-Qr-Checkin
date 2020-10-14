@@ -6,6 +6,6 @@
     app:startDestination="@id/lockScreenFragment">
     <fragment
         android:id="@+id/lockScreenFragment"
-        android:name="com.skfo763.auto_qr_checkin.lockscreen.fragment.LockScreenFragment"
+        android:name="com.skfo763.qrcheckin.lockscreen.fragment.LockScreenFragment"
         android:label="LockScreenFragment" />
 </navigation>

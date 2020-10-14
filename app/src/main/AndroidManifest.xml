@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.skfo763.auto_qr_checkin">
+    package="com.skfo763.qrcheckin">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -18,19 +18,19 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:name=".BaseApplication"
+        android:name="com.skfo763.qrcheckin.BaseApplication"
         android:hardwareAccelerated="true">
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="${adMobAppKey}"/>
-        <receiver android:name=".lockscreen.receiver.ScreenReceiver" />
-        <service android:name=".lockscreen.service.LockScreenService" />
+        <receiver android:name="com.skfo763.qrcheckin.lockscreen.receiver.ScreenReceiver" />
+        <service android:name="com.skfo763.qrcheckin.lockscreen.service.LockScreenService" />
         <service android:name="com.skfo763.component.floatingwidget.FloatingWidgetService"
             android:enabled="true"
             android:exported="false">
         </service>
         <activity
-            android:name=".lockscreen.activity.LockScreenActivity"
+            android:name="com.skfo763.qrcheckin.lockscreen.activity.LockScreenActivity"
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait"

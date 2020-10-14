@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:bind="http://schemas.android.com/apk/res-auto"
-    tools:context="com.skfo763.auto_qr_checkin.lockscreen.activity.LockScreenActivity">
+    tools:context="com.skfo763.qrcheckin.lockscreen.activity.LockScreenActivity">
 
     <data>
         <import type="android.view.View"/>
         <variable
             name="viewModel"
-            type="com.skfo763.auto_qr_checkin.lockscreen.viewmodel.LockScreenViewModel" />
+            type="com.skfo763.qrcheckin.lockscreen.viewmodel.LockScreenViewModel" />
     </data>
 
     <androidx.drawerlayout.widget.DrawerLayout
