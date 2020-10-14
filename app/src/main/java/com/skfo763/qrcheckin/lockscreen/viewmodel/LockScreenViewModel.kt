@@ -139,17 +139,12 @@ class LockScreenViewModel @ViewModelInject constructor(
 
     val onShareClicked = {
         _isLoading.value = true
-
-        throw RuntimeException("test crash")
-        /*
         viewModelScope.launch {
             repository.getPlayStoreUrl().collect {
                 _isLoading.value = false
                 useCase.sendUrl(it)
             }
         }
-
-         */
     }
 
     val onVersionClicked = {
@@ -190,7 +185,7 @@ class LockScreenViewModel @ViewModelInject constructor(
     }
 
     fun inAppReview() {
-        if(random.nextInt(5) == 0) {
+        if(random.nextInt(6) == 0) {
             inAppReviewManager.launchReviewFlow({
                 if(it) {
                     sendReviewCompleteEvent(true)
