@@ -46,4 +46,7 @@ abstract class BaseActivityUseCase(private val activity: AppCompatActivity): IBa
         return activity.intent.extras?.get(key) as? T
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
+        return false
+    }
 }

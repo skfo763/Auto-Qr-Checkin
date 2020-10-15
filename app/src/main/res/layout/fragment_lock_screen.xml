@@ -25,7 +25,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             availableHost="@{parentViewModel.availableHost}"
             availablePath="@{parentViewModel.availablePath}"
+            errorCaseList="@{parentViewModel.errorList}"
             checkInUrl="@{parentViewModel.urlForCheckIn}"
+            onOtherAppOpen="@{parentViewModel.onOtherAppOpen}"
             onInvalidUrlLoaded="@{parentViewModel.onFailedUrlLoaded}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

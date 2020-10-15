@@ -28,6 +28,7 @@ object Versions {
     const val realtimeDB = "19.4.0"
 
     const val playCore = "1.8.0"
+    const val gson = "2.8.6"
 }
 
 object TestVersions {

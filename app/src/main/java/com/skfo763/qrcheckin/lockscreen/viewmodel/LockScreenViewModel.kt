@@ -1,5 +1,7 @@
 package com.skfo763.qrcheckin.lockscreen.viewmodel
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.CompoundButton
 import androidx.hilt.Assisted
@@ -17,7 +19,9 @@ import com.skfo763.component.floatingwidget.FloatingWidgetService
 import com.skfo763.component.floatingwidget.FloatingWidgetView.Companion.CURR_X
 import com.skfo763.component.floatingwidget.FloatingWidgetView.Companion.CURR_Y
 import com.skfo763.component.playcore.InAppReviewManager
+import com.skfo763.component.qrwebview.ErrorFormat
 import com.skfo763.component.tracker.FirebaseAnalyticsCustom
+import com.skfo763.remote.QrCheckInError
 import com.skfo763.repository.lockscreen.LockScreenRepository
 import com.skfo763.repository.model.LanguageState
 import kotlinx.coroutines.flow.collect
@@ -35,10 +39,9 @@ class LockScreenViewModel @ViewModelInject constructor(
     private val _isLockScreenChecked = MutableLiveData<Boolean>()
     private val _isWidgetChecked = MutableLiveData<Boolean>()
     private val _deleteAdsState = MutableLiveData<Boolean>()
-    private val _appTitle = MutableLiveData<String>()
-    private val _appIcon = MutableLiveData<Int>()
     private val _availableHost = MutableLiveData<List<String>?>()
     private val _availablePath = MutableLiveData<List<String>?>()
+    private val _errorList = MutableLiveData<List<ErrorFormat>?>()
     private val _urlForCheckIn = MutableLiveData<String?>()
     private val _isLoading = MutableLiveData<Boolean>()
     private val _versionName = MutableLiveData(BuildConfig.VERSION_NAME)
@@ -46,10 +49,9 @@ class LockScreenViewModel @ViewModelInject constructor(
     val isLockScreenChecked: LiveData<Boolean> = _isLockScreenChecked
     val isWidgetChecked: LiveData<Boolean> = _isWidgetChecked
     val deleteAdsState: LiveData<Boolean> = _deleteAdsState
-    val appTitle: LiveData<String> = _appTitle
-    val appIcon: LiveData<Int> = _appIcon
     val availableHost: LiveData<List<String>?> = _availableHost
     val availablePath: LiveData<List<String>?> = _availablePath
+    val errorList: LiveData<List<ErrorFormat>?> = _errorList
     val urlForCheckIn: LiveData<String?> = _urlForCheckIn
     val isLoading: LiveData<Boolean> = _isLoading
     val versionName: LiveData<String> = _versionName
@@ -88,6 +90,10 @@ class LockScreenViewModel @ViewModelInject constructor(
 
     val onFailedUrlLoaded: (invalidUrl: String?) -> Unit = {
         useCase.finishActivity()
+    }
+
+    val onOtherAppOpen: (openLink: String?) -> Unit  = { openLink ->
+        useCase.startActivityForResult(openLink)
     }
 
     val setLockScreenSwitchToSavedState = {
@@ -179,9 +185,14 @@ class LockScreenViewModel @ViewModelInject constructor(
                 _availableHost.value = it.availableHost
                 _availablePath.value = it.availablePath
                 _urlForCheckIn.value = it.url
+                _errorList.value = convertToWebErrorFormat(it.errorList)
                 _isLoading.value = false
             }
         }
+    }
+
+    private fun convertToWebErrorFormat(errorList: List<QrCheckInError>): List<ErrorFormat>? {
+        return errorList.map { ErrorFormat(it.url, it.title, it.message, it.alternativeUrl) }
     }
 
     fun inAppReview() {

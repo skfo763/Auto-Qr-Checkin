@@ -1,14 +1,9 @@
 package com.skfo763.component.qrwebview
 
 import android.graphics.Bitmap
-import android.net.Uri
 import android.util.Log
-import android.webkit.WebResourceRequest
-import android.webkit.WebResourceResponse
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import com.skfo763.component.extensions.parsedUri
-import com.skfo763.util.parseUriString
 
 class QrCheckInWebClient(
     private val webClientInterface: QrCheckInClientInterface
@@ -36,7 +31,17 @@ class QrCheckInWebClient(
         request: WebResourceRequest?,
         errorResponse: WebResourceResponse?
     ) {
+        Log.d("QrCheckInWebView", "onReceivedError" + errorResponse?.data?.toString())
         super.onReceivedHttpError(view, request, errorResponse)
+    }
+
+    override fun onReceivedError(
+        view: WebView?,
+        request: WebResourceRequest?,
+        error: WebResourceError?
+    ) {
+        Log.d("QrCheckInWebView", "onReceivedError" + error?.toString())
+        super.onReceivedError(view, request, error)
     }
 
 }

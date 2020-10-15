@@ -23,4 +23,6 @@
     <string name="developer_info_title">개발자 정보</string>
     <string name="developer_info_message">개발자 이름 : 서창연\n이메일 주소 : scy7351@gmail.com</string>
     <string name="floating_button_title">QR인증</string>
+    <string name="app_refresh_title">앱 새로고침 안내</string>
+    <string name="app_refresh_message">로그인 정보가 변경되어 앱을 새로고침합니다. 다시 접속해주세요.</string>
 </resources>

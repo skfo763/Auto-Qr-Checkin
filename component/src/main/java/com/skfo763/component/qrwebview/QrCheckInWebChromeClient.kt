@@ -1,5 +1,7 @@
 package com.skfo763.component.qrwebview
 
+import android.util.Log
+import android.webkit.ConsoleMessage
 import android.webkit.JsResult
 import android.webkit.WebChromeClient
 import android.webkit.WebView
@@ -14,6 +16,7 @@ class QrCheckInWebChromeClient : WebChromeClient() {
         message: String?,
         result: JsResult?
     ): Boolean {
+        Log.d("QrCheckInWebView", "onJsAlert - ${message ?: "null"}")
         return super.onJsAlert(view, url, message, result)
     }
 
@@ -23,7 +26,13 @@ class QrCheckInWebChromeClient : WebChromeClient() {
         message: String?,
         result: JsResult?
     ): Boolean {
+        Log.d("QrCheckInWebView", "onJsConfirm - ${message ?: "null"}")
         return super.onJsConfirm(view, url, message, result)
+    }
+
+    override fun onConsoleMessage(consoleMessage: ConsoleMessage?): Boolean {
+        Log.d("QrCheckInWebView", "onConsoleMessage - ${consoleMessage ?: "null"}")
+        return super.onConsoleMessage(consoleMessage)
     }
 
 }

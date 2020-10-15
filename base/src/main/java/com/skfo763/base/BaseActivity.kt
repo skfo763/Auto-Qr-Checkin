@@ -1,5 +1,6 @@
 package com.skfo763.base
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -46,6 +47,12 @@ abstract class BaseActivity<B : ViewDataBinding, V: BaseViewModel<U>, U: IBaseAc
         (supportFragmentManager.findFragmentById(navHostResId!!) as? NavHostFragment)?.let {
             navHostFragment = it
             connectNavHostToController(it)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if(!useCase.onActivityResult(requestCode, resultCode, data)) {
+            super.onActivityResult(requestCode, resultCode, data)
         }
     }
 

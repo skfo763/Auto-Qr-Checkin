@@ -21,7 +21,7 @@ class LockScreenRepositoryImpl @Inject constructor(
     @ExperimentalCoroutinesApi
     override fun getNaverQrCheckInUrl(): Flow<CheckInUrl> {
         return realtimeDBManager.naverQrApiUrl.map {
-            CheckInUrl(it.url, it.availableHost, it.availablePath)
+            CheckInUrl(it.url, it.availableHost, it.availablePath, it.errorList)
         }
     }
 

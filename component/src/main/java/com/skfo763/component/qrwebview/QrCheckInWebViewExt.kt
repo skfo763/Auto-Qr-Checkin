@@ -28,3 +28,15 @@ fun QrCheckInWebView.setAvailablePath(path: List<String>?) {
 fun QrCheckInWebView.onInvalidUrlLoaded(func: (invalidUrl: String?) -> Unit) {
     this.doOnInvalidUrlLoaded = func
 }
+
+@BindingAdapter("onOtherAppOpen")
+fun QrCheckInWebView.onOtherAppOpen(func: (openLink: String?) -> Unit) {
+    this.doOnOpenOtherApp = func
+}
+
+@BindingAdapter("errorCaseList")
+fun QrCheckInWebView.setErrorCase(errorList: List<ErrorFormat>?) {
+    errorList?.let {
+        this.errorList = errorList
+    }
+}

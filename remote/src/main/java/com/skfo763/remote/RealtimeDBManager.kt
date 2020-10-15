@@ -26,7 +26,10 @@ class RealtimeDBManager {
                 val availablePaths = snapshot.child("path").children.toList().map {
                     it.getValue(String::class.java) ?: ""
                 }
-                this@callbackFlow.sendBlocking(QrApiUrl(url, availableHosts, availablePaths))
+                val errorList = snapshot.child("error").children.map {
+                    it.getValue(QrCheckInError::class.java) ?: QrCheckInError()
+                }
+                this@callbackFlow.sendBlocking(QrApiUrl(url, availableHosts, availablePaths, errorList))
             }
 
             override fun onCancelled(error: DatabaseError) {
