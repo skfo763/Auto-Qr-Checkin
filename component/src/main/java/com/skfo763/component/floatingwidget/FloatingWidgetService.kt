@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import com.skfo763.component.R
@@ -37,9 +38,13 @@ open class FloatingWidgetService @Inject constructor(): Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         client.params.x = intent?.getIntExtra(CURR_X, 0) ?: 0
         client.params.y = intent?.getIntExtra(CURR_Y, 0) ?: 0
-        client.mWindowManager.addView(floatingWidgetView, client.params)
-        setListeners()
-
+        try {
+            client.mWindowManager.addView(floatingWidgetView, client.params)
+        } catch (e: RuntimeException) {
+            FirebaseCrashlytics.getInstance().recordException(e)
+        } finally {
+            setListeners()
+        }
         return super.onStartCommand(intent, flags, startId)
     }
 
