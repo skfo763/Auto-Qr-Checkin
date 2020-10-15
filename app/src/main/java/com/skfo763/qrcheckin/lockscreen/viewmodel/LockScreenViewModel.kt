@@ -1,7 +1,5 @@
 package com.skfo763.qrcheckin.lockscreen.viewmodel
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.widget.CompoundButton
 import androidx.hilt.Assisted
@@ -11,8 +9,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.skfo763.qrcheckin.lockscreen.service.LockScreenService
-import com.skfo763.qrcheckin.lockscreen.usecase.LockScreenActivityUseCase
 import com.skfo763.base.BaseViewModel
 import com.skfo763.base.BuildConfig
 import com.skfo763.component.floatingwidget.FloatingWidgetService
@@ -21,6 +17,8 @@ import com.skfo763.component.floatingwidget.FloatingWidgetView.Companion.CURR_Y
 import com.skfo763.component.playcore.InAppReviewManager
 import com.skfo763.component.qrwebview.ErrorFormat
 import com.skfo763.component.tracker.FirebaseAnalyticsCustom
+import com.skfo763.qrcheckin.lockscreen.service.LockScreenService
+import com.skfo763.qrcheckin.lockscreen.usecase.LockScreenActivityUseCase
 import com.skfo763.remote.QrCheckInError
 import com.skfo763.repository.lockscreen.LockScreenRepository
 import com.skfo763.repository.model.LanguageState
@@ -196,7 +194,7 @@ class LockScreenViewModel @ViewModelInject constructor(
     }
 
     fun inAppReview() {
-        if(random.nextInt(6) == 0) {
+        if(random.nextInt(5) == 0) {
             inAppReviewManager.launchReviewFlow({
                 if(it) {
                     sendReviewCompleteEvent(true)
