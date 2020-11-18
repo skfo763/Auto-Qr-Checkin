@@ -24,7 +24,9 @@ import com.skfo763.repository.lockscreen.LockScreenRepository
 import com.skfo763.repository.model.LanguageState
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import java.io.File
 import java.util.*
+
 
 class LockScreenViewModel @ViewModelInject constructor(
     private val repository: LockScreenRepository,
@@ -199,7 +201,7 @@ class LockScreenViewModel @ViewModelInject constructor(
     fun inAppReview() {
         if(random.nextInt(8) == 0) {
             inAppReviewManager.launchReviewFlow({
-                if(it) {
+                if (it) {
                     sendReviewCompleteEvent(true)
                 } else {
                     sendReviewCompleteEvent(false)
@@ -220,8 +222,33 @@ class LockScreenViewModel @ViewModelInject constructor(
     }
 
     fun sendCheckStateProperty() {
-        useCase.sendUserProperty("lock_screen_enabled", if(_isLockScreenChecked.value == true) "true" else "false")
-        useCase.sendUserProperty("widget_enabled", if(_isWidgetChecked.value == true) "true" else "false")
+        useCase.sendUserProperty(
+            "lock_screen_enabled",
+            if (_isLockScreenChecked.value == true) "true" else "false"
+        )
+        useCase.sendUserProperty(
+            "widget_enabled",
+            if (_isWidgetChecked.value == true) "true" else "false"
+        )
+    }
+
+    fun clearCaches(cacheDir: File?) {
+        val appDir = File(cacheDir?.parent ?: return)
+        if(appDir.exists()) {
+            appDir.list()?.forEach {
+                deleteDir(File(appDir, it))
+            }
+        }
+        useCase.finishActivity()
+    }
+
+    private fun deleteDir(dir: File): Boolean {
+        if (dir.isDirectory) {
+            dir.list()?.forEach {
+                if (!deleteDir(File(dir, it))) return false
+            }
+        }
+        return dir.delete()
     }
 
 }

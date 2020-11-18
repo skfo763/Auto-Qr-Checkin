@@ -3,6 +3,8 @@
     <string name="app_name_partial">QR 체크인 도우미</string>
     <string name="noti_channel_id">QR 체크인 위젯</string>
     <string name="menu_title_developer_info">개발자 정보</string>
+    <string name="menu_title_logout">로그아웃</string>
+    <string name="menu_title_additional_function">추가 기능</string>
     <string name="nav_function_title">기능 설정</string>
     <string name="nav_function_lock_screen_title">앱 잠금화면 QR 인증 화면 노출</string>
     <string name="nav_function_widget">앱 종료 시 위젯 노출</string>

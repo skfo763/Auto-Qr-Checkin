@@ -54,6 +54,12 @@ class QrCheckInWebView @JvmOverloads constructor(
         }
     }
 
+    fun clearCacheData() {
+        clearCache(true)
+        clearHistory()
+        clearFormData()
+    }
+
     override fun onUrlLoadReceived(view: WebView?, uri: Uri?): Boolean {
         uriChecker.checkUrlFlow(uri)
         return true

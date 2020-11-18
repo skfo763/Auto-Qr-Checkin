@@ -1,7 +1,9 @@
 package com.skfo763.qrcheckin.lockscreen.fragment
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.activityViewModels
 import com.skfo763.qrcheckin.R
 import com.skfo763.qrcheckin.databinding.FragmentLockScreenBinding
@@ -29,4 +31,23 @@ class LockScreenFragment : BaseFragment<FragmentLockScreenBinding, LockScreenVie
         parentViewModel.setQrCheckIn()
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            R.id.toolbar_menu_developer_info -> {
+                AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.developer_info_title)
+                    .setMessage(R.string.developer_info_message)
+                    .setPositiveButton(R.string.confirm) { dialog, _ ->
+                        dialog.dismiss()
+                    }.show()
+                super.onOptionsItemSelected(item)
+            }
+            R.id.toolbar_menu_logout -> {
+                parentViewModel.clearCaches(context?.externalCacheDir)
+                binding.lockScreenFragmentQrWebview.clearCacheData()
+                super.onOptionsItemSelected(item)
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
 }

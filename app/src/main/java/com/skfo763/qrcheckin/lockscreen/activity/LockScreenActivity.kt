@@ -116,12 +116,6 @@ class LockScreenActivity (
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
             R.id.toolbar_menu_info -> {
-                AlertDialog.Builder(this)
-                    .setTitle(R.string.developer_info_title)
-                    .setMessage(R.string.developer_info_message)
-                    .setPositiveButton(R.string.confirm) { dialog, _ ->
-                        dialog.dismiss()
-                    }.show()
                 super.onOptionsItemSelected(item)
             }
             else -> {
