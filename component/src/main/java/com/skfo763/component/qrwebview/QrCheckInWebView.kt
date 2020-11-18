@@ -1,24 +1,16 @@
 package com.skfo763.component.qrwebview
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.AttributeSet
-import android.util.Log
+import android.webkit.CookieManager
 import android.webkit.WebSettings
 import android.webkit.WebView
 import androidx.appcompat.app.AlertDialog
 import com.skfo763.component.BuildConfig
 import com.skfo763.component.R
-import com.skfo763.component.extensions.containsAtLeast
-import com.skfo763.component.extensions.getMatchedErrorFormat
-import com.skfo763.component.extensions.hostSafeArg
-import com.skfo763.component.extensions.queryMap
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+
 
 class QrCheckInWebView @JvmOverloads constructor(
     context: Context,
@@ -34,7 +26,12 @@ class QrCheckInWebView @JvmOverloads constructor(
         isFocusable = true
         isFocusableInTouchMode = true
 
-        uriChecker.showDialog = { uri, it -> showDialog(it.title, it.message, it.alternativeUrl, uri.toString()) }
+        uriChecker.showDialog = { uri, it -> showDialog(
+            it.title,
+            it.message,
+            it.alternativeUrl,
+            uri.toString()
+        ) }
         uriChecker.loadUrl = { this.loadUrl(it) }
     }
 
@@ -58,6 +55,7 @@ class QrCheckInWebView @JvmOverloads constructor(
         clearCache(true)
         clearHistory()
         clearFormData()
+        removeCookie()
     }
 
     override fun onUrlLoadReceived(view: WebView?, uri: Uri?): Boolean {
@@ -73,10 +71,15 @@ class QrCheckInWebView @JvmOverloads constructor(
             .setMessage(message)
             .setPositiveButton(R.string.confirm) { dialog, _ ->
                 linkUrl?.let {
-                    uriChecker.doOnOpenOtherApp?.invoke(if(linkUrl.isNotBlank()) linkUrl else existingUrl)
+                    uriChecker.doOnOpenOtherApp?.invoke(if (linkUrl.isNotBlank()) linkUrl else existingUrl)
                 }
                 dialog.dismiss()
             }.show()
     }
 
+    private fun removeCookie() {
+        val cookieManager = CookieManager.getInstance()
+        cookieManager.removeSessionCookies {}
+        cookieManager.removeAllCookies {}
+    }
 }

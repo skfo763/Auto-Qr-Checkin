@@ -66,10 +66,14 @@ class LockScreenActivityUseCase constructor(
 
     fun startActivityForResult(openLink: String?) {
         openLink?.let {
-            activity.startActivityForResult(
-                Intent(Intent.ACTION_VIEW, Uri.parse(it)),
-                REQ_CODE_OPEN_OTHER_APP
-            )
+            try {
+                activity.startActivityForResult(Intent(Intent.ACTION_VIEW, Uri.parse(it)), REQ_CODE_OPEN_OTHER_APP)
+            } catch (e: Exception) {
+                activity.startActivity(Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://play.google.com/store/apps/details?id=com.nhn.android.search")
+                ))
+            }
         }
     }
 

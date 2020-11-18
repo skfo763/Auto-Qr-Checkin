@@ -108,22 +108,13 @@ class LockScreenActivity (
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.lock_screen_toolbar_menu, menu)
-        return true
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
-            R.id.toolbar_menu_info -> {
-                super.onOptionsItemSelected(item)
+        when(item.itemId) {
+            android.R.id.home -> {
+                val navController = navHostResId?.let { findNavController(this, it) } ?: return super.onSupportNavigateUp()
+                return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
             }
-            else -> {
-                val navController = navHostResId?.let {
-                    findNavController(this, it)
-                } ?: return super.onSupportNavigateUp()
-                navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
-            }
+            else -> return super.onOptionsItemSelected(item)
         }
     }
 

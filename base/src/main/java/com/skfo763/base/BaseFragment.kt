@@ -29,6 +29,7 @@ abstract class BaseFragment<B: ViewDataBinding, VP: BaseViewModel<U>, U: IBaseAc
         binding = DataBindingUtil.inflate(inflater, layoutResId, container, false)
         binding.lifecycleOwner = this
         bindingVariable(binding)
+        setHasOptionsMenu(true)
         return binding.root
     }
 }
