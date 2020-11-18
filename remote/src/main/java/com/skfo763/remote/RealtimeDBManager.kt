@@ -20,16 +20,11 @@ class RealtimeDBManager {
         val listener = dbRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val url = snapshot.child("url").getValue(String::class.java) ?: BuildConfig.QR_CHECKIN_URL_NAVER
-                val availableHosts = snapshot.child("host").children.toList().map {
-                    it.getValue(String::class.java) ?: ""
-                }
-                val availablePaths = snapshot.child("path").children.toList().map {
-                    it.getValue(String::class.java) ?: ""
-                }
-                val errorList = snapshot.child("error").children.map {
-                    it.getValue(QrCheckInError::class.java) ?: QrCheckInError()
-                }
-                this@callbackFlow.sendBlocking(QrApiUrl(url, availableHosts, availablePaths, errorList))
+                val availableHosts = snapshot.child("host").children.toCustomDataTypeList(String::class.java, "")
+                val availablePaths = snapshot.child("path").children.toCustomDataTypeList(String::class.java, "")
+                val appLandingScheme = snapshot.child("landing").children.toCustomDataTypeList(String::class.java, "")
+                val errorList = snapshot.child("error").children.toCustomDataTypeList(QrCheckInError::class.java, QrCheckInError())
+                this@callbackFlow.sendBlocking(QrApiUrl(url, availableHosts, availablePaths, appLandingScheme, errorList))
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -59,6 +54,10 @@ class RealtimeDBManager {
         awaitClose {
             dbRef.removeEventListener(listener)
         }
+    }
+
+    private fun <T> Iterable<DataSnapshot>.toCustomDataTypeList(clazz: Class<T>, dataOnNull: T): List<T> {
+        return this.toList().map { it.getValue(clazz) ?: dataOnNull }
     }
 
 }

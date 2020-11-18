@@ -13,30 +13,37 @@ fun QrCheckInWebView.loadCheckInUrl(url: String?) {
 @BindingAdapter("availableHost")
 fun QrCheckInWebView.setAvailableHost(hostList: List<String>?) {
     hostList?.let {
-        availableHost = it
+        uriChecker.availableHost = it
     }
 }
 
 @BindingAdapter("availablePath")
 fun QrCheckInWebView.setAvailablePath(path: List<String>?) {
     path?.let {
-        availablePath = it
+        uriChecker.availablePath = it
+    }
+}
+
+@BindingAdapter("appLandingScheme")
+fun QrCheckInWebView.setAppLandingScheme(schemeList: List<String>?) {
+    schemeList?.let {
+        uriChecker.appLandingScheme = it
     }
 }
 
 @BindingAdapter("onInvalidUrlLoaded")
 fun QrCheckInWebView.onInvalidUrlLoaded(func: (invalidUrl: String?) -> Unit) {
-    this.doOnInvalidUrlLoaded = func
+    uriChecker.doOnInvalidUrlLoaded = func
 }
 
 @BindingAdapter("onOtherAppOpen")
 fun QrCheckInWebView.onOtherAppOpen(func: (openLink: String?) -> Unit) {
-    this.doOnOpenOtherApp = func
+    uriChecker.doOnOpenOtherApp = func
 }
 
 @BindingAdapter("errorCaseList")
 fun QrCheckInWebView.setErrorCase(errorList: List<ErrorFormat>?) {
     errorList?.let {
-        this.errorList = errorList
+        uriChecker.errorList = errorList
     }
 }

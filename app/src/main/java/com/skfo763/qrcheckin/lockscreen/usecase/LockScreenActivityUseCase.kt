@@ -76,13 +76,7 @@ class LockScreenActivityUseCase constructor(
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
         return when(requestCode) {
             REQ_CODE_OPEN_OTHER_APP -> {
-                AlertDialog.Builder(activity)
-                    .setTitle(activity.getString(R.string.app_refresh_title))
-                    .setMessage(activity.getString(R.string.app_refresh_message))
-                    .setCancelable(false)
-                    .setPositiveButton(R.string.confirm) { dialog, _ ->
-                        activity.finish()
-                    }.show()
+                activity.viewModel.setQrCheckIn()
                 true
             }
             else -> return super.onActivityResult(requestCode, resultCode, data)

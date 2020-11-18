@@ -92,10 +92,10 @@ class LockScreenActivity (
 
     private fun checkOverlayOption() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
-           showPermissionDialog {
-            requestOverlayOptions()
+            showPermissionDialog {
+                requestOverlayOptions()
+            }
         }
-    }
     }
 
     @RequiresApi(Build.VERSION_CODES.M)

@@ -39,6 +39,7 @@ class LockScreenViewModel @ViewModelInject constructor(
     private val _deleteAdsState = MutableLiveData<Boolean>()
     private val _availableHost = MutableLiveData<List<String>?>()
     private val _availablePath = MutableLiveData<List<String>?>()
+    private val _appLandingScheme = MutableLiveData<List<String>?>()
     private val _errorList = MutableLiveData<List<ErrorFormat>?>()
     private val _urlForCheckIn = MutableLiveData<String?>()
     private val _isLoading = MutableLiveData<Boolean>()
@@ -49,6 +50,7 @@ class LockScreenViewModel @ViewModelInject constructor(
     val deleteAdsState: LiveData<Boolean> = _deleteAdsState
     val availableHost: LiveData<List<String>?> = _availableHost
     val availablePath: LiveData<List<String>?> = _availablePath
+    val appLandingScheme: LiveData<List<String>?> = _appLandingScheme
     val errorList: LiveData<List<ErrorFormat>?> = _errorList
     val urlForCheckIn: LiveData<String?> = _urlForCheckIn
     val isLoading: LiveData<Boolean> = _isLoading
@@ -182,6 +184,7 @@ class LockScreenViewModel @ViewModelInject constructor(
             repository.getNaverQrCheckInUrl().collect {
                 _availableHost.value = it.availableHost
                 _availablePath.value = it.availablePath
+                _appLandingScheme.value = it.appLandingScheme
                 _urlForCheckIn.value = it.url
                 _errorList.value = convertToWebErrorFormat(it.errorList)
                 _isLoading.value = false
@@ -194,7 +197,7 @@ class LockScreenViewModel @ViewModelInject constructor(
     }
 
     fun inAppReview() {
-        if(random.nextInt(5) == 0) {
+        if(random.nextInt(8) == 0) {
             inAppReviewManager.launchReviewFlow({
                 if(it) {
                     sendReviewCompleteEvent(true)
