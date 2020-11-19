@@ -3,7 +3,7 @@ import com.skfo763.gradle.lib.*
 plugins {
     `android-application`
     `signing-config`
-    `load-local-properties`
+    `load-local-properties-app`
     id("dagger.hilt.android.plugin")
     id("kotlin-android-extensions")
     id("com.google.gms.google-services")
@@ -58,4 +58,5 @@ dependencies {
     androidXUiDependency()
     navigationDependency()
     firebaseDependency()
+    naverMapDependency()
 }

@@ -13,6 +13,7 @@ object AndroidCoreKtxLib {
 object KotlinLib {
     const val kotlin = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}"
     const val coroutine = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutine}"
+    const val coroutineExt = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1"
 }
 
 object DaggerHiltLib {
@@ -32,6 +33,7 @@ fun DependencyHandler.androidCoreKtxDependency() {
 fun DependencyHandler.kotlinDependency() {
     implementation(KotlinLib.kotlin)
     implementation(KotlinLib.coroutine)
+    implementation(KotlinLib.coroutineExt)
 }
 
 fun DependencyHandler.daggerHiltDependency() {

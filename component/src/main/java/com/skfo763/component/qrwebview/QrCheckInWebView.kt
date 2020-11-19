@@ -11,7 +11,6 @@ import androidx.appcompat.app.AlertDialog
 import com.skfo763.component.BuildConfig
 import com.skfo763.component.R
 
-
 class QrCheckInWebView @JvmOverloads constructor(
     context: Context,
     attributeSet: AttributeSet? = null,

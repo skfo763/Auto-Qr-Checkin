@@ -2,6 +2,7 @@ import com.skfo763.gradle.lib.*
 
 plugins {
     `android-library`
+    `load-local-properties-lib`
     id("dagger.hilt.android.plugin")
 }
 
@@ -14,6 +15,7 @@ android {
 
 dependencies {
     implementation(project(":util"))
+    implementation(project(":base"))
 
     kotlinDependency()
     androidCoreKtxDependency()
@@ -21,4 +23,5 @@ dependencies {
     androidXUiDependency()
     playCoreDependency()
     firebaseDependency()
+    naverMapDependency()
 }

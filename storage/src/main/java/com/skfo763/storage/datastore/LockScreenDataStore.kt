@@ -11,7 +11,7 @@ import androidx.datastore.preferences.preferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class LockScreenDataStore (context: Context) {
+class LockScreenDataStore(context: Context) {
 
     private val IS_FEATURE_ON = preferencesKey<Boolean>("is_feature_on")
 

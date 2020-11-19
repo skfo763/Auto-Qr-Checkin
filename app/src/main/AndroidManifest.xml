@@ -23,6 +23,9 @@
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="${adMobAppKey}"/>
+        <meta-data
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="${naverMapClientId}" />
         <receiver android:name="com.skfo763.qrcheckin.lockscreen.receiver.ScreenReceiver" />
         <service android:name="com.skfo763.qrcheckin.lockscreen.service.LockScreenService" />
         <service android:name="com.skfo763.component.floatingwidget.FloatingWidgetService"

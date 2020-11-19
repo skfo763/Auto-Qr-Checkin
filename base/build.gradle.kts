@@ -2,6 +2,7 @@ import com.skfo763.gradle.lib.*
 
 plugins {
     `android-library`
+    `load-local-properties-lib`
     id("dagger.hilt.android.plugin")
 }
 

@@ -10,10 +10,15 @@ android {
         val adMobKey = gradleLocalProperties(rootDir).getProperty("admob.app.key")
         val checkInUrlNaver = gradleLocalProperties(rootDir).getProperty("checkin.url.naver")
         val checkInUrlKakao = gradleLocalProperties(rootDir).getProperty("checkin.url.kakao")
-        manifestPlaceholders = mapOf("adMobAppKey" to adMobKey)
+        val naverMapClientId = gradleLocalProperties(rootDir).getProperty("maps.naver.clientid")
+        val naverMapClientSecret = gradleLocalProperties(rootDir).getProperty("maps.naver.clientsecret")
+
+        manifestPlaceholders = mapOf("adMobAppKey" to adMobKey, "naverMapClientId" to naverMapClientId)
         buildConfigField("String", "AD_MOB_KEY", "\"$adMobKey\"")
         buildConfigField("String", "QR_CHECKIN_URL_NAVER", "\"$checkInUrlNaver\"")
         buildConfigField("String", "QR_CHECKIN_URL_KAKAO", "\"$checkInUrlKakao\"")
+        buildConfigField("String", "NAVER_MAP_CLIENT_ID", "\"$naverMapClientId\"")
+        buildConfigField("String", "NAVER_MAP_CLIENT_SECRET", "\"$naverMapClientSecret\"")
     }
 
     buildTypes {

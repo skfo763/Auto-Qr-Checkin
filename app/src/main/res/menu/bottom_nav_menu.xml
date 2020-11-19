@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/lockScreenFragment"
+        android:icon="@drawable/ic_drawable_qrcode"
+        android:title="@string/nav_qr_fragment_title"/>
+    <item
+        android:id="@+id/checkInMapFragment"
+        android:icon="@drawable/ic_baseline_location_on_24"
+        android:title="@string/nav_map_fragment_title"/>
+</menu>

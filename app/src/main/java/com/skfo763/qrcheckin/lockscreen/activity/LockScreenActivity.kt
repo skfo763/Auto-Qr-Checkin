@@ -51,6 +51,7 @@ class LockScreenActivity (
         appBarConfiguration = AppBarConfiguration(host.navController.graph, binding.lockScreenDrawerlayout)
         binding.toolbar.setupWithNavController(host.navController, appBarConfiguration)
         binding.lockScreenNavigation.lockScreenNavView.setupWithNavController(host.navController)
+        binding.lockScreenBottomNavigation.setupWithNavController(host.navController)
     }
 
     private fun setToolbar() {

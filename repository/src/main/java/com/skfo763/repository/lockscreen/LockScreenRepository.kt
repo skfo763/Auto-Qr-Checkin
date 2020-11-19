@@ -1,5 +1,6 @@
 package com.skfo763.repository.lockscreen
 
+import android.location.Location
 import com.skfo763.repository.model.CheckInUrl
 import com.skfo763.repository.model.LanguageState
 import kotlinx.coroutines.flow.Flow
@@ -17,6 +18,8 @@ interface LockScreenRepository {
     fun getCurrentDeleteAdsState(): Flow<Boolean>
 
     fun getLanguageState(): Flow<LanguageState>
+
+    suspend fun getLastKnownLocation(): Flow<Location?>
 
     suspend fun setLockFeatureState(isFeatureOn: Boolean)
 

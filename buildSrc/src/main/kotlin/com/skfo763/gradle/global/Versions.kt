@@ -28,7 +28,8 @@ object Versions {
     const val realtimeDB = "19.4.0"
 
     const val playCore = "1.8.0"
-    const val gson = "2.8.6"
+    const val playServiceMap = "16.0.0"
+    const val naverMap = "3.10.0"
 }
 
 object TestVersions {

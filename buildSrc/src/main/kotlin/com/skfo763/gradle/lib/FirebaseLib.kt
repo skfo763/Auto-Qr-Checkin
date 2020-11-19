@@ -10,7 +10,6 @@ object FirebaseLib {
     const val analytics = "com.google.firebase:firebase-analytics-ktx:${Versions.analytics}"
     const val crashlytics = "com.google.firebase:firebase-crashlytics-ktx:${Versions.crashlytics}"
     const val realtimeDB = "com.google.firebase:firebase-database-ktx:${Versions.realtimeDB}"
-    const val fbCoroutine = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1"
 }
 
 fun DependencyHandlerScope.firebaseDependency() {

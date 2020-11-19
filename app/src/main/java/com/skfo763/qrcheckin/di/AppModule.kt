@@ -5,6 +5,7 @@ import android.app.Application
 import com.skfo763.qrcheckin.admob.AdMobManager
 import com.skfo763.component.playcore.InAppReviewManager
 import com.skfo763.component.tracker.FirebaseTracker
+import com.skfo763.storage.gps.GpsManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,7 +17,6 @@ import dagger.hilt.android.components.ApplicationComponent
 abstract class AppActivityModule {
 
     companion object {
-
         @Provides
         fun provideInAppReviewManager(activity: Activity): InAppReviewManager {
             return InAppReviewManager(activity)
@@ -25,6 +25,11 @@ abstract class AppActivityModule {
         @Provides
         fun provideAdMobManager(activity: Activity): AdMobManager {
             return AdMobManager(activity)
+        }
+
+        @Provides
+        fun provideGpsManager(activity: Activity): GpsManager {
+            return GpsManager(activity)
         }
     }
 
