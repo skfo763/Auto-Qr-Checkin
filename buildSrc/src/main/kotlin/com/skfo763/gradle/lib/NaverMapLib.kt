@@ -6,8 +6,6 @@ import com.skfo763.gradle.global.Versions
 
 object NaverMapLib {
     const val naverMapSdk = "com.naver.maps:map-sdk:${Versions.naverMap}"
-
-
 }
 
 fun DependencyHandler.naverMapDependency() {

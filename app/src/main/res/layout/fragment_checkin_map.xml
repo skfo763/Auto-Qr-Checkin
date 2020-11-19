@@ -24,6 +24,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             location="@{parentViewModel.location}"/>
 
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/checkin_map_go_current_location"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_margin="20dp"
+            android:elevation="2dp"
+            android:foreground="?attr/selectableItemBackground"
+            android:onClick="@{(v) -> parentViewModel.requestLastKnownLocation()}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@drawable/ic_baseline_my_location_24"
+            android:background="@drawable/background_map_current_location"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

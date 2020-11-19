@@ -26,4 +26,5 @@ dependencies {
     kotlinDependency()
     daggerHiltDependency()
     firebaseDependency()
+    networkDependency()
 }

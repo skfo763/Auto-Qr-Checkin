@@ -11,6 +11,12 @@ object DataStoreLib {
     const val playServiceLocation = "com.google.android.gms:play-services-location:${Versions.playServiceMap}"
 }
 
+object RoomLib {
+    const val roomRuntime = "androidx.room:room-runtime:${Versions.roomVersion}"
+    const val roomKtx = "androidx.room:room-ktx:${Versions.roomVersion}"
+    const val roomCompiler = "androidx.room:room-compiler:${Versions.roomVersion}"
+}
+
 fun DependencyHandler.dataStoreDependency() {
     implementation(DataStoreLib.prefDataStore)
     implementation(DataStoreLib.protoDataStore)
@@ -19,4 +25,10 @@ fun DependencyHandler.dataStoreDependency() {
 fun DependencyHandler.googleMapsDependency() {
     implementation(DataStoreLib.playServiceMaps)
     implementation(DataStoreLib.playServiceLocation)
+}
+
+fun DependencyHandler.roomDependency() {
+    implementation(RoomLib.roomRuntime)
+    implementation(RoomLib.roomKtx)
+    kapt(RoomLib.roomKtx)
 }

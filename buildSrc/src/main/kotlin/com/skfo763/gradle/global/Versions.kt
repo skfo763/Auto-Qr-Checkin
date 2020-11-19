@@ -18,6 +18,7 @@ object Versions {
     const val lifeCycleExt = "2.2.0"
 
     const val dataStore = "1.0.0-alpha01"
+    const val roomVersion = "2.2.5"
     const val material = "1.2.1"
     const val navVersion = "2.3.0"
 
@@ -30,6 +31,8 @@ object Versions {
     const val playCore = "1.8.0"
     const val playServiceMap = "16.0.0"
     const val naverMap = "3.10.0"
+    const val retrofit = "2.9.0"
+    const val moshi = "1.10.0"
     const val tedPermission = "2.2.3"
 }
 

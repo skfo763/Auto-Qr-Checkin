@@ -29,4 +29,5 @@
     <string name="app_refresh_message">로그인 정보가 변경되어 앱을 새로고침합니다. 다시 접속해주세요.</string>
     <string name="nav_qr_fragment_title">QR 인증</string>
     <string name="nav_map_fragment_title">방문 기록</string>
+    <string name="menu_title_drop_location">방문 기록 삭제하기</string>
 </resources>

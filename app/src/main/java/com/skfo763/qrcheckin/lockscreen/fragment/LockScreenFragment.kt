@@ -48,7 +48,7 @@ class LockScreenFragment : BaseFragment<FragmentLockScreenBinding, LockScreenVie
             }
             R.id.toolbar_menu_logout -> {
                 binding.lockScreenFragmentQrWebview.clearCacheData()
-                parentViewModel.clearCaches(context?.externalCacheDir)
+                activity?.onBackPressed()
                 super.onOptionsItemSelected(item)
             }
             else -> true

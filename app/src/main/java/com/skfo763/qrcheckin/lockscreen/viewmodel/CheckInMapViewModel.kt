@@ -9,4 +9,9 @@ class CheckInMapViewModel @ViewModelInject constructor(
     @Assisted private val savedStateHandle: SavedStateHandle
 ): ViewModel() {
 
+    fun dropLocationDatabase() {
+
+
+    }
+
 }

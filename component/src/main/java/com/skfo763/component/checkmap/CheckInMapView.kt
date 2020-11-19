@@ -10,13 +10,13 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraAnimation
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.MapView
+import com.naver.maps.map.overlay.LocationOverlay
 
 class CheckInMapView @JvmOverloads constructor(
     context: Context,
     attributeSet: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : MapView(context, attributeSet, defStyleAttr), LifecycleObserver {
-
 
     var location: Location? = null
         set(value) {
@@ -34,9 +34,12 @@ class CheckInMapView @JvmOverloads constructor(
 
     private fun setCurrentLocation(location: Location) {
         getMapAsync {
-            val cameraUpdate = CameraUpdate.scrollTo(LatLng(location.latitude, location.longitude))
+            val latlng = LatLng(location.latitude, location.longitude)
+            val cameraUpdate = CameraUpdate.scrollTo(latlng)
             cameraUpdate.animate(CameraAnimation.Easing)
             it.moveCamera(cameraUpdate)
+            it.locationOverlay.position = latlng
+            it.locationOverlay.isVisible = true
         }
     }
 
@@ -64,6 +67,12 @@ class CheckInMapView @JvmOverloads constructor(
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     override fun onDestroy() {
         super.onDestroy()
+    }
+
+    private fun LocationOverlay.initialize() {
+        this.iconWidth = LocationOverlay.SIZE_AUTO
+        this.iconHeight = LocationOverlay.SIZE_AUTO
+        this.circleRadius = 100
     }
 
 }
