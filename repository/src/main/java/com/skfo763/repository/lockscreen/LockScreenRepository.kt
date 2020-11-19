@@ -19,7 +19,7 @@ interface LockScreenRepository {
 
     fun getLanguageState(): Flow<LanguageState>
 
-    suspend fun getLastKnownLocation(): Flow<Location?>
+    fun getLastKnownLocation(): Flow<Location?>
 
     suspend fun setLockFeatureState(isFeatureOn: Boolean)
 

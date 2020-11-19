@@ -30,6 +30,7 @@ object Versions {
     const val playCore = "1.8.0"
     const val playServiceMap = "16.0.0"
     const val naverMap = "3.10.0"
+    const val tedPermission = "2.2.3"
 }
 
 object TestVersions {

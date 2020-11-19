@@ -17,5 +17,6 @@ dependencies {
     kotlinDependency()
     daggerHiltDependency()
     navigationDependency()
+    firebaseDependency()
     implementation(UiLib.appCompat)
 }

@@ -14,6 +14,7 @@ object UiLib {
     const val appCompat = "androidx.appcompat:appcompat:${Versions.appCompat}"
     const val constraintLayout = "androidx.constraintlayout:constraintlayout:${Versions.constraintLayout}"
     const val material = "com.google.android.material:material:${Versions.material}"
+    const val tedPermission = "gun0912.ted:tedpermission:${Versions.tedPermission}"
 }
 
 object NavigationLib {
@@ -38,6 +39,7 @@ fun DependencyHandler.androidXUiDependency() {
     implementation(UiLib.appCompat)
     implementation(UiLib.constraintLayout)
     implementation(UiLib.material)
+    implementation(UiLib.tedPermission)
 }
 
 fun DependencyHandler.navigationDependency() {

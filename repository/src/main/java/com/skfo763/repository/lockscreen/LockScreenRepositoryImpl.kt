@@ -52,8 +52,9 @@ class LockScreenRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getLastKnownLocation(): Flow<Location?> {
-        return gpsManager.requestLastKnownLocation()
+    @ExperimentalCoroutinesApi
+    override fun getLastKnownLocation(): Flow<Location?> {
+        return gpsManager.requestLastKnownLocation
     }
 
     override suspend fun setLockFeatureState(isFeatureOn: Boolean) {

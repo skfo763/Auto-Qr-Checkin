@@ -1,5 +1,6 @@
 package com.skfo763.qrcheckin.lockscreen.viewmodel
 
+import android.location.Location
 import android.os.Bundle
 import android.widget.CompoundButton
 import androidx.hilt.Assisted
@@ -45,6 +46,7 @@ class LockScreenViewModel @ViewModelInject constructor(
     private val _errorList = MutableLiveData<List<ErrorFormat>?>()
     private val _urlForCheckIn = MutableLiveData<String?>()
     private val _isLoading = MutableLiveData<Boolean>()
+    private val _location = MutableLiveData<Location>()
     private val _versionName = MutableLiveData(BuildConfig.VERSION_NAME)
 
     val isLockScreenChecked: LiveData<Boolean> = _isLockScreenChecked
@@ -56,6 +58,7 @@ class LockScreenViewModel @ViewModelInject constructor(
     val errorList: LiveData<List<ErrorFormat>?> = _errorList
     val urlForCheckIn: LiveData<String?> = _urlForCheckIn
     val isLoading: LiveData<Boolean> = _isLoading
+    val location: LiveData<Location> = _location
     val versionName: LiveData<String> = _versionName
 
     private val setLockScreenDataToCurrentSwitchState: (isChecked: Boolean) -> Unit = {
@@ -251,4 +254,11 @@ class LockScreenViewModel @ViewModelInject constructor(
         return dir.delete()
     }
 
+    fun requestLastKnownLocation() {
+        viewModelScope.launch {
+            repository.getLastKnownLocation().collect {
+                _location.value = it
+            }
+        }
+    }
 }

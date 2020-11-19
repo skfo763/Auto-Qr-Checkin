@@ -21,7 +21,7 @@ class UriChecker {
         uri?.checkUriScheme()?.checkErrorFormat()?.checkAvailableHostAndPath()?.let {
             doOnInvalidUrlLoaded?.invoke(it.toString())
         } ?: run {
-            Log.d("hellohello", "hellohello")
+
         }
     }
 

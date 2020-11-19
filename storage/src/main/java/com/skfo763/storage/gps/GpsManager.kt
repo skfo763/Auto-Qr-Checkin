@@ -16,6 +16,8 @@ import com.google.android.gms.location.*
 import com.google.android.gms.tasks.Task
 import com.skfo763.base.checkPermissionGranted
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.channels.sendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
@@ -51,8 +53,15 @@ class GpsManager(private val context: Context) {
         fusedLocationClient.checkPermission().removeLocationUpdates(locationCallback).await()
     }
 
-    fun requestLastKnownLocation(): Flow<Location?> = flow {
-        fusedLocationClient.checkPermission().lastLocation.await()
+    @SuppressLint("MissingPermission")
+    @ExperimentalCoroutinesApi
+    val requestLastKnownLocation = callbackFlow<Location> {
+        fusedLocationClient.checkPermission().lastLocation.addOnSuccessListener {
+            this.sendBlocking(it)
+        }.addOnFailureListener {
+            this.close(it)
+        }
+        awaitClose { }
     }
 
     private val Context.isLocationPermissionGranted: Boolean get() {
