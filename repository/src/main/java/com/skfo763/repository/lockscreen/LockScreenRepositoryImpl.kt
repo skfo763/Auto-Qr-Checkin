@@ -1,6 +1,5 @@
 package com.skfo763.repository.lockscreen
 
-import android.location.Location
 import com.skfo763.remote.RealtimeDBManager
 import com.skfo763.repository.model.CheckInUrl
 import com.skfo763.repository.model.LanguageState
@@ -10,7 +9,6 @@ import com.skfo763.storage.gps.GpsManager
 import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -18,8 +16,7 @@ import javax.inject.Inject
 class LockScreenRepositoryImpl @Inject constructor(
     private val lockScreenDataStore: LockScreenDataStore,
     private val appDataStore: AppDataStore,
-    private val realtimeDBManager: RealtimeDBManager,
-    private val gpsManager: GpsManager
+    private val realtimeDBManager: RealtimeDBManager
 ) : LockScreenRepository {
 
     @ExperimentalCoroutinesApi
@@ -50,11 +47,6 @@ class LockScreenRepositoryImpl @Inject constructor(
         return appDataStore.languageFlow.map {
             mappingLanguageState(it)
         }
-    }
-
-    @ExperimentalCoroutinesApi
-    override fun getLastKnownLocation(): Flow<Location?> {
-        return gpsManager.requestLastKnownLocation
     }
 
     override suspend fun setLockFeatureState(isFeatureOn: Boolean) {

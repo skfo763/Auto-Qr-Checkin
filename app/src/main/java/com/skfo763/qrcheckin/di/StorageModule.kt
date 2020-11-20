@@ -1,8 +1,10 @@
 package com.skfo763.qrcheckin.di
 
 import android.app.Application
+import androidx.room.Room
 import com.skfo763.storage.datastore.AppDataStore
 import com.skfo763.storage.datastore.LockScreenDataStore
+import com.skfo763.storage.room.CheckPointDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,6 +27,16 @@ abstract class StorageModule {
         @Provides
         fun provideAppDataStore(application: Application): AppDataStore {
             return AppDataStore(application.applicationContext)
+        }
+
+        @Singleton
+        @Provides
+        fun provideCheckpointDatabase(application: Application): CheckPointDatabase {
+            return Room.databaseBuilder(
+                application.applicationContext,
+                CheckPointDatabase::class.java,
+                "db-checkpoint"
+            ).build()
         }
     }
 

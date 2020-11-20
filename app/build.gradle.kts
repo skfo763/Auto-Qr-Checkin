@@ -58,5 +58,7 @@ dependencies {
     androidXUiDependency()
     navigationDependency()
     firebaseDependency()
+    networkDependency()
+    roomDependency()
     naverMapDependency()
 }

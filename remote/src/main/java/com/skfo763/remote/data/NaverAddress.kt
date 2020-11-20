@@ -1,4 +1,4 @@
-package com.skfo763.remote
+package com.skfo763.remote.data
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -30,5 +30,18 @@ data class ComplexRegion(
 
 @JsonClass(generateAdapter = true)
 data class Region(
-    @Json(name = "name") val name: String
+    @Json(name = "name") val name: String,
+    @Json(name = "coords") val coordinates: ComplexCoords
+)
+
+@JsonClass(generateAdapter = true)
+data class ComplexCoords(
+    @Json(name = "center") val center: Coordinate
+)
+
+@JsonClass(generateAdapter = true)
+data class Coordinate(
+    @Json(name = "crs") val coordinateType: String,
+    @Json(name = "x") val x: Float,
+    @Json(name = "y") val y: Float
 )

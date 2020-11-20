@@ -1,8 +1,10 @@
 package com.skfo763.qrcheckin.extension
 
+import android.annotation.SuppressLint
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.skfo763.qrcheckin.R
+import com.skfo763.repository.model.CheckInAddress
 
 @BindingAdapter("isDeleteAds")
 fun TextView.setDeleteAdsTextView(isDeleteAds: Boolean) {

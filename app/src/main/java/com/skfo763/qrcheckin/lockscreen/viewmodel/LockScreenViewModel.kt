@@ -20,8 +20,10 @@ import com.skfo763.component.qrwebview.ErrorFormat
 import com.skfo763.component.tracker.FirebaseAnalyticsCustom
 import com.skfo763.qrcheckin.lockscreen.service.LockScreenService
 import com.skfo763.qrcheckin.lockscreen.usecase.LockScreenActivityUseCase
-import com.skfo763.remote.QrCheckInError
+import com.skfo763.remote.data.QrCheckInError
+import com.skfo763.repository.checkinmap.CheckInMapRepository
 import com.skfo763.repository.lockscreen.LockScreenRepository
+import com.skfo763.repository.model.CheckInAddress
 import com.skfo763.repository.model.LanguageState
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -30,7 +32,8 @@ import java.util.*
 
 
 class LockScreenViewModel @ViewModelInject constructor(
-    private val repository: LockScreenRepository,
+    private val lockScreenRepository: LockScreenRepository,
+    private val checkInMapRepository: CheckInMapRepository,
     private val inAppReviewManager: InAppReviewManager,
     @Assisted private val savedStateHandle: SavedStateHandle
 ) : BaseViewModel<LockScreenActivityUseCase>() {
@@ -63,25 +66,25 @@ class LockScreenViewModel @ViewModelInject constructor(
 
     private val setLockScreenDataToCurrentSwitchState: (isChecked: Boolean) -> Unit = {
         viewModelScope.launch {
-            repository.setLockFeatureState(it)
+            lockScreenRepository.setLockFeatureState(it)
         }
     }
 
     private val setWidgetDataToCurrentSwitchState: (isChecked: Boolean) -> Unit = {
         viewModelScope.launch {
-            repository.setWidgetFeatureState(it)
+            lockScreenRepository.setWidgetFeatureState(it)
         }
     }
 
     private val setAdsDelete: (isDeleted: Boolean) -> Unit = {
         viewModelScope.launch {
-            repository.setDeleteAdsState(it)
+            lockScreenRepository.setDeleteAdsState(it)
         }
     }
 
     private val setLanguage: (LanguageState) -> Unit = {
         viewModelScope.launch {
-            repository.setLanguageState(it)
+            lockScreenRepository.setLanguageState(it)
         }
     }
 
@@ -103,7 +106,7 @@ class LockScreenViewModel @ViewModelInject constructor(
 
     val setLockScreenSwitchToSavedState = {
         viewModelScope.launch {
-            repository.getCurrentLockFeatureState().collect { isChecked ->
+            lockScreenRepository.getCurrentLockFeatureState().collect { isChecked ->
                 _isLockScreenChecked.value = isChecked
             }
         }
@@ -111,7 +114,7 @@ class LockScreenViewModel @ViewModelInject constructor(
 
     val setWidgetSwitchToSavedState = {
         viewModelScope.launch {
-            repository.getCurrentWidgetFeatureState().collect { isChecked ->
+            lockScreenRepository.getCurrentWidgetFeatureState().collect { isChecked ->
                 _isWidgetChecked.value = isChecked
             }
         }
@@ -141,7 +144,7 @@ class LockScreenViewModel @ViewModelInject constructor(
     val onReviewClicked = {
         _isLoading.value = true
         viewModelScope.launch {
-            repository.getPlayStoreUrl().collect { url ->
+            lockScreenRepository.getPlayStoreUrl().collect { url ->
                 _isLoading.value = false
                 useCase.openUrl(url)
             }
@@ -151,7 +154,7 @@ class LockScreenViewModel @ViewModelInject constructor(
     val onShareClicked = {
         _isLoading.value = true
         viewModelScope.launch {
-            repository.getPlayStoreUrl().collect {
+            lockScreenRepository.getPlayStoreUrl().collect {
                 _isLoading.value = false
                 useCase.sendUrl(it)
             }
@@ -186,7 +189,7 @@ class LockScreenViewModel @ViewModelInject constructor(
     fun setQrCheckIn() {
         _isLoading.value = true
         viewModelScope.launch {
-            repository.getNaverQrCheckInUrl().collect {
+            lockScreenRepository.getNaverQrCheckInUrl().collect {
                 _availableHost.value = it.availableHost
                 _availablePath.value = it.availablePath
                 _appLandingScheme.value = it.appLandingScheme
@@ -256,9 +259,16 @@ class LockScreenViewModel @ViewModelInject constructor(
 
     fun requestLastKnownLocation() {
         viewModelScope.launch {
-            repository.getLastKnownLocation().collect {
+            checkInMapRepository.getLastKnownLocation().collect {
+                requestAddressFromLocation(it?.latitude, it?.longitude)
                 _location.value = it
             }
         }
+    }
+
+    private fun requestAddressFromLocation(latitude: Double?, longitude: Double?) {
+        if(latitude == null || longitude == null) return
+
+
     }
 }

@@ -30,4 +30,7 @@
     <string name="nav_qr_fragment_title">QR 인증</string>
     <string name="nav_map_fragment_title">방문 기록</string>
     <string name="menu_title_drop_location">방문 기록 삭제하기</string>
+
+    <string name="loading">주소를 불러오는 중..</string>
+    <string formatted="false" name="address_format">%s %s %s</string>
 </resources>

@@ -32,7 +32,9 @@ object Versions {
     const val playServiceMap = "16.0.0"
     const val naverMap = "3.10.0"
     const val retrofit = "2.9.0"
-    const val moshi = "1.10.0"
+    const val moshi = "1.11.0"
+    const val stetho = "1.5.1"
+    const val loggingInterceptor = "4.9.0"
     const val tedPermission = "2.2.3"
 }
 

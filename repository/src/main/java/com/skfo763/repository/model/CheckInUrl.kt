@@ -1,6 +1,6 @@
 package com.skfo763.repository.model
 
-import com.skfo763.remote.QrCheckInError
+import com.skfo763.remote.data.QrCheckInError
 
 data class CheckInUrl(
     val url: String,

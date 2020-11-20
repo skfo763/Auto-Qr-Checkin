@@ -3,20 +3,23 @@ package com.skfo763.component.checkmap
 import android.content.Context
 import android.location.Location
 import android.util.AttributeSet
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
+import android.util.Log
+import android.widget.Toast
+import androidx.lifecycle.*
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraAnimation
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.MapView
+import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.LocationOverlay
 
 class CheckInMapView @JvmOverloads constructor(
     context: Context,
     attributeSet: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : MapView(context, attributeSet, defStyleAttr), LifecycleObserver {
+) : MapView(context, attributeSet, defStyleAttr), LifecycleObserver, NaverMap.OnCameraChangeListener, NaverMap.OnCameraIdleListener {
+
+    var onCameraPositionChanged: ((LatLng) -> Unit)? = null
 
     var location: Location? = null
         set(value) {
@@ -27,9 +30,27 @@ class CheckInMapView @JvmOverloads constructor(
         }
 
     fun initializeMapSetting() {
-        getMapAsync {
-
+        getMapAsync { map ->
+            map.minZoom = 5.0
+            map.maxZoom = 18.0
         }
+    }
+
+    override fun onCameraChange(reason: Int, animated: Boolean) {
+        Log.d("NaverMap", "카메라 변경 - reson: $reason, animated: $animated")
+        getMapAsync {
+            when(reason) {
+                CameraUpdate.REASON_GESTURE,
+                CameraUpdate.REASON_CONTROL,
+                CameraUpdate.REASON_DEVELOPER ->  {
+                    onCameraPositionChanged?.invoke(it.cameraPosition.target)
+                }
+            }
+        }
+    }
+
+    override fun onCameraIdle() {
+        Toast.makeText(context, "카메라 움직임 종료", Toast.LENGTH_SHORT).show()
     }
 
     private fun setCurrentLocation(location: Location) {

@@ -1,5 +1,7 @@
 package com.skfo763.qrcheckin.di
 
+import com.skfo763.repository.checkinmap.CheckInMapRepository
+import com.skfo763.repository.checkinmap.CheckInMapRepositoryImpl
 import com.skfo763.repository.lockscreen.LockScreenRepository
 import com.skfo763.repository.lockscreen.LockScreenRepositoryImpl
 import com.skfo763.repository.lockscreen.MainRepositoryImpl
@@ -18,4 +20,8 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindMainRepository(impl: MainRepositoryImpl): MainRepository
+
+    @Binds
+    abstract fun bindCheckInMapRepository(impl: CheckInMapRepositoryImpl): CheckInMapRepository
+
 }

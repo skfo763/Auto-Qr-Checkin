@@ -1,4 +1,6 @@
-package com.skfo763.remote
+package com.skfo763.remote.data
+
+import com.skfo763.remote.BuildConfig
 
 data class QrApiUrl(
     val url: String = BuildConfig.QR_CHECKIN_URL_NAVER,
