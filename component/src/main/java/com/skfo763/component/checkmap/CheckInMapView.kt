@@ -1,14 +1,17 @@
 package com.skfo763.component.checkmap
 
 import android.content.Context
+import android.graphics.PointF
 import android.location.Location
 import android.util.AttributeSet
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.*
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
+import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.LocationOverlay
+import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.Overlay
 
 class CheckInMapView @JvmOverloads constructor(
     context: Context,
@@ -26,10 +29,39 @@ class CheckInMapView @JvmOverloads constructor(
             field = value
         }
 
+    var currentMarkers: List<Marker> = listOf()
+        set(value) {
+            field.forEach { it.map = null }
+            getMapAsync { map ->
+                value.forEach {
+                    it.onClickListener = markerClickListener
+                    it.map = map
+                }
+            }
+            field = value
+        }
+
+    private val infoWindow = InfoWindow().apply {
+        adapter = object: InfoWindow.DefaultTextAdapter(context) {
+            override fun getText(window: InfoWindow): CharSequence = window.marker?.tag as? CharSequence ?: ""
+        }
+    }
+
+    private val markerClickListener = Overlay.OnClickListener { overlay ->
+        val marker = overlay as? Marker ?: return@OnClickListener true
+        marker.infoWindow?.let {
+            infoWindow.open(marker)
+        } ?: run {
+            infoWindow.close()
+        }
+        true
+    }
+
     fun initializeMapSetting() {
         getMapAsync { map ->
             map.minZoom = 5.0
             map.maxZoom = 18.0
+            map.setOnMapClickListener { _: PointF, _: LatLng -> infoWindow.close() }
             map.addOnCameraChangeListener(this)
             map.addOnCameraIdleListener(this)
         }
@@ -82,11 +114,4 @@ class CheckInMapView @JvmOverloads constructor(
     override fun onDestroy() {
         super.onDestroy()
     }
-
-    private fun LocationOverlay.initialize() {
-        this.iconWidth = LocationOverlay.SIZE_AUTO
-        this.iconHeight = LocationOverlay.SIZE_AUTO
-        this.circleRadius = 100
-    }
-
 }
