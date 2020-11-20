@@ -11,7 +11,7 @@ interface CheckPointDao {
     @Query("SELECT * FROM checkpoint WHERE checkpoint_idx > (:offset) LIMIT 10")
     suspend fun getCheckPointWithOffset(offset: Int): List<CheckPointEntity>
 
-    @Query("SELECT DISTINCT addr_si_gun_gu, addr_large_si_do, addr_yup_myun_dong FROM checkpoint")
+    @Query("SELECT DISTINCT country, addr_si_gun_gu, addr_large_si_do, addr_yup_myun_dong FROM checkpoint")
     suspend fun getAvailableAddressInfo(): List<CheckPointAddress>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

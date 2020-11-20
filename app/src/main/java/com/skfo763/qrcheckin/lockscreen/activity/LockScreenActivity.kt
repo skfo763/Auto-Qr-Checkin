@@ -71,6 +71,16 @@ class LockScreenActivity (
         viewModel.inAppReview()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.startTrackingLocation()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.stopTrackingLocation()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)

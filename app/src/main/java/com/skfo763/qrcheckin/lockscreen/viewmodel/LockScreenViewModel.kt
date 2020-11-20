@@ -21,12 +21,15 @@ import com.skfo763.component.tracker.FirebaseAnalyticsCustom
 import com.skfo763.qrcheckin.lockscreen.service.LockScreenService
 import com.skfo763.qrcheckin.lockscreen.usecase.LockScreenActivityUseCase
 import com.skfo763.remote.data.QrCheckInError
+import com.skfo763.repository.checkinmap.CheckInMapException
 import com.skfo763.repository.checkinmap.CheckInMapRepository
 import com.skfo763.repository.lockscreen.LockScreenRepository
 import com.skfo763.repository.model.CheckInAddress
 import com.skfo763.repository.model.LanguageState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.*
 
@@ -259,16 +262,25 @@ class LockScreenViewModel @ViewModelInject constructor(
 
     fun requestLastKnownLocation() {
         viewModelScope.launch {
-            checkInMapRepository.getLastKnownLocation().collect {
-                requestAddressFromLocation(it?.latitude, it?.longitude)
-                _location.value = it
+            withContext(Dispatchers.Main) {
+                try {
+                    _location.value = checkInMapRepository.getLastKnownLocation()
+                } catch (e: CheckInMapException) {
+                    e.printStackTrace()
+                }
             }
         }
     }
 
-    private fun requestAddressFromLocation(latitude: Double?, longitude: Double?) {
-        if(latitude == null || longitude == null) return
+    fun startTrackingLocation() {
+        viewModelScope.launch {
+            checkInMapRepository.startTrackingLocation()
+        }
+    }
 
-
+    fun stopTrackingLocation() {
+        viewModelScope.launch {
+            checkInMapRepository.stopTrackingLocation()
+        }
     }
 }

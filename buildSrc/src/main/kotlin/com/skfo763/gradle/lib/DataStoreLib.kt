@@ -30,5 +30,5 @@ fun DependencyHandler.googleMapsDependency() {
 fun DependencyHandler.roomDependency() {
     implementation(RoomLib.roomRuntime)
     implementation(RoomLib.roomKtx)
-    kapt(RoomLib.roomKtx)
+    kapt(RoomLib.roomCompiler)
 }

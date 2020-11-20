@@ -45,7 +45,7 @@ class GpsManager(private val context: Context) {
         }
     }
 
-    fun startLocationUpdate(looper: Looper? = null): Flow<Void>  = flow {
+    fun startLocationUpdate(looper: Looper? = Looper.getMainLooper()): Flow<Void>  = flow {
         fusedLocationClient.checkPermission().requestLocationUpdates(locationResult, locationCallback, looper).await()
     }
 
@@ -53,15 +53,8 @@ class GpsManager(private val context: Context) {
         fusedLocationClient.checkPermission().removeLocationUpdates(locationCallback).await()
     }
 
-    @SuppressLint("MissingPermission")
-    @ExperimentalCoroutinesApi
-    val requestLastKnownLocation = callbackFlow<Location> {
-        fusedLocationClient.checkPermission().lastLocation.addOnSuccessListener {
-            this.sendBlocking(it)
-        }.addOnFailureListener {
-            this.close(it)
-        }
-        awaitClose { }
+    suspend fun requestLastKnownLocation(): Location? {
+        return fusedLocationClient.checkPermission().lastLocation.await()
     }
 
     private val Context.isLocationPermissionGranted: Boolean get() {

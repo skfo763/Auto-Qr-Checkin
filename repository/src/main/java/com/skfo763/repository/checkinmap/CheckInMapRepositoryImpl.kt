@@ -1,6 +1,6 @@
 package com.skfo763.repository.checkinmap
 
-import android.location.Location
+import android.util.Log
 import com.skfo763.remote.api.NaverMapApi
 import com.skfo763.remote.data.ComplexRegion
 import com.skfo763.repository.model.CheckInAddress
@@ -10,9 +10,11 @@ import com.skfo763.storage.room.CheckPointAddress
 import com.skfo763.storage.room.CheckPointDao
 import com.skfo763.storage.room.CheckPointEntity
 import dagger.hilt.android.scopes.ActivityScoped
-import dagger.hilt.android.scopes.FragmentScoped
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @ActivityScoped
@@ -22,22 +24,43 @@ class CheckInMapRepositoryImpl @Inject constructor(
     val gpsManager: GpsManager
 ) : CheckInMapRepository {
 
-    override suspend fun getAddressFromLocation(
-        latitude: Double,
-        longitude: Double
-    ): CheckInAddress {
-        return naverMapApi.getAddressByLocation("${longitude.toFloat()},${latitude.toFloat()}").results[0].regions.address
-    }
-
-    override suspend fun getCheckPoint(address: CheckInAddress): List<CheckPoint> {
-        return checkpointDB.getCheckPointFromAddress(address.largeSiDo, address.siGunGu).map {
-            CheckPoint(it.checkpointId, it.latitude, it.longitude, it.address, it.checkInTime)
+    override suspend fun getAddressFromLocation(latitude: Double, longitude: Double) = coroutineScope {
+        withContext(Dispatchers.IO) {
+            try {
+                naverMapApi.getAddressByLocation("${longitude.toFloat()},${latitude.toFloat()}").results[0].regions.address
+            } catch (e: Exception) {
+                throw CheckInMapException.NoAddressInfoException(e.message)
+            }
         }
     }
 
-    override suspend fun getCheckPointWithOffset(offset: Int): List<CheckPoint> {
-        return checkpointDB.getCheckPointWithOffset(offset).map {
-            CheckPoint(it.checkpointId, it.latitude, it.longitude, it.address, it.checkInTime)
+    override suspend fun getCheckPoint(address: CheckInAddress) = coroutineScope {
+        withContext(Dispatchers.IO) {
+            try {
+                checkpointDB.getCheckPointFromAddress(address.largeSiDo, address.siGunGu).map {
+                    CheckPoint(it.checkpointId, it.latitude, it.longitude, it.address, it.checkInTime)
+                }
+            } catch (e: Exception) {
+                throw CheckInMapException.NoCheckPointException(e.message)
+            }
+        }
+    }
+
+    override suspend fun getCheckPointWithOffset(offset: Int) = coroutineScope {
+        withContext(Dispatchers.IO) {
+            try {
+                checkpointDB.getCheckPointWithOffset(offset).map {
+                    CheckPoint(
+                        it.checkpointId,
+                        it.latitude,
+                        it.longitude,
+                        it.address,
+                        it.checkInTime
+                    )
+                }
+            } catch (e: Exception) {
+                throw CheckInMapException.NoCheckPointException(e.message)
+            }
         }
     }
 
@@ -49,9 +72,30 @@ class CheckInMapRepositoryImpl @Inject constructor(
         checkpointDB.insertCheckPoint(*checkPoint.map { it.entity }.toTypedArray())
     }
 
-    @ExperimentalCoroutinesApi
-    override fun getLastKnownLocation(): Flow<Location?> {
-        return gpsManager.requestLastKnownLocation
+    override suspend fun getLastKnownLocation() = coroutineScope {
+        withContext(Dispatchers.IO) {
+            try {
+                gpsManager.requestLastKnownLocation()
+            } catch (e: Exception) {
+                throw CheckInMapException.CannnotFoundLocationException(e.message)
+            }
+        }
+    }
+
+    override suspend fun startTrackingLocation() {
+        withContext(Dispatchers.Main) {
+            gpsManager.startLocationUpdate().collect {
+                Log.d("hellohello", "hellohello")
+            }
+        }
+    }
+
+    override suspend fun stopTrackingLocation() {
+        withContext(Dispatchers.IO) {
+            gpsManager.stopLocationUpdate().collect {
+                Log.d("hellohello", "hellohello")
+            }
+        }
     }
 
     private val ComplexRegion.address: CheckInAddress get() {

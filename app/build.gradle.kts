@@ -59,6 +59,6 @@ dependencies {
     navigationDependency()
     firebaseDependency()
     networkDependency()
-    roomDependency()
     naverMapDependency()
+    roomDependency()
 }

@@ -4,13 +4,12 @@ import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.naver.maps.geometry.LatLng
+import com.skfo763.repository.checkinmap.CheckInMapException
 import com.skfo763.repository.checkinmap.CheckInMapRepository
 import com.skfo763.repository.model.CheckInAddress
 import com.skfo763.repository.model.CheckPoint
-import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.async
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 class CheckInMapViewModel @ViewModelInject constructor(
     private val checkInMapRepository: CheckInMapRepository,
@@ -31,11 +30,15 @@ class CheckInMapViewModel @ViewModelInject constructor(
     }
 
     private suspend fun getAddressFromLocation(latLng: LatLng) {
-        _cameraScopeAddress.value = checkInMapRepository.getAddressFromLocation(latLng.latitude, latLng.longitude)
-    }
-
-    private suspend fun getCheckPoint(address: CheckInAddress) {
-        _addressList.value = checkInMapRepository.getCheckPoint(address)
+        withContext(Dispatchers.Main) {
+            try {
+                val address = checkInMapRepository.getAddressFromLocation(latLng.latitude, latLng.longitude)
+                _cameraScopeAddress.value = address
+                _addressList.value = checkInMapRepository.getCheckPoint(address)
+            } catch (e: CheckInMapException) {
+                e.printStackTrace()
+            }
+        }
     }
 
     fun dropLocationDatabase() {

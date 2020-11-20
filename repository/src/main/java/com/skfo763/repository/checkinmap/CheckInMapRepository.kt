@@ -19,6 +19,10 @@ interface CheckInMapRepository {
 
     suspend fun insertCheckPoint(vararg checkPoint: CheckPoint)
 
-    fun getLastKnownLocation(): Flow<Location?>
+    suspend fun getLastKnownLocation(): Location?
+
+    suspend fun startTrackingLocation()
+
+    suspend fun stopTrackingLocation()
 
 }

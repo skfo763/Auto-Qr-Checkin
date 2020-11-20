@@ -7,10 +7,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.*
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.CameraAnimation
-import com.naver.maps.map.CameraUpdate
-import com.naver.maps.map.MapView
-import com.naver.maps.map.NaverMap
+import com.naver.maps.map.*
 import com.naver.maps.map.overlay.LocationOverlay
 
 class CheckInMapView @JvmOverloads constructor(
@@ -33,24 +30,21 @@ class CheckInMapView @JvmOverloads constructor(
         getMapAsync { map ->
             map.minZoom = 5.0
             map.maxZoom = 18.0
+            map.addOnCameraChangeListener(this)
+            map.addOnCameraIdleListener(this)
         }
     }
 
     override fun onCameraChange(reason: Int, animated: Boolean) {
-        Log.d("NaverMap", "카메라 변경 - reson: $reason, animated: $animated")
-        getMapAsync {
-            when(reason) {
-                CameraUpdate.REASON_GESTURE,
-                CameraUpdate.REASON_CONTROL,
-                CameraUpdate.REASON_DEVELOPER ->  {
-                    onCameraPositionChanged?.invoke(it.cameraPosition.target)
-                }
-            }
+        if(BuildConfig.DEBUG) {
+            Log.d("NaverMap", "카메라 변경 - reson: $reason, animated: $animated")
         }
     }
 
     override fun onCameraIdle() {
-        Toast.makeText(context, "카메라 움직임 종료", Toast.LENGTH_SHORT).show()
+        getMapAsync {
+            onCameraPositionChanged?.invoke(it.cameraPosition.target)
+        }
     }
 
     private fun setCurrentLocation(location: Location) {
@@ -63,7 +57,6 @@ class CheckInMapView @JvmOverloads constructor(
             it.locationOverlay.isVisible = true
         }
     }
-
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     override fun onResume() {

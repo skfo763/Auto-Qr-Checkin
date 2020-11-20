@@ -13,6 +13,6 @@ dependencies {
     kotlinDependency()
     daggerHiltDependency()
     dataStoreDependency()
-    roomDependency()
     googleMapsDependency()
+    roomDependency()
 }

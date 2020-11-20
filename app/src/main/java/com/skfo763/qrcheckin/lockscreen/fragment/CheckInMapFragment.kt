@@ -35,6 +35,8 @@ class CheckInMapFragment : BaseFragment<FragmentCheckinMapBinding, LockScreenVie
 
     override val bindingVariable: (FragmentCheckinMapBinding) -> Unit = {
         it.parentViewModel = this.parentViewModel
+        it.viewModel = viewModel
+        it.checkinMapView.initializeMapSetting()
     }
 
     private val permissionListener = object: PermissionListener {
