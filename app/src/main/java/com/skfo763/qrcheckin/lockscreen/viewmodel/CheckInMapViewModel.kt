@@ -1,6 +1,7 @@
 package com.skfo763.qrcheckin.lockscreen.viewmodel
 
 import android.annotation.SuppressLint
+import android.location.Location
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
@@ -25,20 +26,37 @@ class CheckInMapViewModel @ViewModelInject constructor(
     @SuppressLint("SimpleDateFormat")
     private val dateFormat = SimpleDateFormat("yyyy년 MM월 dd일 hh시 mm분")
 
+    private val _location = MutableLiveData<Location>()
     private val _cameraScopeAddress = MutableLiveData<CheckInAddress?>()
     private val _checkPointList = MutableLiveData<List<NaverMapMarker>>(listOf())
 
+    val location: LiveData<Location> = _location
     val cameraScopeAddress: LiveData<CheckInAddress?> = _cameraScopeAddress
     val checkPointList: LiveData<List<NaverMapMarker>> = _checkPointList
 
-    val onCameraPositionChanged: (LatLng) -> Unit = {
-        viewModelScope.launch {
-            getAddressFromLocation(it)
-        }
-    }
 
     init {
         this.resultReceiver.listener = this
+    }
+
+    fun requestLastKnownLocation() {
+        viewModelScope.launch {
+            viewModelScope.launch {
+                withContext(Dispatchers.Main) {
+                    try {
+                        _location.value = checkInMapRepository.getLastKnownLocation() ?: return@withContext
+                    } catch (e: CheckInMapException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+        }
+    }
+
+    fun getNaverMapAddress(latLng: LatLng) {
+        viewModelScope.launch {
+            getAddressFromLocation(latLng)
+        }
     }
 
     private suspend fun getAddressFromLocation(latLng: LatLng) {

@@ -1,6 +1,5 @@
 package com.skfo763.qrcheckin.lockscreen.viewmodel
 
-import android.location.Location
 import android.os.Bundle
 import android.widget.CompoundButton
 import androidx.hilt.Assisted
@@ -10,33 +9,33 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.gun0912.tedpermission.PermissionListener
 import com.skfo763.base.BaseViewModel
 import com.skfo763.base.BuildConfig
 import com.skfo763.component.floatingwidget.FloatingWidgetService
 import com.skfo763.component.floatingwidget.FloatingWidgetView.Companion.CURR_X
 import com.skfo763.component.floatingwidget.FloatingWidgetView.Companion.CURR_Y
 import com.skfo763.component.playcore.InAppReviewManager
+import com.skfo763.component.playcore.InAppUpdateManager
 import com.skfo763.component.qrwebview.ErrorFormat
 import com.skfo763.component.tracker.FirebaseAnalyticsCustom
 import com.skfo763.qrcheckin.lockscreen.service.LockScreenService
 import com.skfo763.qrcheckin.lockscreen.usecase.LockScreenActivityUseCase
 import com.skfo763.remote.data.QrCheckInError
-import com.skfo763.repository.checkinmap.CheckInMapException
 import com.skfo763.repository.checkinmap.CheckInMapRepository
 import com.skfo763.repository.lockscreen.LockScreenRepository
-import com.skfo763.repository.model.CheckInAddress
+import com.skfo763.repository.model.CheckPoint
 import com.skfo763.repository.model.LanguageState
-import kotlinx.coroutines.Dispatchers
+import com.skfo763.storage.gps.GpsException
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.File
 import java.util.*
 
 class LockScreenViewModel @ViewModelInject constructor(
     private val lockScreenRepository: LockScreenRepository,
     private val checkInMapRepository: CheckInMapRepository,
     private val inAppReviewManager: InAppReviewManager,
+    private val inAppUpdateManager: InAppUpdateManager,
     @Assisted private val savedStateHandle: SavedStateHandle
 ) : BaseViewModel<LockScreenActivityUseCase>() {
 
@@ -51,7 +50,6 @@ class LockScreenViewModel @ViewModelInject constructor(
     private val _errorList = MutableLiveData<List<ErrorFormat>?>()
     private val _urlForCheckIn = MutableLiveData<String?>()
     private val _isLoading = MutableLiveData<Boolean>()
-    private val _location = MutableLiveData<Location>()
     private val _versionName = MutableLiveData(BuildConfig.VERSION_NAME)
 
     val isLockScreenChecked: LiveData<Boolean> = _isLockScreenChecked
@@ -63,7 +61,6 @@ class LockScreenViewModel @ViewModelInject constructor(
     val errorList: LiveData<List<ErrorFormat>?> = _errorList
     val urlForCheckIn: LiveData<String?> = _urlForCheckIn
     val isLoading: LiveData<Boolean> = _isLoading
-    val location: LiveData<Location> = _location
     val versionName: LiveData<String> = _versionName
 
     private val setLockScreenDataToCurrentSwitchState: (isChecked: Boolean) -> Unit = {
@@ -167,6 +164,27 @@ class LockScreenViewModel @ViewModelInject constructor(
         // TODO(버전 클릭 시 로직 추가)
     }
 
+    val startTrackingLocationListener = object: PermissionListener {
+        override fun onPermissionGranted() {
+            viewModelScope.launch {
+                checkInMapRepository.startTrackingLocation()
+            }
+        }
+        override fun onPermissionDenied(deniedPermissions: MutableList<String>?) = Unit
+    }
+
+    val stopTrackingLocation: () -> Unit = {
+        viewModelScope.launch {
+            checkInMapRepository.stopTrackingLocation()
+        }
+    }
+
+    init {
+        useCase.onActivityInAppUpdateResult = inAppUpdateManager.handleInAppUpdateResult
+        setLockScreenSwitchToSavedState()
+        setWidgetSwitchToSavedState()
+    }
+
     fun deleteFloatingButton() {
         if(isWidgetChecked.value == true) {
             useCase.stopService(FloatingWidgetService::class.java)
@@ -181,11 +199,6 @@ class LockScreenViewModel @ViewModelInject constructor(
             }
             useCase.startForegroundService(FloatingWidgetService::class.java, bundle)
         }
-    }
-
-    init {
-        setLockScreenSwitchToSavedState()
-        setWidgetSwitchToSavedState()
     }
 
     fun setQrCheckIn() {
@@ -207,13 +220,19 @@ class LockScreenViewModel @ViewModelInject constructor(
     }
 
     fun inAppReview() {
-        if(random.nextInt(8) == 0) {
+        if(inAppReviewManager.shouldReviewApp(random)) {
             inAppReviewManager.launchReviewFlow({
-                if (it) {
-                    sendReviewCompleteEvent(true)
-                } else {
-                    sendReviewCompleteEvent(false)
-                }
+                sendReviewCompleteEvent(it)
+            }) {
+                FirebaseCrashlytics.getInstance().recordException(it)
+            }
+        }
+    }
+
+    fun inAppUpdate() {
+        if(inAppUpdateManager.shouldUpdateApp(random)) {
+            inAppUpdateManager.launchUpdateFlow({
+
             }) {
                 FirebaseCrashlytics.getInstance().recordException(it)
             }
@@ -224,7 +243,7 @@ class LockScreenViewModel @ViewModelInject constructor(
         useCase.logAnalyticsEvent(
             FirebaseAnalyticsCustom.Event.IN_APP_REVIEW,
             Bundle().apply {
-                putBoolean(FirebaseAnalyticsCustom.Param.REVIEW_COMPLETE, true)
+                putBoolean(FirebaseAnalyticsCustom.Param.REVIEW_COMPLETE, complete)
             }
         )
     }
@@ -240,46 +259,25 @@ class LockScreenViewModel @ViewModelInject constructor(
         )
     }
 
-    fun clearCaches(cacheDir: File?) {
-        val appDir = File(cacheDir?.parent ?: return)
-        if(appDir.exists()) {
-            appDir.list()?.forEach {
-                deleteDir(File(appDir, it))
-            }
-        }
-        useCase.finishActivity()
-    }
-
-    private fun deleteDir(dir: File): Boolean {
-        if (dir.isDirectory) {
-            dir.list()?.forEach {
-                if (!deleteDir(File(dir, it))) return false
-            }
-        }
-        return dir.delete()
-    }
-
-    fun requestLastKnownLocation() {
+    fun saveCheckPoint() {
         viewModelScope.launch {
-            withContext(Dispatchers.Main) {
-                try {
-                    _location.value = checkInMapRepository.getLastKnownLocation()
-                } catch (e: CheckInMapException) {
-                    e.printStackTrace()
-                }
+            try {
+                val location = checkInMapRepository.getLastKnownLocation() ?: return@launch
+                val address = checkInMapRepository.getAddressFromLocation(location.latitude, location.longitude)
+                val checkPoint = CheckPoint(
+                    location.latitude,
+                    location.longitude,
+                    address,
+                    System.currentTimeMillis()
+                )
+                checkInMapRepository.saveCheckPoint(checkPoint)
+            } catch (e: GpsException) {
+                // TODO(에러 로직 일원화)
+                e.printStackTrace()
+            } catch (e: Exception) {
+                // TODO(에러 로직 일원화)
+                e.printStackTrace()
             }
-        }
-    }
-
-    fun startTrackingLocation() {
-        viewModelScope.launch {
-            checkInMapRepository.startTrackingLocation()
-        }
-    }
-
-    fun stopTrackingLocation() {
-        viewModelScope.launch {
-            checkInMapRepository.stopTrackingLocation()
         }
     }
 }

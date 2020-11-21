@@ -39,7 +39,7 @@ class CheckInMapRepositoryImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             try {
                 checkpointDB.getCheckPointFromAddress(address.largeSiDo, address.siGunGu).map {
-                    CheckPoint(it.checkpointId, it.latitude, it.longitude, it.address, it.checkInTime)
+                    CheckPoint(it.latitude, it.longitude, it.address, it.checkInTime, it.checkpointId)
                 }
             } catch (e: Exception) {
                 throw CheckInMapException.NoCheckPointException(e.message)
@@ -52,11 +52,11 @@ class CheckInMapRepositoryImpl @Inject constructor(
             try {
                 checkpointDB.getCheckPointWithOffset(offset).map {
                     CheckPoint(
-                        it.checkpointId,
                         it.latitude,
                         it.longitude,
                         it.address,
-                        it.checkInTime
+                        it.checkInTime,
+                        it.checkpointId
                     )
                 }
             } catch (e: Exception) {
@@ -69,7 +69,7 @@ class CheckInMapRepositoryImpl @Inject constructor(
         return checkpointDB.getAvailableAddressInfo().map { it.address }
     }
 
-    override suspend fun insertCheckPoint(vararg checkPoint: CheckPoint) {
+    override suspend fun saveCheckPoint(vararg checkPoint: CheckPoint) {
         checkpointDB.insertCheckPoint(*checkPoint.map { it.entity }.toTypedArray())
     }
 

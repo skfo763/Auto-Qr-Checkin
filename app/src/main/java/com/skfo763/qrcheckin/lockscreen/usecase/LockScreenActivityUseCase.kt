@@ -5,13 +5,12 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.skfo763.qrcheckin.lockscreen.activity.LockScreenActivity
 import com.skfo763.base.BaseActivityUseCase
 import com.skfo763.component.extensions.parsedUri
-import com.skfo763.qrcheckin.R
+import com.skfo763.component.playcore.InAppUpdateManager
+import com.skfo763.qrcheckin.lockscreen.activity.LockScreenActivity
 
 class LockScreenActivityUseCase constructor(
     private val activity: LockScreenActivity
@@ -20,6 +19,8 @@ class LockScreenActivityUseCase constructor(
     companion object {
         const val REQ_CODE_OPEN_OTHER_APP = 1000
     }
+
+    var onActivityInAppUpdateResult: ((Int, Intent?) -> Unit)? = null
 
     fun openUrl(url: String?) {
         try {
@@ -83,7 +84,13 @@ class LockScreenActivityUseCase constructor(
                 activity.viewModel.setQrCheckIn()
                 true
             }
+            InAppUpdateManager.REQUEST_APP_UPDATE -> {
+                onActivityInAppUpdateResult?.invoke(resultCode, data)
+                true
+            }
             else -> return super.onActivityResult(requestCode, resultCode, data)
         }
     }
+
+
 }

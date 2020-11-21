@@ -16,6 +16,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
+import com.gun0912.tedpermission.PermissionListener
 import com.skfo763.qrcheckin.R
 import com.skfo763.qrcheckin.admob.AdMobManager
 import com.skfo763.qrcheckin.databinding.ActivityLockScreenBinding
@@ -24,6 +25,7 @@ import com.skfo763.qrcheckin.lockscreen.usecase.LockScreenActivityUseCase
 import com.skfo763.qrcheckin.lockscreen.viewmodel.LockScreenViewModel
 import com.skfo763.base.BaseActivity
 import com.skfo763.component.tracker.FirebaseTracker
+import com.skfo763.storage.gps.isLocationPermissionGranted
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -69,16 +71,7 @@ class LockScreenActivity (
         checkOverlayOption()
         adMobManager.putAddToCustomContainer(binding.lockScreenAdViewContainer)
         viewModel.inAppReview()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.startTrackingLocation()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        viewModel.stopTrackingLocation()
+        requestLocationPermissions(viewModel.startTrackingLocationListener)
     }
 
     override fun onDestroy() {
@@ -86,6 +79,9 @@ class LockScreenActivity (
         window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         clearDismissKeyGuard()
         clearScreenOnLocked()
+        if(this.isLocationPermissionGranted) {
+            viewModel.stopTrackingLocation()
+        }
     }
 
     private fun showPermissionDialog(doOnPositiveClicked: () -> Unit) {

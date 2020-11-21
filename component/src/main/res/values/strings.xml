@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="update_complete">업데이트가 완료되었습니다. 앱을 다시 실행해주세요.</string>
+    <string name="restart_app">다시 시작하기</string>
+</resources>

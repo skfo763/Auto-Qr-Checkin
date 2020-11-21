@@ -1,9 +1,9 @@
 package com.skfo763.repository.model
 
 data class CheckPoint(
-    val checkPointIdx: Int,
-    val latitude: Float,
-    val longitude: Float,
+    val latitude: Double,
+    val longitude: Double,
     val address: CheckInAddress,
-    val checkInTime: Long
+    val checkInTime: Long,
+    val checkPointIdx: Int = 0
 )

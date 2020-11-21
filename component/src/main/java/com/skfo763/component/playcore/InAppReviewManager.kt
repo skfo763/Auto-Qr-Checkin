@@ -12,6 +12,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.sendBlocking
 import kotlinx.coroutines.flow.*
 import java.lang.IllegalStateException
+import java.util.*
 import javax.inject.Inject
 
 @ActivityScoped
@@ -20,6 +21,8 @@ class InAppReviewManager @Inject constructor(private val activity: Activity) {
     private val reviewManager =
         if(BuildConfig.DEBUG) FakeReviewManager(activity)
         else ReviewManagerFactory.create(activity)
+
+    fun shouldReviewApp(random: Random) = if(BuildConfig.DEBUG) true else random.nextInt(6) == 0
 
     fun launchReviewFlow(onRequestComplete: (Boolean) -> Unit, onRequestFailed: (Exception) -> Unit) {
         requestReviewFlow({

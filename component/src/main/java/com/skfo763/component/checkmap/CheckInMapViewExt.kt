@@ -17,12 +17,6 @@ object CheckInMapViewExt {
     }
 
     @JvmStatic
-    @BindingAdapter("onCameraPositionChanged")
-    fun CheckInMapView.setOnCameraPositionChanged(onCameraChanged: ((LatLng) -> Unit)? = null) {
-        this.onCameraPositionChanged = onCameraChanged
-    }
-
-    @JvmStatic
     @BindingAdapter("markerLists")
     fun CheckInMapView.setMarkerList(markerLists: List<NaverMapMarker>? = null) {
         markerLists ?: return
@@ -45,7 +39,7 @@ object CheckInMapViewExt {
     const val MIN_LATITUDE = 36.377666
     const val MAX_LONGITUDE = 127.520437
     const val MIN_LONGITUDE = 127.200359
-    fun LatLng.shouldUseNaverMapOnly(): Boolean {
+    fun shouldUseNaverMapOnly(latitude: Double, longitude: Double): Boolean {
         return latitude in MIN_LATITUDE..MAX_LATITUDE && longitude in MIN_LONGITUDE..MAX_LONGITUDE
     }
 }

@@ -6,11 +6,11 @@
     <data>
         <import type="com.skfo763.repository.model.CheckInAddress" />
         <variable
-            name="parentViewModel"
-            type="com.skfo763.qrcheckin.lockscreen.viewmodel.LockScreenViewModel" />
-        <variable
             name="viewModel"
             type="com.skfo763.qrcheckin.lockscreen.viewmodel.CheckInMapViewModel" />
+        <variable
+            name="gotoCurrentButtonListener"
+            type="android.view.View.OnClickListener"/>
     </data>
 
 
@@ -26,7 +26,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            location="@{parentViewModel.location}"
+            location="@{viewModel.location}"
             markerLists="@{viewModel.checkPointList}"/>
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -53,7 +53,7 @@
             android:layout_margin="20dp"
             android:elevation="2dp"
             android:foreground="?attr/selectableItemBackground"
-            android:onClick="@{(v) -> parentViewModel.requestLastKnownLocation()}"
+            android:onClick="@{gotoCurrentButtonListener}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:src="@drawable/ic_baseline_my_location_24"

@@ -1,11 +1,8 @@
 package com.skfo763.qrcheckin.lockscreen.fragment
 
-import android.Manifest
 import android.content.Intent
 import android.location.Geocoder
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -14,13 +11,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.gun0912.tedpermission.PermissionListener
-import com.gun0912.tedpermission.TedPermission
 import com.naver.maps.geometry.LatLng
 import com.skfo763.base.BaseFragment
 import com.skfo763.component.checkmap.CheckInMapViewExt.shouldUseNaverMapOnly
 import com.skfo763.qrcheckin.R
 import com.skfo763.qrcheckin.databinding.FragmentCheckinMapBinding
-import com.skfo763.qrcheckin.lockscreen.receiver.AddressResultReceiver
+import com.skfo763.qrcheckin.extension.requestLocationPermissions
 import com.skfo763.qrcheckin.lockscreen.service.FetchAddressIntentService
 import com.skfo763.qrcheckin.lockscreen.service.FetchAddressIntentService.Companion.LATITUDE
 import com.skfo763.qrcheckin.lockscreen.service.FetchAddressIntentService.Companion.LONGITUDE
@@ -42,15 +38,15 @@ class CheckInMapFragment : BaseFragment<FragmentCheckinMapBinding, LockScreenVie
     private val viewModel: CheckInMapViewModel by viewModels()
 
     override val bindingVariable: (FragmentCheckinMapBinding) -> Unit = {
-        it.parentViewModel = this.parentViewModel
         it.viewModel = viewModel
+        it.setGotoCurrentButtonListener { context?.requestLocationPermissions(permissionListener) }
         it.checkinMapView.initializeMapSetting()
         it.checkinMapView.onCameraPositionChanged = this::searchAddress
     }
 
     private val permissionListener = object: PermissionListener {
         override fun onPermissionGranted() {
-            parentViewModel.requestLastKnownLocation()
+            viewModel.requestLastKnownLocation()
         }
 
         override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
@@ -62,11 +58,7 @@ class CheckInMapFragment : BaseFragment<FragmentCheckinMapBinding, LockScreenVie
         super.onViewCreated(view, savedInstanceState)
         viewLifecycleOwner.lifecycle.addObserver(binding.checkinMapView)
         binding.checkinMapView.onCreate(savedInstanceState)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        requestPermission()
+        context?.requestLocationPermissions(permissionListener)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -105,8 +97,8 @@ class CheckInMapFragment : BaseFragment<FragmentCheckinMapBinding, LockScreenVie
     }
 
     private fun searchAddress(location: LatLng) {
-        if(location.shouldUseNaverMapOnly() || !Geocoder.isPresent()) {
-            viewModel.onCameraPositionChanged(location)
+        if(shouldUseNaverMapOnly(location.latitude, location.longitude) || !Geocoder.isPresent()) {
+            viewModel.getNaverMapAddress(location)
         } else {
             activity ?: return
             val intent = Intent(activity, FetchAddressIntentService::class.java).apply {
@@ -116,24 +108,5 @@ class CheckInMapFragment : BaseFragment<FragmentCheckinMapBinding, LockScreenVie
             }
             activity?.startService(intent)
         }
-    }
-
-    private fun requestPermission() {
-        TedPermission.with(context ?: return)
-            .setPermissionListener(permissionListener)
-            .setDeniedTitle("권한거부")
-            .setDeniedMessage("권한거부")
-            .setGotoSettingButtonText("hellohello")
-            .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-            .check()
-    }
-
-    private fun showServiceUnavailableDialog() {
-        AlertDialog.Builder(requireContext())
-            .setTitle(R.string.geocoder_unavailable_title)
-            .setMessage(R.string.geocoder_unavailable_message)
-            .setPositiveButton(R.string.confirm) { dialog, _ ->
-                dialog.dismiss()
-            }.show()
     }
 }

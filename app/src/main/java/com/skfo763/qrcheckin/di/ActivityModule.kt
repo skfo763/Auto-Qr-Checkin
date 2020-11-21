@@ -4,6 +4,7 @@ import android.app.Activity
 import android.os.Handler
 import android.os.Looper
 import com.skfo763.component.playcore.InAppReviewManager
+import com.skfo763.component.playcore.InAppUpdateManager
 import com.skfo763.qrcheckin.admob.AdMobManager
 import com.skfo763.qrcheckin.lockscreen.receiver.AddressResultReceiver
 import com.skfo763.remote.NetworkManager
@@ -25,6 +26,11 @@ abstract class ActivityModule {
         @Provides
         fun provideInAppReviewManager(activity: Activity): InAppReviewManager {
             return InAppReviewManager(activity)
+        }
+
+        @Provides
+        fun provideInAppUpdateManager(activity: Activity): InAppUpdateManager {
+            return InAppUpdateManager(activity, activity.)
         }
 
         @Provides

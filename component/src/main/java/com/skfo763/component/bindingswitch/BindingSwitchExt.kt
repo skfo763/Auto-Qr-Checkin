@@ -5,7 +5,7 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.databinding.BindingAdapter
 
 @BindingAdapter("onCheckStateChanged")
-fun SwitchCompat.setOnCheckStateChangedListener(onChanged: (CompoundButton?, Boolean) -> Unit) {
+inline fun SwitchCompat.setOnCheckStateChangedListener(crossinline onChanged: (CompoundButton?, Boolean) -> Unit) {
     setOnCheckedChangeListener { buttonView, isChecked ->
         onChanged.invoke(buttonView, isChecked)
     }

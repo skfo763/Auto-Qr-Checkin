@@ -8,8 +8,8 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "checkpoint", indices = [Index(value = ["addr_large_si_do", "addr_si_gun_gu"])])
 data class CheckPointEntity(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "checkpoint_idx") val checkpointId: Int,
-    @ColumnInfo(name = "latitude") val latitude: Float,
-    @ColumnInfo(name = "longitude") val longitude: Float,
+    @ColumnInfo(name = "latitude") val latitude: Double,
+    @ColumnInfo(name = "longitude") val longitude: Double,
     @ColumnInfo(name = "country") val country: String,
     @ColumnInfo(name = "addr_large_si_do") val largeSiDo: String,
     @ColumnInfo(name = "addr_si_gun_gu") val siGunGu: String,
