@@ -6,18 +6,21 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.naver.maps.geometry.LatLng
 import com.skfo763.component.checkmap.NaverMapMarker
+import com.skfo763.qrcheckin.lockscreen.receiver.AddressResultReceiver
 import com.skfo763.repository.checkinmap.CheckInMapException
 import com.skfo763.repository.checkinmap.CheckInMapRepository
 import com.skfo763.repository.model.CheckInAddress
 import com.skfo763.repository.model.CheckPoint
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
 import java.text.SimpleDateFormat
 import java.util.*
 
 class CheckInMapViewModel @ViewModelInject constructor(
     private val checkInMapRepository: CheckInMapRepository,
+    val resultReceiver: AddressResultReceiver,
     @Assisted private val savedStateHandle: SavedStateHandle
-): ViewModel() {
+): ViewModel(), AddressResultReceiver.Listener {
 
     @SuppressLint("SimpleDateFormat")
     private val dateFormat = SimpleDateFormat("yyyy년 MM월 dd일 hh시 mm분")
@@ -34,10 +37,15 @@ class CheckInMapViewModel @ViewModelInject constructor(
         }
     }
 
+    init {
+        this.resultReceiver.listener = this
+    }
+
     private suspend fun getAddressFromLocation(latLng: LatLng) {
         withContext(Dispatchers.Main) {
             try {
                 val address = checkInMapRepository.getAddressFromLocation(latLng.latitude, latLng.longitude)
+                if(_cameraScopeAddress.equals(address)) return@withContext
                 _cameraScopeAddress.value = address
                 _checkPointList.value = checkInMapRepository.getCheckPoint(address).markerList
             } catch (e: CheckInMapException) {
@@ -58,5 +66,16 @@ class CheckInMapViewModel @ViewModelInject constructor(
             "${it.address.largeSiDo} ${it.address.siGunGu} ${it.address.yupMyunDong}",
             dateFormat.format(Date(it.checkInTime))
         )
+    }
+
+    override fun onReceiveSuccess(result: CheckInAddress) {
+        _cameraScopeAddress.value = result
+    }
+
+    override fun onReceiveError(data: Pair<Int, String>) {
+        when(data.first) {
+
+
+        }
     }
 }

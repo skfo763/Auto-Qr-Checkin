@@ -49,17 +49,15 @@ class CheckInMapView @JvmOverloads constructor(
 
     private val markerClickListener = Overlay.OnClickListener { overlay ->
         val marker = overlay as? Marker ?: return@OnClickListener true
-        marker.infoWindow?.let {
+        marker.infoWindow?.close() ?: run {
             infoWindow.open(marker)
-        } ?: run {
-            infoWindow.close()
         }
         true
     }
 
     fun initializeMapSetting() {
         getMapAsync { map ->
-            map.minZoom = 5.0
+            map.minZoom = 8.0
             map.maxZoom = 18.0
             map.setOnMapClickListener { _: PointF, _: LatLng -> infoWindow.close() }
             map.addOnCameraChangeListener(this)

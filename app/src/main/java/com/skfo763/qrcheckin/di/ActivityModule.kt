@@ -1,8 +1,11 @@
 package com.skfo763.qrcheckin.di
 
 import android.app.Activity
+import android.os.Handler
+import android.os.Looper
 import com.skfo763.component.playcore.InAppReviewManager
 import com.skfo763.qrcheckin.admob.AdMobManager
+import com.skfo763.qrcheckin.lockscreen.receiver.AddressResultReceiver
 import com.skfo763.remote.NetworkManager
 import com.skfo763.remote.api.NaverMapApi
 import com.skfo763.storage.gps.GpsManager
@@ -12,6 +15,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.components.FragmentComponent
 
 @Module
 @InstallIn(ActivityComponent::class)
@@ -41,6 +45,11 @@ abstract class ActivityModule {
         @Provides
         fun provideCheckpointDao(db: CheckPointDatabase): CheckPointDao {
             return db.checkPointDao()
+        }
+
+        @Provides
+        fun provideAddressResultReceiver(): AddressResultReceiver {
+            return AddressResultReceiver(Handler(Looper.getMainLooper()))
         }
     }
 }

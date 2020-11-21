@@ -5,6 +5,7 @@ import com.skfo763.remote.api.NaverMapApi
 import com.skfo763.remote.data.ComplexRegion
 import com.skfo763.repository.model.CheckInAddress
 import com.skfo763.repository.model.CheckPoint
+import com.skfo763.repository.test.TestCheckPointGenerator
 import com.skfo763.storage.gps.GpsManager
 import com.skfo763.storage.room.CheckPointAddress
 import com.skfo763.storage.room.CheckPointDao
@@ -37,17 +38,9 @@ class CheckInMapRepositoryImpl @Inject constructor(
     override suspend fun getCheckPoint(address: CheckInAddress) = coroutineScope {
         withContext(Dispatchers.IO) {
             try {
-                listOf(
-                    CheckPoint(0, 37.50499F, 127.04674F, CheckInAddress("대한민국", "서울특별시", "강남구", "삼성동"), System.currentTimeMillis() - 600000),
-                    CheckPoint(0, 37.50489F, 127.04764F, CheckInAddress("대한민국", "서울특별시", "강남구", "삼성동"), System.currentTimeMillis() - 600000),
-                    CheckPoint(0, 37.50679F, 127.04854F, CheckInAddress("대한민국", "서울특별시", "강남구", "삼성동"), System.currentTimeMillis() - 600000),
-                    CheckPoint(0, 37.50769F, 127.04944F, CheckInAddress("대한민국", "서울특별시", "강남구", "삼성동"), System.currentTimeMillis() - 600000)
-                )
-                /*
                 checkpointDB.getCheckPointFromAddress(address.largeSiDo, address.siGunGu).map {
                     CheckPoint(it.checkpointId, it.latitude, it.longitude, it.address, it.checkInTime)
                 }
-                 */
             } catch (e: Exception) {
                 throw CheckInMapException.NoCheckPointException(e.message)
             }

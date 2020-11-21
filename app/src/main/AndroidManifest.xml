@@ -28,9 +28,14 @@
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="${naverMapClientId}" />
         <receiver android:name="com.skfo763.qrcheckin.lockscreen.receiver.ScreenReceiver" />
-        <service android:name="com.skfo763.qrcheckin.lockscreen.service.LockScreenService" />
+        <service android:name="com.skfo763.qrcheckin.lockscreen.service.LockScreenService"
+            android:exported="false">
+        </service>
         <service android:name="com.skfo763.component.floatingwidget.FloatingWidgetService"
             android:enabled="true"
+            android:exported="false">
+        </service>
+        <service android:name=".lockscreen.service.FetchAddressIntentService"
             android:exported="false">
         </service>
         <activity
@@ -38,7 +43,6 @@
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait"
-            android:excludeFromRecents="true"
             android:launchMode="singleTop"
             android:hardwareAccelerated="true">
             <intent-filter>

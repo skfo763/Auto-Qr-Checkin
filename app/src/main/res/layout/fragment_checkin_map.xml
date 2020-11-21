@@ -27,7 +27,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             location="@{parentViewModel.location}"
-            onCameraPositionChanged="@{viewModel.onCameraPositionChanged}"
             markerLists="@{viewModel.checkPointList}"/>
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -41,7 +40,7 @@
             android:paddingRight="8dp"
             android:paddingTop="4dp"
             android:paddingBottom="4dp"
-            android:text="@{viewModel.cameraScopeAddress == null ? @string/loading : @string/address_format(viewModel.cameraScopeAddress.largeSiDo, viewModel.cameraScopeAddress.siGunGu, viewModel.cameraScopeAddress.yupMyunDong)}"
+            addressText="@{viewModel.cameraScopeAddress}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

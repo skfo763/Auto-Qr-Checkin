@@ -1,22 +1,30 @@
 package com.skfo763.qrcheckin.lockscreen.fragment
 
 import android.Manifest
+import android.content.Intent
+import android.location.Geocoder
 import android.os.Bundle
-import android.util.Log
+import android.os.Handler
+import android.os.Looper
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
+import com.naver.maps.geometry.LatLng
 import com.skfo763.base.BaseFragment
+import com.skfo763.component.checkmap.CheckInMapViewExt.shouldUseNaverMapOnly
 import com.skfo763.qrcheckin.R
 import com.skfo763.qrcheckin.databinding.FragmentCheckinMapBinding
+import com.skfo763.qrcheckin.lockscreen.receiver.AddressResultReceiver
+import com.skfo763.qrcheckin.lockscreen.service.FetchAddressIntentService
+import com.skfo763.qrcheckin.lockscreen.service.FetchAddressIntentService.Companion.LATITUDE
+import com.skfo763.qrcheckin.lockscreen.service.FetchAddressIntentService.Companion.LONGITUDE
+import com.skfo763.qrcheckin.lockscreen.service.FetchAddressIntentService.Companion.RECEIVER
 import com.skfo763.qrcheckin.lockscreen.usecase.LockScreenActivityUseCase
 import com.skfo763.qrcheckin.lockscreen.viewmodel.CheckInMapViewModel
 import com.skfo763.qrcheckin.lockscreen.viewmodel.LockScreenViewModel
@@ -37,6 +45,7 @@ class CheckInMapFragment : BaseFragment<FragmentCheckinMapBinding, LockScreenVie
         it.parentViewModel = this.parentViewModel
         it.viewModel = viewModel
         it.checkinMapView.initializeMapSetting()
+        it.checkinMapView.onCameraPositionChanged = this::searchAddress
     }
 
     private val permissionListener = object: PermissionListener {
@@ -55,14 +64,14 @@ class CheckInMapFragment : BaseFragment<FragmentCheckinMapBinding, LockScreenVie
         binding.checkinMapView.onCreate(savedInstanceState)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.checkin_map_toolbar_menu, menu)
-    }
-
     override fun onStart() {
         super.onStart()
         requestPermission()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.checkin_map_toolbar_menu, menu)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -95,6 +104,20 @@ class CheckInMapFragment : BaseFragment<FragmentCheckinMapBinding, LockScreenVie
         }
     }
 
+    private fun searchAddress(location: LatLng) {
+        if(location.shouldUseNaverMapOnly() || !Geocoder.isPresent()) {
+            viewModel.onCameraPositionChanged(location)
+        } else {
+            activity ?: return
+            val intent = Intent(activity, FetchAddressIntentService::class.java).apply {
+                putExtra(LATITUDE, location.latitude)
+                putExtra(LONGITUDE, location.longitude)
+                putExtra(RECEIVER, viewModel.resultReceiver)
+            }
+            activity?.startService(intent)
+        }
+    }
+
     private fun requestPermission() {
         TedPermission.with(context ?: return)
             .setPermissionListener(permissionListener)
@@ -103,5 +126,14 @@ class CheckInMapFragment : BaseFragment<FragmentCheckinMapBinding, LockScreenVie
             .setGotoSettingButtonText("hellohello")
             .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
             .check()
+    }
+
+    private fun showServiceUnavailableDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.geocoder_unavailable_title)
+            .setMessage(R.string.geocoder_unavailable_message)
+            .setPositiveButton(R.string.confirm) { dialog, _ ->
+                dialog.dismiss()
+            }.show()
     }
 }

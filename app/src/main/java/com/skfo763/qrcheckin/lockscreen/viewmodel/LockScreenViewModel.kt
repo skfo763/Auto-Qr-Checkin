@@ -33,7 +33,6 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.*
 
-
 class LockScreenViewModel @ViewModelInject constructor(
     private val lockScreenRepository: LockScreenRepository,
     private val checkInMapRepository: CheckInMapRepository,

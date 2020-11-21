@@ -3,6 +3,7 @@ package com.skfo763.component.qrwebview
 import android.graphics.Bitmap
 import android.util.Log
 import android.webkit.*
+import com.skfo763.component.BuildConfig
 import com.skfo763.component.extensions.parsedUri
 
 class QrCheckInWebClient(
@@ -10,6 +11,7 @@ class QrCheckInWebClient(
 ): WebViewClient() {
 
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+        if(BuildConfig.DEBUG) Log.d(this::class.java.simpleName, request?.url?.toString() ?: "empty url")
         return webClientInterface.onUrlLoadReceived(view, request?.url)
     }
 
