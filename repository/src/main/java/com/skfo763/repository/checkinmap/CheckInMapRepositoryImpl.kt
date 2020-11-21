@@ -1,6 +1,7 @@
 package com.skfo763.repository.checkinmap
 
 import android.util.Log
+import com.skfo763.base.logMessage
 import com.skfo763.remote.api.NaverMapApi
 import com.skfo763.remote.data.ComplexRegion
 import com.skfo763.repository.model.CheckInAddress
@@ -86,7 +87,7 @@ class CheckInMapRepositoryImpl @Inject constructor(
     override suspend fun startTrackingLocation() {
         withContext(Dispatchers.Main) {
             gpsManager.startLocationUpdate().collect {
-                Log.d("hellohello", "hellohello")
+                logMessage("starting location updating success")
             }
         }
     }
@@ -94,7 +95,7 @@ class CheckInMapRepositoryImpl @Inject constructor(
     override suspend fun stopTrackingLocation() {
         withContext(Dispatchers.IO) {
             gpsManager.stopLocationUpdate().collect {
-                Log.d("hellohello", "hellohello")
+                logMessage("stopping location updating success")
             }
         }
     }

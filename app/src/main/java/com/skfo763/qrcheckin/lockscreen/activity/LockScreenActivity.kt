@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.view.Menu
 import android.view.MenuItem
 import android.view.WindowManager
 import androidx.activity.viewModels
@@ -16,7 +15,6 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
-import com.gun0912.tedpermission.PermissionListener
 import com.skfo763.qrcheckin.R
 import com.skfo763.qrcheckin.admob.AdMobManager
 import com.skfo763.qrcheckin.databinding.ActivityLockScreenBinding
@@ -70,18 +68,16 @@ class LockScreenActivity (
         setToolbar()
         checkOverlayOption()
         adMobManager.putAddToCustomContainer(binding.lockScreenAdViewContainer)
-        viewModel.inAppReview()
-        requestLocationPermissions(viewModel.startTrackingLocationListener)
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         clearDismissKeyGuard()
         clearScreenOnLocked()
         if(this.isLocationPermissionGranted) {
             viewModel.stopTrackingLocation()
         }
+        super.onDestroy()
     }
 
     private fun showPermissionDialog(doOnPositiveClicked: () -> Unit) {
@@ -102,6 +98,8 @@ class LockScreenActivity (
             showPermissionDialog {
                 requestOverlayOptions()
             }
+        } else {
+            requestLocationPermissions(viewModel.startTrackingLocationListener)
         }
     }
 

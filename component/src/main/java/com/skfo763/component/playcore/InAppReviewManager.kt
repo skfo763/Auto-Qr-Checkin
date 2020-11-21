@@ -22,7 +22,7 @@ class InAppReviewManager @Inject constructor(private val activity: Activity) {
         if(BuildConfig.DEBUG) FakeReviewManager(activity)
         else ReviewManagerFactory.create(activity)
 
-    fun shouldReviewApp(random: Random) = if(BuildConfig.DEBUG) true else random.nextInt(6) == 0
+    fun shouldReviewApp(random: Random) = if(BuildConfig.DEBUG) false else random.nextInt(8) == 0
 
     fun launchReviewFlow(onRequestComplete: (Boolean) -> Unit, onRequestFailed: (Exception) -> Unit) {
         requestReviewFlow({

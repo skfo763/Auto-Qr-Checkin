@@ -63,7 +63,9 @@ class QrCheckInWebView @JvmOverloads constructor(
         return true
     }
 
-    override fun onWebPageLoadStart(view: WebView?, url: String?, favicon: Bitmap?) = Unit
+    override fun onWebPageLoadStart(view: WebView?, url: String?, favicon: Bitmap?) {
+        uriChecker.checkUrlForCheckInFlow(url)
+    }
 
     private fun showDialog(title: String, message: String, linkUrl: String?, existingUrl: String) {
         AlertDialog.Builder(context)

@@ -15,6 +15,8 @@ object Versions {
     const val hilt = "2.28-alpha"
     const val hiltApp = "1.0.0-alpha01"
     const val coroutine = "1.3.9"
+    const val rxJava = "3.0.7"
+    const val rxAndroid = "3.0.0"
     const val lifeCycleExt = "2.2.0"
 
     const val dataStore = "1.0.0-alpha01"

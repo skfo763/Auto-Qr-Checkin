@@ -12,6 +12,7 @@ import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.LocationOverlay
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
+import com.skfo763.base.logMessage
 
 class CheckInMapView @JvmOverloads constructor(
     context: Context,
@@ -66,9 +67,7 @@ class CheckInMapView @JvmOverloads constructor(
     }
 
     override fun onCameraChange(reason: Int, animated: Boolean) {
-        if(BuildConfig.DEBUG) {
-            Log.d("NaverMap", "카메라 변경 - reson: $reason, animated: $animated")
-        }
+        logMessage("camera changed - reason: $reason, animated: $animated")
     }
 
     override fun onCameraIdle() {

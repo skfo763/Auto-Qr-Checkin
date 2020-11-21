@@ -8,10 +8,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.gun0912.tedpermission.PermissionListener
 import com.skfo763.base.BaseViewModel
 import com.skfo763.base.BuildConfig
+import com.skfo763.base.logException
+import com.skfo763.base.logMessage
 import com.skfo763.component.floatingwidget.FloatingWidgetService
 import com.skfo763.component.floatingwidget.FloatingWidgetView.Companion.CURR_X
 import com.skfo763.component.floatingwidget.FloatingWidgetView.Companion.CURR_Y
@@ -27,9 +28,19 @@ import com.skfo763.repository.lockscreen.LockScreenRepository
 import com.skfo763.repository.model.CheckPoint
 import com.skfo763.repository.model.LanguageState
 import com.skfo763.storage.gps.GpsException
-import kotlinx.coroutines.flow.collect
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.BackpressureStrategy
+import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.Subject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class LockScreenViewModel @ViewModelInject constructor(
     private val lockScreenRepository: LockScreenRepository,
@@ -40,6 +51,7 @@ class LockScreenViewModel @ViewModelInject constructor(
 ) : BaseViewModel<LockScreenActivityUseCase>() {
 
     private val random = Random()
+    private val subject: Subject<String> = BehaviorSubject.createDefault("").toSerialized()
 
     private val _isLockScreenChecked = MutableLiveData<Boolean>()
     private val _isWidgetChecked = MutableLiveData<Boolean>()
@@ -167,6 +179,7 @@ class LockScreenViewModel @ViewModelInject constructor(
     val startTrackingLocationListener = object: PermissionListener {
         override fun onPermissionGranted() {
             viewModelScope.launch {
+                startPlayCoreFlow()
                 checkInMapRepository.startTrackingLocation()
             }
         }
@@ -179,10 +192,23 @@ class LockScreenViewModel @ViewModelInject constructor(
         }
     }
 
+    val onCheckInComplete: (String?) -> Unit = {
+        subject.onNext(it ?: "")
+    }
+
     init {
-        useCase.onActivityInAppUpdateResult = inAppUpdateManager.handleInAppUpdateResult
         setLockScreenSwitchToSavedState()
         setWidgetSwitchToSavedState()
+        observeCheckInFlowable()
+    }
+
+    private fun observeCheckInFlowable() {
+        subject.toFlowable(BackpressureStrategy.BUFFER)
+            .observeOn(Schedulers.io())
+            .throttleFirst(5000L, TimeUnit.MILLISECONDS)
+            .subscribe({
+                logMessage("onPageStarted - checkin : $it")
+            }) { logException(Exception(it)) }
     }
 
     fun deleteFloatingButton() {
@@ -219,22 +245,17 @@ class LockScreenViewModel @ViewModelInject constructor(
         return errorList.map { ErrorFormat(it.url, it.title, it.message, it.alternativeUrl) }
     }
 
-    fun inAppReview() {
-        if(inAppReviewManager.shouldReviewApp(random)) {
+    private fun startPlayCoreFlow() {
+        useCase.onActivityInAppUpdateResult = inAppUpdateManager.handleInAppUpdateResult
+        if(inAppUpdateManager.shouldUpdateApp(random)) {
+            inAppUpdateManager.launchUpdateFlow {
+                logException(it)
+            }
+        } else if(inAppReviewManager.shouldReviewApp(random)) {
             inAppReviewManager.launchReviewFlow({
                 sendReviewCompleteEvent(it)
             }) {
-                FirebaseCrashlytics.getInstance().recordException(it)
-            }
-        }
-    }
-
-    fun inAppUpdate() {
-        if(inAppUpdateManager.shouldUpdateApp(random)) {
-            inAppUpdateManager.launchUpdateFlow({
-
-            }) {
-                FirebaseCrashlytics.getInstance().recordException(it)
+                logException(it)
             }
         }
     }
@@ -260,6 +281,7 @@ class LockScreenViewModel @ViewModelInject constructor(
     }
 
     fun saveCheckPoint() {
+        if(!useCase.isLocationPermissionGranted) return
         viewModelScope.launch {
             try {
                 val location = checkInMapRepository.getLastKnownLocation() ?: return@launch

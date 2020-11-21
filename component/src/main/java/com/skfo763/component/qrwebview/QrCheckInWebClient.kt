@@ -3,6 +3,7 @@ package com.skfo763.component.qrwebview
 import android.graphics.Bitmap
 import android.util.Log
 import android.webkit.*
+import com.skfo763.base.logMessage
 import com.skfo763.component.BuildConfig
 import com.skfo763.component.extensions.parsedUri
 
@@ -11,7 +12,7 @@ class QrCheckInWebClient(
 ): WebViewClient() {
 
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-        if(BuildConfig.DEBUG) Log.d(this::class.java.simpleName, request?.url?.toString() ?: "empty url")
+        logMessage("shouldOverrideUrlLoading : " + request?.url?.toString())
         return webClientInterface.onUrlLoadReceived(view, request?.url)
     }
 
@@ -21,10 +22,12 @@ class QrCheckInWebClient(
     }
 
     override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+        logMessage("onPageStarted : $url")
         return webClientInterface.onWebPageLoadStart(view, url, favicon)
     }
 
     override fun onPageFinished(view: WebView?, url: String?) {
+        logMessage("onPageFinished : $url")
         super.onPageFinished(view, url)
     }
 
@@ -33,7 +36,7 @@ class QrCheckInWebClient(
         request: WebResourceRequest?,
         errorResponse: WebResourceResponse?
     ) {
-        Log.d("QrCheckInWebView", "onReceivedError" + errorResponse?.data?.toString())
+        logMessage("onReceivedError" + errorResponse?.data?.toString())
         super.onReceivedHttpError(view, request, errorResponse)
     }
 
@@ -42,7 +45,7 @@ class QrCheckInWebClient(
         request: WebResourceRequest?,
         error: WebResourceError?
     ) {
-        Log.d("QrCheckInWebView", "onReceivedError" + error?.toString())
+        logMessage("onReceivedError" + error?.toString())
         super.onReceivedError(view, request, error)
     }
 

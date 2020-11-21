@@ -30,7 +30,7 @@ abstract class ActivityModule {
 
         @Provides
         fun provideInAppUpdateManager(activity: Activity): InAppUpdateManager {
-            return InAppUpdateManager(activity, activity.)
+            return InAppUpdateManager(activity)
         }
 
         @Provides

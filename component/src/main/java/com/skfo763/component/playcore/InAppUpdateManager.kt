@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Activity.RESULT_CANCELED
 import android.app.Activity.RESULT_OK
 import android.content.Intent
+import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import androidx.annotation.IdRes
@@ -24,10 +25,7 @@ import java.util.*
 import javax.inject.Inject
 
 @ActivityScoped
-class InAppUpdateManager @Inject constructor(
-    private val activity: Activity,
-    private val snackBarView: View
-) {
+class InAppUpdateManager @Inject constructor(private val activity: Activity) {
     companion object {
         const val REQUEST_APP_UPDATE = 32145064
     }
@@ -46,9 +44,9 @@ class InAppUpdateManager @Inject constructor(
         }
     }
 
-    fun shouldUpdateApp(random: Random) = if(BuildConfig.DEBUG) true else random.nextInt(6) == 0
+    fun shouldUpdateApp(random: Random) = false
 
-    fun launchUpdateFlow(onRequestComplete: (Boolean) -> Unit, onRequestFailed: (Exception) -> Unit) {
+    fun launchUpdateFlow(onRequestFailed: (Exception) -> Unit) {
         appUpdateManager.appUpdateInfo
             .addOnSuccessListener {
                 if(it.isUpdateAvailable) {
@@ -65,6 +63,9 @@ class InAppUpdateManager @Inject constructor(
                 when(it.installStatus()) {
                     InstallStatus.DOWNLOADED -> popupSnackBarForCompleteUpdate()
                     InstallStatus.DOWNLOADING -> onUpdateProgress(it.downloadPercentile)
+                    else -> {
+
+                    }
                 }
             }
     }
@@ -86,20 +87,20 @@ class InAppUpdateManager @Inject constructor(
     val handleInAppUpdateResult: (Int, Intent?) -> Unit = { resultCode, data ->
         when(resultCode) {
             RESULT_OK -> {
-
+                popupSnackBarForCompleteUpdate()
             }
             RESULT_CANCELED -> {
-
+                Log.e(this::class.java.simpleName, "app update canceled")
             }
             ActivityResult.RESULT_IN_APP_UPDATE_FAILED -> {
-
+                Log.e(this::class.java.simpleName, "app update failed")
             }
         }
     }
 
     private fun popupSnackBarForCompleteUpdate() {
         Snackbar.make(
-            snackBarView,
+            activity.window.decorView,
             activity.getString(R.string.update_complete),
             Snackbar.LENGTH_INDEFINITE
         ).setAction(R.string.restart_app) {

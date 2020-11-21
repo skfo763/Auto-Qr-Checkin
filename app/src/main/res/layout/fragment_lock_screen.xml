@@ -29,7 +29,8 @@
             errorCaseList="@{parentViewModel.errorList}"
             checkInUrl="@{parentViewModel.urlForCheckIn}"
             onOtherAppOpen="@{parentViewModel.onOtherAppOpen}"
-            onInvalidUrlLoaded="@{parentViewModel.onFailedUrlLoaded}"/>
+            onInvalidUrlLoaded="@{parentViewModel.onFailedUrlLoaded}"
+            onCheckIn="@{parentViewModel.onCheckInComplete}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

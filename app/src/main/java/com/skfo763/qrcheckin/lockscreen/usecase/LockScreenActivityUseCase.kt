@@ -11,6 +11,7 @@ import com.skfo763.base.BaseActivityUseCase
 import com.skfo763.component.extensions.parsedUri
 import com.skfo763.component.playcore.InAppUpdateManager
 import com.skfo763.qrcheckin.lockscreen.activity.LockScreenActivity
+import com.skfo763.storage.gps.isLocationPermissionGranted
 
 class LockScreenActivityUseCase constructor(
     private val activity: LockScreenActivity
@@ -21,6 +22,8 @@ class LockScreenActivityUseCase constructor(
     }
 
     var onActivityInAppUpdateResult: ((Int, Intent?) -> Unit)? = null
+
+    val isLocationPermissionGranted: Boolean get() = activity.isLocationPermissionGranted
 
     fun openUrl(url: String?) {
         try {

@@ -2,14 +2,17 @@ package com.skfo763.component.qrwebview
 
 import android.net.Uri
 import android.util.Log
+import com.skfo763.base.logMessage
 import com.skfo763.component.extensions.containsAtLeast
 import com.skfo763.component.extensions.getMatchedErrorFormat
 import com.skfo763.component.extensions.hostSafeArg
 
 class UriChecker {
 
+    var checkInUrl: String = ""
     var doOnInvalidUrlLoaded: ((String?) -> Unit)? = null
     var doOnOpenOtherApp: ((String?) -> Unit)? = null
+    var doCheckIn: ((String?) -> Unit)? = null
     var showDialog: ((Uri, ErrorFormat) -> Unit)? = null
     var loadUrl: ((String) -> Unit)? = null
     var availableHost: List<String> = listOf()
@@ -20,8 +23,12 @@ class UriChecker {
     fun checkUrlFlow(uri: Uri?) {
         uri?.checkUriScheme()?.checkErrorFormat()?.checkAvailableHostAndPath()?.let {
             doOnInvalidUrlLoaded?.invoke(it.toString())
-        } ?: run {
+        }
+    }
 
+    fun checkUrlForCheckInFlow(url: String?) {
+        url?.isCheckInFlow()?.let {
+            logMessage("onPageStarted - NoCheckIn : $url")
         }
     }
 
@@ -51,6 +58,13 @@ class UriChecker {
     private fun Uri.checkAvailableHostAndPath(): Uri? {
         return if(availableHost.contains(this.hostSafeArg) && availablePath.containsAtLeast(this.pathSegments)) {
             loadUrl?.invoke(this.toString())
+            null
+        } else this
+    }
+
+    private fun String.isCheckInFlow(): String? {
+        return if(equals(checkInUrl)) {
+            doCheckIn?.invoke(this)
             null
         } else this
     }

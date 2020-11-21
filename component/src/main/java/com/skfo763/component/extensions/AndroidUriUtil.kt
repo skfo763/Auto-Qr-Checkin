@@ -1,7 +1,7 @@
 package com.skfo763.component.extensions
 
 import android.net.Uri
-import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.skfo763.base.logException
 import com.skfo763.component.qrwebview.ErrorFormat
 
 val String?.parsedUri: Uri? get() = try {
@@ -37,7 +37,7 @@ fun List<ErrorFormat>.getMatchedErrorFormat(uri: Uri): ErrorFormat? {
             }
         }
     } catch (e: Exception) {
-        FirebaseCrashlytics.getInstance().recordException(e)
+        logException(e)
     } finally {
         return matchedErrorFormat
     }

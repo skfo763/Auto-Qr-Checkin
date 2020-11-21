@@ -6,13 +6,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
-import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 
 const val PERMISSION_SETTING_REQUEST_CODE = 27447351
-
 
 fun Context.checkPermissionGranted(vararg permission: String): Boolean {
     return !permission.any {
@@ -35,8 +32,8 @@ fun Fragment.startSettingActivity() {
         }
         startActivityForResult(intent, PERMISSION_SETTING_REQUEST_CODE)
     } catch (e: ActivityNotFoundException) {
-        FirebaseCrashlytics.getInstance().log(e.message ?: "unknown")
+        logError(e.message)
     } catch (e: Exception) {
-        Log.e(this::class.java.simpleName, e.message ?: "unknown")
+        logException(e)
     }
 }

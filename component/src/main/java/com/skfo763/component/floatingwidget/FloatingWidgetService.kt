@@ -4,17 +4,11 @@ import android.app.Service
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.FrameLayout
-import com.google.firebase.crashlytics.FirebaseCrashlytics
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
-import com.skfo763.component.R
+import com.skfo763.base.logException
 import com.skfo763.component.floatingwidget.FloatingWidgetView.Companion.CURR_X
 import com.skfo763.component.floatingwidget.FloatingWidgetView.Companion.CURR_Y
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 open class FloatingWidgetService @Inject constructor(): Service() {
@@ -41,7 +35,7 @@ open class FloatingWidgetService @Inject constructor(): Service() {
         try {
             client.mWindowManager.addView(floatingWidgetView, client.params)
         } catch (e: RuntimeException) {
-            FirebaseCrashlytics.getInstance().recordException(e)
+            logException(e)
         } finally {
             setListeners()
         }

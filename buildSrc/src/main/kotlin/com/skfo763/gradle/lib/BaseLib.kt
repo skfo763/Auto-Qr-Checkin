@@ -10,6 +10,11 @@ object AndroidCoreKtxLib {
     const val fragmentKtx = "androidx.fragment:fragment-ktx:${Versions.fragmentKtx}"
 }
 
+object RxJavaLib {
+    const val rxJava = "io.reactivex.rxjava3:rxjava:${Versions.rxJava}"
+    const val rxAndroid = "io.reactivex.rxjava3:rxandroid:${Versions.rxAndroid}"
+}
+
 object KotlinLib {
     const val kotlin = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}"
     const val coroutine = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutine}"
@@ -34,6 +39,11 @@ fun DependencyHandler.kotlinDependency() {
     implementation(KotlinLib.kotlin)
     implementation(KotlinLib.coroutine)
     implementation(KotlinLib.coroutineExt)
+}
+
+fun DependencyHandler.rxJavaDependency() {
+    implementation(RxJavaLib.rxJava)
+    implementation(RxJavaLib.rxAndroid)
 }
 
 fun DependencyHandler.daggerHiltDependency() {

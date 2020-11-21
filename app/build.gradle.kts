@@ -52,6 +52,7 @@ dependencies {
     implementation(project(":remote"))
 
     kotlinDependency()
+    rxJavaDependency()
     androidCoreKtxDependency()
     daggerHiltDependency()
     lifecycleDependency()

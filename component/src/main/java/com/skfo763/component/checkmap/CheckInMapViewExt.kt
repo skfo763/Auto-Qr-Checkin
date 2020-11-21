@@ -22,7 +22,7 @@ object CheckInMapViewExt {
         markerLists ?: return
         currentMarkers = markerLists.map {
             Marker().apply {
-                position = LatLng(it.latitude.toDouble(), it.longitude.toDouble())
+                position = LatLng(it.latitude, it.longitude)
                 width = Marker.SIZE_AUTO
                 height = Marker.SIZE_AUTO
                 tag = it.checkInTimeString
