@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.MenuItem
 import android.view.WindowManager
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
@@ -22,6 +23,7 @@ import com.skfo763.qrcheckin.extension.*
 import com.skfo763.qrcheckin.lockscreen.usecase.LockScreenActivityUseCase
 import com.skfo763.qrcheckin.lockscreen.viewmodel.LockScreenViewModel
 import com.skfo763.base.BaseActivity
+import com.skfo763.component.bixbysetting.BixbyLandingManager
 import com.skfo763.component.tracker.FirebaseTracker
 import com.skfo763.storage.gps.isLocationPermissionGranted
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,6 +44,7 @@ class LockScreenActivity (
     private lateinit var appBarConfiguration: AppBarConfiguration
     @Inject lateinit var adMobManager: AdMobManager
     @Inject lateinit var firebaseTracker: FirebaseTracker
+    @Inject lateinit var bixbyManager: BixbyLandingManager
 
     override val bindingVariable: (ActivityLockScreenBinding) -> Unit = {
         it.viewModel = viewModel
@@ -124,16 +127,6 @@ class LockScreenActivity (
         }
     }
 
-    override fun onBackPressed() {
-        if(binding.lockScreenDrawerlayout.isDrawerOpen(GravityCompat.START)) {
-            binding.lockScreenDrawerlayout.closeDrawer(GravityCompat.START)
-        } else {
-            adMobManager.showInterstitialAd {
-                super.onBackPressed()
-            }
-        }
-    }
-
     override fun onStart() {
         super.onStart()
         viewModel.deleteFloatingButton()
@@ -144,6 +137,23 @@ class LockScreenActivity (
         super.onStop()
         viewModel.createFloatingButton()
         viewModel.sendCheckStateProperty()
+    }
+
+    override fun onBackPressed() {
+        when {
+            binding.lockScreenDrawerlayout.isDrawerOpen(GravityCompat.START) -> {
+                binding.lockScreenDrawerlayout.closeDrawer(GravityCompat.START)
+            }
+            adMobManager.shouldShowInterstitialAd -> {
+                adMobManager.showInterstitialAd()
+            }
+            viewModel.shouldReviewApp -> {
+                viewModel.startReviewFlow { super.onBackPressed() }
+            }
+            else -> {
+                super.onBackPressed()
+            }
+        }
     }
 
 }

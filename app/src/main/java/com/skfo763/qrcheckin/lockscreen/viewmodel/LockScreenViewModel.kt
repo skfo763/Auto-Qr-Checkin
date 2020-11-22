@@ -14,6 +14,7 @@ import com.skfo763.base.BaseViewModel
 import com.skfo763.base.BuildConfig
 import com.skfo763.base.logException
 import com.skfo763.base.logMessage
+import com.skfo763.component.bixbysetting.BixbyLandingManager
 import com.skfo763.component.floatingwidget.FloatingWidgetService
 import com.skfo763.component.floatingwidget.FloatingWidgetView.Companion.CURR_X
 import com.skfo763.component.floatingwidget.FloatingWidgetView.Companion.CURR_Y
@@ -47,6 +48,7 @@ class LockScreenViewModel @ViewModelInject constructor(
     private val checkInMapRepository: CheckInMapRepository,
     private val inAppReviewManager: InAppReviewManager,
     private val inAppUpdateManager: InAppUpdateManager,
+    private val bixbyLandingManager: BixbyLandingManager,
     @Assisted private val savedStateHandle: SavedStateHandle
 ) : BaseViewModel<LockScreenActivityUseCase>() {
 
@@ -57,6 +59,7 @@ class LockScreenViewModel @ViewModelInject constructor(
     private val random = Random()
     private var currLocation = Pair(0.0, 0.0)
     private val subject: Subject<String> = BehaviorSubject.create()
+    val shouldReviewApp: Boolean get() = inAppReviewManager.shouldReviewApp(random)
 
     private val _isLockScreenChecked = MutableLiveData<Boolean>()
     private val _isWidgetChecked = MutableLiveData<Boolean>()
@@ -188,7 +191,7 @@ class LockScreenViewModel @ViewModelInject constructor(
     val startTrackingLocationListener = object: PermissionListener {
         override fun onPermissionGranted() {
             viewModelScope.launch {
-                startPlayCoreFlow()
+                startInAppUpdateFlow()
                 checkInMapRepository.startTrackingLocation()
             }
         }
@@ -204,6 +207,10 @@ class LockScreenViewModel @ViewModelInject constructor(
     val onCheckInComplete: (String?) -> Unit = {
         logMessage("hellohello - step 1 : $it")
         subject.onNext(it ?: "")
+    }
+
+    val moveToBixbySettings: () -> Unit = {
+        bixbyLandingManager.startBixbySettingIntent()
     }
 
     init {
@@ -265,16 +272,20 @@ class LockScreenViewModel @ViewModelInject constructor(
         return errorList.map { ErrorFormat(it.url, it.title, it.message, it.alternativeUrl) }
     }
 
-    private fun startPlayCoreFlow() {
+    fun startReviewFlow(onReviewFlowEnded: () -> Unit) {
+        inAppReviewManager.launchReviewFlow({
+            sendReviewCompleteEvent(it)
+            onReviewFlowEnded()
+        }) {
+            logException(it)
+            onReviewFlowEnded()
+        }
+    }
+
+    fun startInAppUpdateFlow() {
         useCase.onActivityInAppUpdateResult = inAppUpdateManager.handleInAppUpdateResult
         if(inAppUpdateManager.shouldUpdateApp(random)) {
             inAppUpdateManager.launchUpdateFlow {
-                logException(it)
-            }
-        } else if(inAppReviewManager.shouldReviewApp(random)) {
-            inAppReviewManager.launchReviewFlow({
-                sendReviewCompleteEvent(it)
-            }) {
                 logException(it)
             }
         }

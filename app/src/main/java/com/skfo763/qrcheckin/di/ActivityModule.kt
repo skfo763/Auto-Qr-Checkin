@@ -3,6 +3,7 @@ package com.skfo763.qrcheckin.di
 import android.app.Activity
 import android.os.Handler
 import android.os.Looper
+import com.skfo763.component.bixbysetting.BixbyLandingManager
 import com.skfo763.component.playcore.InAppReviewManager
 import com.skfo763.component.playcore.InAppUpdateManager
 import com.skfo763.qrcheckin.admob.AdMobManager
@@ -56,6 +57,11 @@ abstract class ActivityModule {
         @Provides
         fun provideAddressResultReceiver(): AddressResultReceiver {
             return AddressResultReceiver(Handler(Looper.getMainLooper()))
+        }
+
+        @Provides
+        fun provideBixbyLandingManager(activity: Activity): BixbyLandingManager {
+            return BixbyLandingManager(activity)
         }
     }
 }

@@ -20,11 +20,12 @@ class AdMobManager @Inject constructor(
 ) : LifecycleObserver {
 
     private var initialLayoutComplete = false
-    private var isInterstitialAdShown = false
     private val random = Random()
 
     private val adView = AdView(activity)
     private val mInterstitialAd = InterstitialAd(activity)
+
+    val shouldShowInterstitialAd: Boolean get() = mInterstitialAd.isLoaded && random.nextInt(4) == 0
 
     init {
         MobileAds.initialize(activity) { }
@@ -42,14 +43,8 @@ class AdMobManager @Inject constructor(
         }
     }
 
-    fun showInterstitialAd(doOnFailed: () -> Unit) {
-        if(mInterstitialAd.isLoaded && !isInterstitialAdShown && random.nextInt(4) == 0) {
-            mInterstitialAd.show()
-            isInterstitialAdShown = true
-        } else {
-            isInterstitialAdShown = false
-            doOnFailed()
-        }
+    fun showInterstitialAd() {
+        mInterstitialAd.show()
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)

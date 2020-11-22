@@ -65,9 +65,11 @@
 
             <View
                 android:id="@+id/lock_screen_divider"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="0.5dp"
                 android:background="#D8D8D8"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/toolbar"
                 app:layout_constraintBottom_toTopOf="@id/lock_screen_nav_host_fragment"/>
 
@@ -80,6 +82,13 @@
                 app:navGraph="@navigation/lock_screen_nav_host"
                 app:layout_constraintTop_toBottomOf="@id/lock_screen_divider"
                 app:layout_constraintBottom_toTopOf="@id/lock_screen_ad_view_container"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <include
+                layout="@layout/view_bixby_setting_banner"
+                bind:viewModel="@{viewModel}"
+                app:layout_constraintTop_toBottomOf="@id/toolbar"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 

@@ -44,7 +44,7 @@ class InAppUpdateManager @Inject constructor(private val activity: Activity) {
         }
     }
 
-    fun shouldUpdateApp(random: Random) = false
+    fun shouldUpdateApp(random: Random) = if(BuildConfig.DEBUG) false else random.nextInt(4) == 0
 
     fun launchUpdateFlow(onRequestFailed: (Exception) -> Unit) {
         appUpdateManager.appUpdateInfo
