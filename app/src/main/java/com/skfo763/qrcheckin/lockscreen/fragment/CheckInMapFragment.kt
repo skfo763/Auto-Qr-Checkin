@@ -88,7 +88,7 @@ class CheckInMapFragment : BaseFragment<FragmentCheckinMapBinding, LockScreenVie
                 super.onOptionsItemSelected(item)
             }
             R.id.toolbar_menu_drop_location_data -> {
-                viewModel.dropLocationDatabase()
+                viewModel.deleteAllCheckPoint()
                 useCase.finishActivity()
                 super.onOptionsItemSelected(item)
             }

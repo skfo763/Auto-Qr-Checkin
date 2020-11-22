@@ -15,6 +15,10 @@ fun DependencyHandler.compileOnly(name: String) {
     add("compileOnly", name)
 }
 
+fun DependencyHandler.debugImplementation(name: String) {
+    add("debugImplementation", name)
+}
+
 fun DependencyHandler.testImplementation(name: String) {
     add("testImplementation", name)
 }

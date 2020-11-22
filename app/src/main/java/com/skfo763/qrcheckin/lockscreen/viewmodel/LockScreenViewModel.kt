@@ -1,5 +1,6 @@
 package com.skfo763.qrcheckin.lockscreen.viewmodel
 
+import android.location.Location
 import android.os.Bundle
 import android.widget.CompoundButton
 import androidx.hilt.Assisted
@@ -20,27 +21,26 @@ import com.skfo763.component.playcore.InAppReviewManager
 import com.skfo763.component.playcore.InAppUpdateManager
 import com.skfo763.component.qrwebview.ErrorFormat
 import com.skfo763.component.tracker.FirebaseAnalyticsCustom
+import com.skfo763.qrcheckin.R
 import com.skfo763.qrcheckin.lockscreen.service.LockScreenService
 import com.skfo763.qrcheckin.lockscreen.usecase.LockScreenActivityUseCase
 import com.skfo763.remote.data.QrCheckInError
 import com.skfo763.repository.checkinmap.CheckInMapRepository
 import com.skfo763.repository.lockscreen.LockScreenRepository
+import com.skfo763.repository.model.CheckInUrl
 import com.skfo763.repository.model.CheckPoint
 import com.skfo763.repository.model.LanguageState
 import com.skfo763.storage.gps.GpsException
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.Subject
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.channels.BroadcastChannel
-import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 class LockScreenViewModel @ViewModelInject constructor(
     private val lockScreenRepository: LockScreenRepository,
@@ -50,8 +50,13 @@ class LockScreenViewModel @ViewModelInject constructor(
     @Assisted private val savedStateHandle: SavedStateHandle
 ) : BaseViewModel<LockScreenActivityUseCase>() {
 
+    companion object {
+        private const val minDistance = 4.242640687119285E-5
+    }
+
     private val random = Random()
-    private val subject: Subject<String> = BehaviorSubject.createDefault("").toSerialized()
+    private var currLocation = Pair(0.0, 0.0)
+    private val subject: Subject<String> = BehaviorSubject.create()
 
     private val _isLockScreenChecked = MutableLiveData<Boolean>()
     private val _isWidgetChecked = MutableLiveData<Boolean>()
@@ -173,7 +178,11 @@ class LockScreenViewModel @ViewModelInject constructor(
     }
 
     val onVersionClicked = {
-        // TODO(버전 클릭 시 로직 추가)
+        inAppReviewManager.launchReviewFlow({
+            sendReviewCompleteEvent(it)
+        }) {
+            logException(it)
+        }
     }
 
     val startTrackingLocationListener = object: PermissionListener {
@@ -193,6 +202,7 @@ class LockScreenViewModel @ViewModelInject constructor(
     }
 
     val onCheckInComplete: (String?) -> Unit = {
+        logMessage("hellohello - step 1 : $it")
         subject.onNext(it ?: "")
     }
 
@@ -203,11 +213,13 @@ class LockScreenViewModel @ViewModelInject constructor(
     }
 
     private fun observeCheckInFlowable() {
-        subject.toFlowable(BackpressureStrategy.BUFFER)
+        subject.toSerialized().toFlowable(BackpressureStrategy.BUFFER)
             .observeOn(Schedulers.io())
-            .throttleFirst(5000L, TimeUnit.MILLISECONDS)
+            .throttleFirst(2000L, TimeUnit.MILLISECONDS)
+            .delay(5000L, TimeUnit.MILLISECONDS)
             .subscribe({
-                logMessage("onPageStarted - checkin : $it")
+                if(it.isEmpty()) return@subscribe
+                saveCheckPoint()
             }) { logException(Exception(it)) }
     }
 
@@ -230,14 +242,22 @@ class LockScreenViewModel @ViewModelInject constructor(
     fun setQrCheckIn() {
         _isLoading.value = true
         viewModelScope.launch {
-            lockScreenRepository.getNaverQrCheckInUrl().collect {
-                _availableHost.value = it.availableHost
-                _availablePath.value = it.availablePath
-                _appLandingScheme.value = it.appLandingScheme
-                _urlForCheckIn.value = it.url
-                _errorList.value = convertToWebErrorFormat(it.errorList)
-                _isLoading.value = false
+            withContext(Dispatchers.IO) {
+                lockScreenRepository.getNaverQrCheckInUrl().collect {
+                    setCheckInUrlInfo(it)
+                }
             }
+        }
+    }
+
+    private suspend fun setCheckInUrlInfo(checkInUrl: CheckInUrl) {
+        withContext(Dispatchers.Main) {
+            _availableHost.value = checkInUrl.availableHost
+            _availablePath.value = checkInUrl.availablePath
+            _appLandingScheme.value = checkInUrl.appLandingScheme
+            _urlForCheckIn.value = checkInUrl.url
+            _errorList.value = convertToWebErrorFormat(checkInUrl.errorList)
+            _isLoading.value = false
         }
     }
 
@@ -280,26 +300,35 @@ class LockScreenViewModel @ViewModelInject constructor(
         )
     }
 
-    fun saveCheckPoint() {
-        if(!useCase.isLocationPermissionGranted) return
+    private fun saveCheckPoint() {
+        if(!useCase.isActivityForeground || !useCase.isLocationPermissionGranted) return
         viewModelScope.launch {
             try {
                 val location = checkInMapRepository.getLastKnownLocation() ?: return@launch
+                if(location.isSameCoordinate(currLocation)) return@launch
+                currLocation = location.latitude to location.longitude
                 val address = checkInMapRepository.getAddressFromLocation(location.latitude, location.longitude)
-                val checkPoint = CheckPoint(
-                    location.latitude,
-                    location.longitude,
-                    address,
-                    System.currentTimeMillis()
-                )
-                checkInMapRepository.saveCheckPoint(checkPoint)
+                val checkPoint = CheckPoint(location.latitude, location.longitude, address, System.currentTimeMillis())
+                if(checkInMapRepository.saveCheckPoint(checkPoint)) {
+                    showCheckInConfirmSnackBar(checkPoint)
+                }
             } catch (e: GpsException) {
-                // TODO(에러 로직 일원화)
-                e.printStackTrace()
+                logException(Exception(e))
             } catch (e: Exception) {
-                // TODO(에러 로직 일원화)
-                e.printStackTrace()
+                logException(Exception(e))
             }
         }
+    }
+
+    private fun showCheckInConfirmSnackBar(checkIn: CheckPoint) {
+        useCase.showSnackBar(
+            useCase.res.getString(R.string.location_checkin_complete) +
+                    "${checkIn.address.largeSiDo} ${checkIn.address.siGunGu} ${checkIn.address.yupMyunDong}")
+    }
+
+    private fun Location.isSameCoordinate(prevLocation: Pair<Double, Double>): Boolean {
+        val latDistance = (latitude - prevLocation.first).pow(2)
+        val lngDistance = (longitude - prevLocation.second).pow(2)
+        return sqrt(latDistance + lngDistance) <= minDistance
     }
 }

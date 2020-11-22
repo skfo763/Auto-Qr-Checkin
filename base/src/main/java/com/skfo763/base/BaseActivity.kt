@@ -35,6 +35,7 @@ abstract class BaseActivity<B : ViewDataBinding, V: BaseViewModel<U>, U: IBaseAc
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, layoutResId)
         binding.lifecycleOwner = this
+        lifecycle.addObserver(useCase)
         bindingVariable.invoke(binding)
         viewModel.useCase = useCase
 

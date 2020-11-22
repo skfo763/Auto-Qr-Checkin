@@ -5,8 +5,9 @@ import android.content.Intent
 import android.content.res.Resources
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LifecycleObserver
 
-interface IBaseActivityUseCase {
+interface IBaseActivityUseCase: LifecycleObserver {
 
     val res: Resources
 

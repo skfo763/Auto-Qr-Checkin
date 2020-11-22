@@ -45,6 +45,7 @@ class LockScreenActivity (
 
     override val bindingVariable: (ActivityLockScreenBinding) -> Unit = {
         it.viewModel = viewModel
+        useCase.snackBarWindow = binding.lockScreenNavHostFragment
     }
 
     override fun connectNavHostToController(host: NavHostFragment) {

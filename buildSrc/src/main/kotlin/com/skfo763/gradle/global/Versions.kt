@@ -21,6 +21,7 @@ object Versions {
 
     const val dataStore = "1.0.0-alpha01"
     const val roomVersion = "2.2.5"
+    const val roomDebug = "1.0.6"
     const val material = "1.2.1"
     const val navVersion = "2.3.0"
 

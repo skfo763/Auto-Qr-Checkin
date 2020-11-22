@@ -6,6 +6,7 @@ import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.naver.maps.geometry.LatLng
+import com.skfo763.base.logException
 import com.skfo763.component.checkmap.NaverMapMarker
 import com.skfo763.qrcheckin.lockscreen.receiver.AddressResultReceiver
 import com.skfo763.repository.checkinmap.CheckInMapException
@@ -34,20 +35,17 @@ class CheckInMapViewModel @ViewModelInject constructor(
     val cameraScopeAddress: LiveData<CheckInAddress?> = _cameraScopeAddress
     val checkPointList: LiveData<List<NaverMapMarker>> = _checkPointList
 
-
     init {
         this.resultReceiver.listener = this
     }
 
     fun requestLastKnownLocation() {
         viewModelScope.launch {
-            viewModelScope.launch {
-                withContext(Dispatchers.Main) {
-                    try {
-                        _location.value = checkInMapRepository.getLastKnownLocation() ?: return@withContext
-                    } catch (e: CheckInMapException) {
-                        e.printStackTrace()
-                    }
+            withContext(Dispatchers.Main) {
+                try {
+                    _location.value = checkInMapRepository.getLastKnownLocation() ?: return@withContext
+                } catch (e: CheckInMapException) {
+                    logException(e)
                 }
             }
         }
@@ -56,6 +54,12 @@ class CheckInMapViewModel @ViewModelInject constructor(
     fun getNaverMapAddress(latLng: LatLng) {
         viewModelScope.launch {
             getAddressFromLocation(latLng)
+        }
+    }
+
+    fun deleteAllCheckPoint() {
+        viewModelScope.launch {
+            checkInMapRepository.deleteAllCheckPoint()
         }
     }
 
@@ -72,10 +76,6 @@ class CheckInMapViewModel @ViewModelInject constructor(
         }
     }
 
-    fun dropLocationDatabase() {
-        // TODO(데이터베이스 드랍시키는 로직 추가)
-    }
-
     private val List<CheckPoint>.markerList: List<NaverMapMarker> get() = map {
         NaverMapMarker(
             it.checkPointIdx,
@@ -87,12 +87,14 @@ class CheckInMapViewModel @ViewModelInject constructor(
     }
 
     override fun onReceiveSuccess(result: CheckInAddress) {
-        _cameraScopeAddress.value = result
+        viewModelScope.launch {
+            _cameraScopeAddress.value = result
+            _checkPointList.value = checkInMapRepository.getCheckPoint(result).markerList
+        }
     }
 
     override fun onReceiveError(data: Pair<Int, String>) {
         when(data.first) {
-
 
         }
     }

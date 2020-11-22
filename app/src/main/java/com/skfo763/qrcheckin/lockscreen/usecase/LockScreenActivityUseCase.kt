@@ -4,12 +4,19 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.skfo763.base.BaseActivityUseCase
 import com.skfo763.component.extensions.parsedUri
 import com.skfo763.component.playcore.InAppUpdateManager
+import com.skfo763.qrcheckin.R
 import com.skfo763.qrcheckin.lockscreen.activity.LockScreenActivity
 import com.skfo763.storage.gps.isLocationPermissionGranted
 
@@ -21,9 +28,13 @@ class LockScreenActivityUseCase constructor(
         const val REQ_CODE_OPEN_OTHER_APP = 1000
     }
 
+    var isActivityForeground: Boolean = false
+
     var onActivityInAppUpdateResult: ((Int, Intent?) -> Unit)? = null
 
     val isLocationPermissionGranted: Boolean get() = activity.isLocationPermissionGranted
+
+    var snackBarWindow: View? = null
 
     fun openUrl(url: String?) {
         try {
@@ -58,6 +69,16 @@ class LockScreenActivityUseCase constructor(
 
     fun showToast(s: String) {
         Toast.makeText(activity, s, Toast.LENGTH_SHORT).show()
+    }
+
+    fun showSnackBar(message: String, action: (() -> Unit)? = null) {
+        val snackBar = action?.let {
+            Snackbar.make(snackBarWindow ?: activity.window.decorView, message, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.confirm) { it() }
+        } ?: run {
+            Snackbar.make(snackBarWindow ?: activity.window.decorView, message, Snackbar.LENGTH_LONG)
+        }
+        snackBar.show()
     }
 
     fun logAnalyticsEvent(event: String, param: Bundle) {
@@ -95,5 +116,14 @@ class LockScreenActivityUseCase constructor(
         }
     }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    fun setActivityForegroundStateStart() {
+        isActivityForeground = true
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    fun setActivityForegroundStateStop() {
+        isActivityForeground = false
+    }
 
 }

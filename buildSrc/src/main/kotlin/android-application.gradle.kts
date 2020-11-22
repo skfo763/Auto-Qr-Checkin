@@ -1,3 +1,4 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import com.skfo763.gradle.global.AppVersion
 import com.skfo763.gradle.global.Sdk
 
@@ -27,7 +28,10 @@ android {
 
     buildTypes {
         getByName("release") {
+            val localDBName = gradleLocalProperties(rootDir).getProperty("local.database.name")
+
             isDebuggable = true
+            resValue("string", "DB_PASSWORD_$localDBName", "1027")
         }
 
         getByName("debug") {

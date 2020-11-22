@@ -15,6 +15,7 @@ object RoomLib {
     const val roomRuntime = "androidx.room:room-runtime:${Versions.roomVersion}"
     const val roomKtx = "androidx.room:room-ktx:${Versions.roomVersion}"
     const val roomCompiler = "androidx.room:room-compiler:${Versions.roomVersion}"
+    const val roomDebug = "com.amitshekhar.android:debug-db:${Versions.roomDebug}"
 }
 
 fun DependencyHandler.dataStoreDependency() {
@@ -30,5 +31,6 @@ fun DependencyHandler.googleMapsDependency() {
 fun DependencyHandler.roomDependency() {
     implementation(RoomLib.roomRuntime)
     implementation(RoomLib.roomKtx)
+    debugImplementation(RoomLib.roomDebug)
     kapt(RoomLib.roomCompiler)
 }

@@ -17,9 +17,11 @@ interface CheckInMapRepository {
 
     suspend fun getAllSavedAddress(): List<CheckInAddress>
 
-    suspend fun saveCheckPoint(vararg checkPoint: CheckPoint)
+    suspend fun saveCheckPoint(vararg checkPoint: CheckPoint): Boolean
 
     suspend fun getLastKnownLocation(): Location?
+
+    suspend fun deleteAllCheckPoint()
 
     suspend fun startTrackingLocation()
 

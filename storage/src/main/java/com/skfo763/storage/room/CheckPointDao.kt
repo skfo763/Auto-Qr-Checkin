@@ -23,4 +23,7 @@ interface CheckPointDao {
     @Query("DELETE FROM checkpoint WHERE checkpoint_idx == (:idx)")
     suspend fun deleteCheckPoint(vararg idx: Int)
 
+    @Query("DELETE FROM checkpoint")
+    suspend fun deleteAllCheckPoint()
+
 }

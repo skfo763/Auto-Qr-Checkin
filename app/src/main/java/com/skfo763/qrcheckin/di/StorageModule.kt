@@ -2,6 +2,7 @@ package com.skfo763.qrcheckin.di
 
 import android.app.Application
 import androidx.room.Room
+import com.skfo763.qrcheckin.BuildConfig
 import com.skfo763.storage.datastore.AppDataStore
 import com.skfo763.storage.datastore.LockScreenDataStore
 import com.skfo763.storage.room.CheckPointDatabase
@@ -35,7 +36,7 @@ abstract class StorageModule {
             return Room.databaseBuilder(
                 application.applicationContext,
                 CheckPointDatabase::class.java,
-                "db-checkpoint"
+                BuildConfig.LOCAL_DB_NAME
             ).build()
         }
     }
