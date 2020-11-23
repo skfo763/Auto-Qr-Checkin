@@ -10,6 +10,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.navigation.NavigationView
 import com.skfo763.base.BaseActivity
 import com.skfo763.component.bixbysetting.BixbyLandingManager
 import com.skfo763.component.tracker.FirebaseTracker
@@ -40,6 +41,7 @@ class LockScreenActivity (
         it.viewModel = viewModel
         useCase.snackBarWindow = binding.lockScreenNavHostFragment
         viewModel.setSwitchToSavedState()
+        viewModel.navigationViewModel.useCase = useCase
     }
 
     override fun connectNavHostToController(host: NavHostFragment) {

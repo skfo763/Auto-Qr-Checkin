@@ -1,7 +1,7 @@
 package com.skfo763.repository.checkinmap
 
-import com.skfo763.base.logException
-import com.skfo763.base.logMessage
+import com.skfo763.base.extension.logException
+import com.skfo763.base.extension.logMessage
 import com.skfo763.remote.api.NaverMapApi
 import com.skfo763.remote.data.ComplexRegion
 import com.skfo763.repository.model.CheckInAddress
@@ -76,7 +76,6 @@ class CheckInMapRepositoryImpl @Inject constructor(
             logException(e)
             false
         }
-
     }
 
     override suspend fun getLastKnownLocation() = coroutineScope {

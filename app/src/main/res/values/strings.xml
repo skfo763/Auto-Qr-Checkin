@@ -43,4 +43,6 @@
     <string name="permission_denied_title">권한 거부 안내</string>
     <string name="permission_denied_message">위치 권한이 거부되었습니다. 방문 기록 확인을 위해 권한을 동의해 주세요!</string>
     <string name="permission_goto_settings">설정으로 이동하기</string>
+    <string name="nav_function_auto_checkin">자동 체크인 기능 사용</string>
+    <string name="nav_app_info_open_help">앱 사용설명서 열기</string>
 </resources>

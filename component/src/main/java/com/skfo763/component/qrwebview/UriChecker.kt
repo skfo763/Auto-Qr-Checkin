@@ -1,8 +1,7 @@
 package com.skfo763.component.qrwebview
 
 import android.net.Uri
-import android.util.Log
-import com.skfo763.base.logMessage
+import com.skfo763.base.extension.logMessage
 import com.skfo763.component.extensions.containsAtLeast
 import com.skfo763.component.extensions.getMatchedErrorFormat
 import com.skfo763.component.extensions.hostSafeArg

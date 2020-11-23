@@ -101,9 +101,9 @@ class LockScreenActivityUseCase constructor(
             showOverlayPermissionDialog {
                 activity.requestOverlayOptions()
             }
-            activity.viewModel.setWidgetDataToCurrentSwitchState(false)
+            activity.viewModel.navigationViewModel.setWidgetDataToCurrentSwitchState(false)
         } else {
-            activity.viewModel.setWidgetDataToCurrentSwitchState(true)
+            activity.viewModel.navigationViewModel.setWidgetDataToCurrentSwitchState(true)
         }
     }
 

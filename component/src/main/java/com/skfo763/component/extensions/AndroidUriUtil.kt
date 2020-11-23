@@ -1,7 +1,7 @@
 package com.skfo763.component.extensions
 
 import android.net.Uri
-import com.skfo763.base.logException
+import com.skfo763.base.extension.logException
 import com.skfo763.component.qrwebview.ErrorFormat
 
 val String?.parsedUri: Uri? get() = try {

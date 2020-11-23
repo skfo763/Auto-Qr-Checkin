@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.skfo763.qrcheckin.lockscreen.viewmodel.LockScreenViewModel" />
+            type="com.skfo763.qrcheckin.lockscreen.viewmodel.NavigationViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -97,13 +97,13 @@
                 android:text="@string/nav_function_widget"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/nav_function_allow_push_value"
+                app:layout_constraintEnd_toStartOf="@+id/nav_function_show_widget_value"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/nav_function_allow_push_value"
+                android:id="@+id/nav_function_show_widget_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
@@ -141,7 +141,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/nav_function_show_widget_value"
+                android:id="@+id/nav_function_allow_push_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
@@ -149,6 +149,46 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/nav_function_auto_checkin"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/nav_function_allow_push">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/nav_function_auto_checkin_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:text="@string/nav_function_auto_checkin"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawablePadding="4dp"
+                android:drawableEnd="@drawable/ic_baseline_help_outline_24"
+                android:onClick="@{(v) -> viewModel.openAutoCheckInHelperView()}"
+                android:foreground="?attr/selectableItemBackground"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/nav_function_auto_checkin_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:textColor="#323232"
+                android:textSize="14sp"
+                android:checked="@{viewModel.isAutoCheckInChecked}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                onCheckStateChanged="@{viewModel.onAutoCheckInSwitchStateChanged}"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

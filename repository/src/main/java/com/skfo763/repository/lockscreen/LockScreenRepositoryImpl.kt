@@ -43,6 +43,10 @@ class LockScreenRepositoryImpl @Inject constructor(
         return appDataStore.deleteAdsStateFlow
     }
 
+    override fun getCurrentAutoCheckinState(): Flow<Boolean> {
+        return appDataStore.autoCheckInStateFlow
+    }
+
     override fun getLanguageState(): Flow<LanguageState> {
         return appDataStore.languageFlow.map {
             mappingLanguageState(it)
@@ -63,6 +67,10 @@ class LockScreenRepositoryImpl @Inject constructor(
 
     override suspend fun setLanguageState(language: LanguageState) {
         appDataStore.setLanguage(language.value)
+    }
+
+    override suspend fun setAutoCheckInState(checked: Boolean) {
+        appDataStore.setDoAutoCheckInState(checked)
     }
 
     private val mappingLanguageState: (String) -> LanguageState = {

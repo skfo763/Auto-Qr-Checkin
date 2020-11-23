@@ -11,13 +11,16 @@ import kotlinx.coroutines.flow.map
 
 class AppDataStore(context: Context) {
 
+
     private val LANGUAGE = preferencesKey<String>("language")
     private val IS_FEATURE_ON = preferencesKey<Boolean>("is_feature_on")
     private val INIT_SETTING = preferencesKey<Boolean>("should_init_setting")
+    private val DO_AUTO_CHECKIN = preferencesKey<Boolean>("do_auto_checkin")
 
     private val deleteAdsState: DataStore<Preferences> = context.createDataStore(name = "delete_ads_state")
     private val language: DataStore<Preferences> = context.createDataStore(name = "language")
     private val initSettingState: DataStore<Preferences> = context.createDataStore(name = "should_init_setting")
+    private val autoCheckInState: DataStore<Preferences> = context.createDataStore(name = "auto_checkin_state")
 
     val deleteAdsStateFlow: Flow<Boolean> = deleteAdsState.data.map {
         it[IS_FEATURE_ON] ?: false
@@ -28,6 +31,8 @@ class AppDataStore(context: Context) {
     }
 
     val initSettingStateFlow: Flow<Boolean> = initSettingState.data.map { it[INIT_SETTING] ?: false }
+
+    val autoCheckInStateFlow: Flow<Boolean> = autoCheckInState.data.map { it[DO_AUTO_CHECKIN] ?: true }
 
     suspend fun setDeleteAdsState(isFeatureOn: Boolean) {
         deleteAdsState.edit {
@@ -44,6 +49,12 @@ class AppDataStore(context: Context) {
     suspend fun setInitSettingState(initSettingState: Boolean) {
         this.initSettingState.edit {
             it[INIT_SETTING] = initSettingState
+        }
+    }
+
+    suspend fun setDoAutoCheckInState(autoCheckInState: Boolean) {
+        this.autoCheckInState.edit {
+            it[DO_AUTO_CHECKIN] = autoCheckInState
         }
     }
 

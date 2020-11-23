@@ -1,4 +1,4 @@
-package com.skfo763.base
+package com.skfo763.base.model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

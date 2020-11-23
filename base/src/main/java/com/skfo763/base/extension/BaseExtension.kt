@@ -1,7 +1,8 @@
-package com.skfo763.base
+package com.skfo763.base.extension
 
 import android.util.Log
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.skfo763.base.BuildConfig
 
 fun Any.logMessage(message: String?) {
     if(BuildConfig.DEBUG) {

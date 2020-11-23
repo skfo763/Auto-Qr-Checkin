@@ -4,15 +4,13 @@ import android.content.Context
 import android.graphics.PointF
 import android.location.Location
 import android.util.AttributeSet
-import android.util.Log
 import androidx.lifecycle.*
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.InfoWindow
-import com.naver.maps.map.overlay.LocationOverlay
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
-import com.skfo763.base.logMessage
+import com.skfo763.base.extension.logMessage
 
 class CheckInMapView @JvmOverloads constructor(
     context: Context,

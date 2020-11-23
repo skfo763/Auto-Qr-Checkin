@@ -2,7 +2,7 @@ package com.skfo763.qrcheckin.lockscreen.viewmodel
 
 import android.location.Location
 import android.os.Bundle
-import android.widget.CompoundButton
+import android.view.View
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
@@ -11,9 +11,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.gun0912.tedpermission.PermissionListener
 import com.skfo763.base.BaseViewModel
-import com.skfo763.base.BuildConfig
-import com.skfo763.base.logException
-import com.skfo763.component.bixbysetting.BixbyLandingManager
+import com.skfo763.base.extension.clicks
+import com.skfo763.base.extension.logException
+import com.skfo763.base.extension.logMessage
+import com.skfo763.base.extension.throttleFirst
 import com.skfo763.component.floatingwidget.FloatingWidgetService
 import com.skfo763.component.floatingwidget.FloatingWidgetView.Companion.CURR_X
 import com.skfo763.component.floatingwidget.FloatingWidgetView.Companion.CURR_Y
@@ -22,7 +23,6 @@ import com.skfo763.component.playcore.InAppUpdateManager
 import com.skfo763.component.qrwebview.ErrorFormat
 import com.skfo763.component.tracker.FirebaseAnalyticsCustom
 import com.skfo763.qrcheckin.R
-import com.skfo763.qrcheckin.lockscreen.service.LockScreenService
 import com.skfo763.qrcheckin.lockscreen.usecase.LockScreenActivityUseCase
 import com.skfo763.remote.data.QrCheckInError
 import com.skfo763.repository.checkinmap.CheckInMapRepository
@@ -30,14 +30,16 @@ import com.skfo763.repository.lockscreen.LockScreenRepository
 import com.skfo763.repository.model.CheckInUrl
 import com.skfo763.repository.model.CheckPoint
 import com.skfo763.storage.gps.GpsException
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.Subject
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.pow
@@ -48,7 +50,6 @@ class LockScreenViewModel @ViewModelInject constructor(
     private val checkInMapRepository: CheckInMapRepository,
     private val inAppReviewManager: InAppReviewManager,
     private val inAppUpdateManager: InAppUpdateManager,
-    private val bixbyLandingManager: BixbyLandingManager,
     @Assisted private val savedStateHandle: SavedStateHandle
 ) : BaseViewModel<LockScreenActivityUseCase>() {
 
@@ -60,88 +61,23 @@ class LockScreenViewModel @ViewModelInject constructor(
     private var currLocation = Pair(0.0, 0.0)
     private val subject: Subject<String> = BehaviorSubject.create()
     val shouldReviewApp: Boolean get() = inAppReviewManager.shouldReviewApp(random)
+    val navigationViewModel = NavigationViewModel(viewModelScope, lockScreenRepository)
 
-    private val _isLockScreenChecked = MutableLiveData<Boolean>()
-    private val _isWidgetChecked = MutableLiveData<Boolean>()
     private val _availableHost = MutableLiveData<List<String>?>()
     private val _availablePath = MutableLiveData<List<String>?>()
     private val _appLandingScheme = MutableLiveData<List<String>?>()
+    private val _checkInButtonVisibility = MutableLiveData<Boolean>()
     private val _errorList = MutableLiveData<List<ErrorFormat>?>()
     private val _urlForCheckIn = MutableLiveData<String?>()
     private val _isLoading = MutableLiveData<Boolean>()
-    private val _versionName = MutableLiveData(BuildConfig.VERSION_NAME)
 
-    val isLockScreenChecked: LiveData<Boolean> = _isLockScreenChecked
-    val isWidgetChecked: LiveData<Boolean> = _isWidgetChecked
     val availableHost: LiveData<List<String>?> = _availableHost
     val availablePath: LiveData<List<String>?> = _availablePath
     val appLandingScheme: LiveData<List<String>?> = _appLandingScheme
+    val checkInButtonVisibility: LiveData<Boolean> = _checkInButtonVisibility
     val errorList: LiveData<List<ErrorFormat>?> = _errorList
     val urlForCheckIn: LiveData<String?> = _urlForCheckIn
     val isLoading: LiveData<Boolean> = _isLoading
-    val versionName: LiveData<String> = _versionName
-
-    private val setLockScreenDataToCurrentSwitchState: (isChecked: Boolean) -> Unit = {
-        viewModelScope.launch {
-            lockScreenRepository.setLockFeatureState(it)
-        }
-    }
-
-    val setWidgetDataToCurrentSwitchState: (isChecked: Boolean) -> Unit = {
-        _isWidgetChecked.value = it
-        viewModelScope.launch {
-            lockScreenRepository.setWidgetFeatureState(it)
-        }
-    }
-
-    private val setServiceStateWithCheckState: (isChecked: Boolean) -> Unit = {
-        if(it) {
-            useCase.startForegroundService(LockScreenService::class.java)
-        } else {
-            useCase.stopService(LockScreenService::class.java)
-        }
-    }
-
-    val onLockScreenSwitchStateChanged: (CompoundButton, Boolean) -> Unit = { _, isChecked ->
-        setLockScreenDataToCurrentSwitchState(isChecked)
-        setServiceStateWithCheckState(isChecked)
-    }
-
-    val onWidgetSwitchStateChanged: (CompoundButton, Boolean) -> Unit = { _, isChecked ->
-        if(isChecked) {
-            useCase.checkOverlayOptions()
-        } else {
-            setWidgetDataToCurrentSwitchState(isChecked)
-        }
-    }
-
-    val onReviewClicked = {
-        _isLoading.value = true
-        viewModelScope.launch {
-            lockScreenRepository.getPlayStoreUrl().collect { url ->
-                _isLoading.value = false
-                useCase.openUrl(url)
-            }
-        }
-    }
-
-    val onShareClicked = {
-        _isLoading.value = true
-        viewModelScope.launch {
-            lockScreenRepository.getPlayStoreUrl().collect {
-                _isLoading.value = false
-                useCase.sendUrl(it)
-            }
-        }
-    }
-
-    val onVersionClicked = {
-        inAppReviewManager.launchReviewFlow({
-            sendReviewCompleteEvent(it)
-        }) {
-            logException(it)
-        }
-    }
 
     val onFailedUrlLoaded: (invalidUrl: String?) -> Unit = {
         useCase.finishActivity()
@@ -168,6 +104,7 @@ class LockScreenViewModel @ViewModelInject constructor(
     }
 
     val onCheckInComplete: (String?) -> Unit = {
+        logMessage("doCheckIn - checkin flow start")
         subject.onNext(it ?: "")
     }
 
@@ -177,48 +114,42 @@ class LockScreenViewModel @ViewModelInject constructor(
 
     private fun observeCheckInFlowable() {
         subject.toSerialized().toFlowable(BackpressureStrategy.BUFFER)
-            .observeOn(Schedulers.io())
+            .subscribeOn(Schedulers.io())
             .throttleFirst(2000L, TimeUnit.MILLISECONDS)
             .delay(5000L, TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                if(it.isEmpty()) return@subscribe
-                saveCheckPoint()
+                when {
+                    it.isNullOrEmpty() -> {
+                        return@subscribe
+                    }
+                    navigationViewModel.isAutoCheckInChecked.value == true -> {
+                        saveCheckPoint()
+                    }
+                    else -> {
+                        showCheckInButton()
+                    }
+                }
             }) { logException(Exception(it)) }
     }
 
     fun setSwitchToSavedState() {
-        setLockScreenSavedState()
-        setWidgetSavedState()
-    }
-
-    private fun setLockScreenSavedState() {
-        viewModelScope.launch {
-            lockScreenRepository.getCurrentLockFeatureState().collect { isChecked ->
-                _isLockScreenChecked.value = isChecked
-            }
+        navigationViewModel.apply {
+            setLockScreenSavedState()
+            setWidgetSavedState()
+            setAutoCheckInSavedState()
         }
     }
 
-    private fun setWidgetSavedState() {
-        viewModelScope.launch {
-            lockScreenRepository.getCurrentWidgetFeatureState().collect { isChecked ->
-                if(isChecked) {
-                    useCase.checkOverlayOptions()
-                } else {
-                    _isWidgetChecked.value = isChecked
-                }
-            }
-        }
-    }
 
     fun deleteFloatingButton() {
-        if(isWidgetChecked.value == true) {
+        if(navigationViewModel.isWidgetChecked.value == true) {
             useCase.stopService(FloatingWidgetService::class.java)
         }
     }
 
     fun createFloatingButton() {
-        if(isWidgetChecked.value == true) {
+        if(navigationViewModel.isWidgetChecked.value == true) {
             val bundle = Bundle().apply {
                 putInt(CURR_X, useCase.getIntentValue<Int>(CURR_X) ?: 200)
                 putInt(CURR_Y, useCase.getIntentValue<Int>(CURR_Y) ?: 400)
@@ -236,6 +167,14 @@ class LockScreenViewModel @ViewModelInject constructor(
                 }
             }
         }
+    }
+
+    @FlowPreview
+    @ExperimentalCoroutinesApi
+    fun checkInButtonClicked(view: View) {
+        view.clicks().throttleFirst(1000).onEach {
+            saveCheckPoint()
+        }.launchIn(viewModelScope)
     }
 
     private suspend fun setCheckInUrlInfo(checkInUrl: CheckInUrl) {
@@ -284,13 +223,15 @@ class LockScreenViewModel @ViewModelInject constructor(
     fun sendCheckStateProperty() {
         useCase.sendUserProperty(
             "lock_screen_enabled",
-            if (_isLockScreenChecked.value == true) "true" else "false"
+            if (navigationViewModel.isLockScreenChecked.value == true) "true" else "false"
         )
         useCase.sendUserProperty(
             "widget_enabled",
-            if (_isWidgetChecked.value == true) "true" else "false"
+            if (navigationViewModel.isWidgetChecked.value == true) "true" else "false"
         )
     }
+
+
 
     private fun saveCheckPoint() {
         if(!useCase.isActivityForeground || !useCase.isLocationPermissionGranted) return
@@ -304,6 +245,7 @@ class LockScreenViewModel @ViewModelInject constructor(
                 if(checkInMapRepository.saveCheckPoint(checkPoint)) {
                     showCheckInConfirmSnackBar(checkPoint)
                 }
+                _checkInButtonVisibility.value = false
             } catch (e: GpsException) {
                 logException(Exception(e))
             } catch (e: Exception) {
@@ -311,6 +253,16 @@ class LockScreenViewModel @ViewModelInject constructor(
             }
         }
     }
+
+    private fun showCheckInButton() {
+        if(!useCase.isActivityForeground || !useCase.isLocationPermissionGranted) return
+        viewModelScope.launch {
+            val location = checkInMapRepository.getLastKnownLocation() ?: return@launch
+            if(location.isSameCoordinate(currLocation)) return@launch
+            _checkInButtonVisibility.value = true
+        }
+    }
+
 
     private fun showCheckInConfirmSnackBar(checkIn: CheckPoint) {
         useCase.showSnackBar(

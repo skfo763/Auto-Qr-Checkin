@@ -6,7 +6,7 @@ import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.naver.maps.geometry.LatLng
-import com.skfo763.base.logException
+import com.skfo763.base.extension.logException
 import com.skfo763.component.checkmap.NaverMapMarker
 import com.skfo763.qrcheckin.lockscreen.receiver.AddressResultReceiver
 import com.skfo763.repository.checkinmap.CheckInMapException
@@ -14,7 +14,6 @@ import com.skfo763.repository.checkinmap.CheckInMapRepository
 import com.skfo763.repository.model.CheckInAddress
 import com.skfo763.repository.model.CheckPoint
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
 import java.text.SimpleDateFormat
 import java.util.*
 

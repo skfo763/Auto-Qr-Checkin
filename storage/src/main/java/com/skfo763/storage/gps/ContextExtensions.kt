@@ -2,7 +2,7 @@ package com.skfo763.storage.gps
 
 import android.Manifest
 import android.content.Context
-import com.skfo763.base.checkPermissionGranted
+import com.skfo763.base.extension.checkPermissionGranted
 
 val Context.isLocationPermissionGranted: Boolean get() {
     return this.checkPermissionGranted(

@@ -1,10 +1,8 @@
 package com.skfo763.component.qrwebview
 
 import android.graphics.Bitmap
-import android.util.Log
 import android.webkit.*
-import com.skfo763.base.logMessage
-import com.skfo763.component.BuildConfig
+import com.skfo763.base.extension.logMessage
 import com.skfo763.component.extensions.parsedUri
 
 class QrCheckInWebClient(

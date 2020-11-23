@@ -7,7 +7,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.skfo763.qrcheckin.lockscreen.viewmodel.LockScreenViewModel" />
+            type="com.skfo763.qrcheckin.lockscreen.viewmodel.NavigationViewModel" />
     </data>
 
     <com.google.android.material.navigation.NavigationView

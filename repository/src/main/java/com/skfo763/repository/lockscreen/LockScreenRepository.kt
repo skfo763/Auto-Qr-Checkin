@@ -16,6 +16,8 @@ interface LockScreenRepository {
 
     fun getCurrentDeleteAdsState(): Flow<Boolean>
 
+    fun getCurrentAutoCheckinState(): Flow<Boolean>
+
     fun getLanguageState(): Flow<LanguageState>
 
     suspend fun setLockFeatureState(isFeatureOn: Boolean)
@@ -25,5 +27,7 @@ interface LockScreenRepository {
     suspend fun setDeleteAdsState(isFeatureOn: Boolean)
 
     suspend fun setLanguageState(language: LanguageState)
+
+    suspend fun setAutoCheckInState(checked: Boolean)
 
 }

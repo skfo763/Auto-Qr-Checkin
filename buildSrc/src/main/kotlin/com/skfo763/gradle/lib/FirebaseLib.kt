@@ -10,6 +10,7 @@ object FirebaseLib {
     const val analytics = "com.google.firebase:firebase-analytics-ktx:${Versions.analytics}"
     const val crashlytics = "com.google.firebase:firebase-crashlytics-ktx:${Versions.crashlytics}"
     const val realtimeDB = "com.google.firebase:firebase-database-ktx:${Versions.realtimeDB}"
+    const val firebaseBase = "com.google.android.gms:play-services-basement:17.4.0"
 }
 
 fun DependencyHandlerScope.firebaseDependency() {
@@ -18,4 +19,5 @@ fun DependencyHandlerScope.firebaseDependency() {
     implementation(FirebaseLib.crashlytics)
     implementation(FirebaseLib.analytics)
     implementation(FirebaseLib.realtimeDB)
+    implementation(FirebaseLib.firebaseBase)
 }

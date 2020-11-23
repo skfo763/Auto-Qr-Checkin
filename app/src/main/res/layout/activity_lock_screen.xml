@@ -94,10 +94,24 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
+            <com.skfo763.component.checkinbutton.CheckInButton
+                android:id="@+id/lock_screen_check_in_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:elevation="1dp"
+                android:layout_marginRight="28dp"
+                android:visibility="gone"
+                android:onClick="@{(v) -> viewModel.checkInButtonClicked(v)}"
+                buttonVisibility="@{viewModel.checkInButtonVisibility}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/lock_screen_ad_view_container"/>
+
             <FrameLayout
                 android:id="@+id/lock_screen_ad_view_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                tools:layout_height="50dp"
+                tools:background="#123456"
                 app:layout_constraintTop_toBottomOf="@id/lock_screen_nav_host_fragment"
                 app:layout_constraintBottom_toTopOf="@id/lock_screen_bottom_navigation"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -118,7 +132,7 @@
         <include
             android:id="@+id/lock_screen_navigation"
             layout="@layout/view_lock_screen_navigation"
-            bind:viewModel="@{viewModel}"
+            bind:viewModel="@{viewModel.navigationViewModel}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>

@@ -4,7 +4,7 @@ import android.app.Service
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
-import com.skfo763.base.logException
+import com.skfo763.base.extension.logException
 import com.skfo763.component.floatingwidget.FloatingWidgetView.Companion.CURR_X
 import com.skfo763.component.floatingwidget.FloatingWidgetView.Companion.CURR_Y
 import dagger.hilt.android.AndroidEntryPoint

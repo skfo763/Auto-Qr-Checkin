@@ -4,7 +4,7 @@ import android.webkit.ConsoleMessage
 import android.webkit.JsResult
 import android.webkit.WebChromeClient
 import android.webkit.WebView
-import com.skfo763.base.logMessage
+import com.skfo763.base.extension.logMessage
 
 class QrCheckInWebChromeClient : WebChromeClient() {
 

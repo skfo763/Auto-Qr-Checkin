@@ -1,4 +1,4 @@
-package com.skfo763.base
+package com.skfo763.base.extension
 
 import android.content.ActivityNotFoundException
 import android.content.Context
