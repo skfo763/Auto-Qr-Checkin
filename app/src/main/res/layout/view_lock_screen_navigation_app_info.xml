@@ -89,7 +89,6 @@
             android:layout_height="44dp"
             android:orientation="horizontal"
             android:visibility="gone"
-            android:onClick="@{(v) -> viewModel.onDeleteAdsClicked.invoke()}"
             android:foreground="?attr/selectableItemBackground"
             app:layout_constraintBottom_toTopOf="@+id/nav_app_info_review"
             app:layout_constraintTop_toBottomOf="@+id/nav_app_info_version">
@@ -117,8 +116,7 @@
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                isDeleteAds="@{viewModel.deleteAdsState}"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -163,7 +161,6 @@
             android:layout_height="44dp"
             android:orientation="horizontal"
             android:visibility="gone"
-            android:onClick="@{(v) -> viewModel.onLanguageChangeClicked.invoke()}"
             android:foreground="?attr/selectableItemBackground"
             app:layout_constraintBottom_toTopOf="@id/nav_app_info_share"
             app:layout_constraintTop_toBottomOf="@+id/nav_app_info_review">

@@ -34,11 +34,10 @@ abstract class BaseActivity<B : ViewDataBinding, V: BaseViewModel<U>, U: IBaseAc
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, layoutResId)
-        binding.lifecycleOwner = this
-        lifecycle.addObserver(useCase)
-        bindingVariable.invoke(binding)
         viewModel.useCase = useCase
-
+        lifecycle.addObserver(useCase)
+        binding.lifecycleOwner = this
+        bindingVariable.invoke(binding)
         setNavHost()
         doAfterBindViewModel()
     }

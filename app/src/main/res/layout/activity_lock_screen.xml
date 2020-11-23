@@ -85,13 +85,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
-            <include
-                layout="@layout/view_bixby_setting_banner"
-                bind:viewModel="@{viewModel}"
-                app:layout_constraintTop_toBottomOf="@id/toolbar"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
-
             <ProgressBar
                 android:layout_width="48dp"
                 android:layout_height="48dp"

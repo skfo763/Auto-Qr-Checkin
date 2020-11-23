@@ -13,9 +13,11 @@ class AppDataStore(context: Context) {
 
     private val LANGUAGE = preferencesKey<String>("language")
     private val IS_FEATURE_ON = preferencesKey<Boolean>("is_feature_on")
+    private val INIT_SETTING = preferencesKey<Boolean>("should_init_setting")
 
     private val deleteAdsState: DataStore<Preferences> = context.createDataStore(name = "delete_ads_state")
     private val language: DataStore<Preferences> = context.createDataStore(name = "language")
+    private val initSettingState: DataStore<Preferences> = context.createDataStore(name = "should_init_setting")
 
     val deleteAdsStateFlow: Flow<Boolean> = deleteAdsState.data.map {
         it[IS_FEATURE_ON] ?: false
@@ -24,6 +26,8 @@ class AppDataStore(context: Context) {
     val languageFlow: Flow<String> = language.data.map {
         it[LANGUAGE] ?: "korean"
     }
+
+    val initSettingStateFlow: Flow<Boolean> = initSettingState.data.map { it[INIT_SETTING] ?: false }
 
     suspend fun setDeleteAdsState(isFeatureOn: Boolean) {
         deleteAdsState.edit {
@@ -34,6 +38,12 @@ class AppDataStore(context: Context) {
     suspend fun setLanguage(language: String) {
         this.language.edit {
             it[LANGUAGE] = language
+        }
+    }
+
+    suspend fun setInitSettingState(initSettingState: Boolean) {
+        this.initSettingState.edit {
+            it[INIT_SETTING] = initSettingState
         }
     }
 

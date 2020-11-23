@@ -30,7 +30,7 @@ android {
         getByName("release") {
             val localDBName = gradleLocalProperties(rootDir).getProperty("local.database.name")
 
-            isDebuggable = true
+            isDebuggable = false
             resValue("string", "DB_PASSWORD_$localDBName", "1027")
         }
 

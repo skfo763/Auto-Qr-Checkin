@@ -13,7 +13,6 @@ import com.gun0912.tedpermission.PermissionListener
 import com.skfo763.base.BaseViewModel
 import com.skfo763.base.BuildConfig
 import com.skfo763.base.logException
-import com.skfo763.base.logMessage
 import com.skfo763.component.bixbysetting.BixbyLandingManager
 import com.skfo763.component.floatingwidget.FloatingWidgetService
 import com.skfo763.component.floatingwidget.FloatingWidgetView.Companion.CURR_X
@@ -30,14 +29,15 @@ import com.skfo763.repository.checkinmap.CheckInMapRepository
 import com.skfo763.repository.lockscreen.LockScreenRepository
 import com.skfo763.repository.model.CheckInUrl
 import com.skfo763.repository.model.CheckPoint
-import com.skfo763.repository.model.LanguageState
 import com.skfo763.storage.gps.GpsException
 import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.Subject
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.pow
@@ -63,7 +63,6 @@ class LockScreenViewModel @ViewModelInject constructor(
 
     private val _isLockScreenChecked = MutableLiveData<Boolean>()
     private val _isWidgetChecked = MutableLiveData<Boolean>()
-    private val _deleteAdsState = MutableLiveData<Boolean>()
     private val _availableHost = MutableLiveData<List<String>?>()
     private val _availablePath = MutableLiveData<List<String>?>()
     private val _appLandingScheme = MutableLiveData<List<String>?>()
@@ -74,7 +73,6 @@ class LockScreenViewModel @ViewModelInject constructor(
 
     val isLockScreenChecked: LiveData<Boolean> = _isLockScreenChecked
     val isWidgetChecked: LiveData<Boolean> = _isWidgetChecked
-    val deleteAdsState: LiveData<Boolean> = _deleteAdsState
     val availableHost: LiveData<List<String>?> = _availableHost
     val availablePath: LiveData<List<String>?> = _availablePath
     val appLandingScheme: LiveData<List<String>?> = _appLandingScheme
@@ -89,21 +87,10 @@ class LockScreenViewModel @ViewModelInject constructor(
         }
     }
 
-    private val setWidgetDataToCurrentSwitchState: (isChecked: Boolean) -> Unit = {
+    val setWidgetDataToCurrentSwitchState: (isChecked: Boolean) -> Unit = {
+        _isWidgetChecked.value = it
         viewModelScope.launch {
             lockScreenRepository.setWidgetFeatureState(it)
-        }
-    }
-
-    private val setAdsDelete: (isDeleted: Boolean) -> Unit = {
-        viewModelScope.launch {
-            lockScreenRepository.setDeleteAdsState(it)
-        }
-    }
-
-    private val setLanguage: (LanguageState) -> Unit = {
-        viewModelScope.launch {
-            lockScreenRepository.setLanguageState(it)
         }
     }
 
@@ -115,49 +102,17 @@ class LockScreenViewModel @ViewModelInject constructor(
         }
     }
 
-    val onFailedUrlLoaded: (invalidUrl: String?) -> Unit = {
-        useCase.finishActivity()
-    }
-
-    val onOtherAppOpen: (openLink: String?) -> Unit  = { openLink ->
-        useCase.startActivityForResult(openLink)
-    }
-
-    val setLockScreenSwitchToSavedState = {
-        viewModelScope.launch {
-            lockScreenRepository.getCurrentLockFeatureState().collect { isChecked ->
-                _isLockScreenChecked.value = isChecked
-            }
-        }
-    }
-
-    val setWidgetSwitchToSavedState = {
-        viewModelScope.launch {
-            lockScreenRepository.getCurrentWidgetFeatureState().collect { isChecked ->
-                _isWidgetChecked.value = isChecked
-            }
-        }
-    }
-
     val onLockScreenSwitchStateChanged: (CompoundButton, Boolean) -> Unit = { _, isChecked ->
         setLockScreenDataToCurrentSwitchState(isChecked)
         setServiceStateWithCheckState(isChecked)
     }
 
     val onWidgetSwitchStateChanged: (CompoundButton, Boolean) -> Unit = { _, isChecked ->
-        setWidgetDataToCurrentSwitchState(isChecked)
-    }
-
-    val onPushSwitchStateChanged: (CompoundButton, Boolean) -> Unit = { _, isChecked ->
-        setWidgetDataToCurrentSwitchState(isChecked)
-    }
-
-    val onDeleteAdsClicked = {
-        // TODO(광고 제거 버튼 클릭 로직 추가)
-    }
-
-    val onLanguageChangeClicked = {
-        // TODO(언어 설정 변경 로직 추가)
+        if(isChecked) {
+            useCase.checkOverlayOptions()
+        } else {
+            setWidgetDataToCurrentSwitchState(isChecked)
+        }
     }
 
     val onReviewClicked = {
@@ -188,6 +143,14 @@ class LockScreenViewModel @ViewModelInject constructor(
         }
     }
 
+    val onFailedUrlLoaded: (invalidUrl: String?) -> Unit = {
+        useCase.finishActivity()
+    }
+
+    val onOtherAppOpen: (openLink: String?) -> Unit  = { openLink ->
+        useCase.startActivityForResult(openLink)
+    }
+
     val startTrackingLocationListener = object: PermissionListener {
         override fun onPermissionGranted() {
             viewModelScope.launch {
@@ -205,17 +168,10 @@ class LockScreenViewModel @ViewModelInject constructor(
     }
 
     val onCheckInComplete: (String?) -> Unit = {
-        logMessage("hellohello - step 1 : $it")
         subject.onNext(it ?: "")
     }
 
-    val moveToBixbySettings: () -> Unit = {
-        bixbyLandingManager.startBixbySettingIntent()
-    }
-
     init {
-        setLockScreenSwitchToSavedState()
-        setWidgetSwitchToSavedState()
         observeCheckInFlowable()
     }
 
@@ -228,6 +184,31 @@ class LockScreenViewModel @ViewModelInject constructor(
                 if(it.isEmpty()) return@subscribe
                 saveCheckPoint()
             }) { logException(Exception(it)) }
+    }
+
+    fun setSwitchToSavedState() {
+        setLockScreenSavedState()
+        setWidgetSavedState()
+    }
+
+    private fun setLockScreenSavedState() {
+        viewModelScope.launch {
+            lockScreenRepository.getCurrentLockFeatureState().collect { isChecked ->
+                _isLockScreenChecked.value = isChecked
+            }
+        }
+    }
+
+    private fun setWidgetSavedState() {
+        viewModelScope.launch {
+            lockScreenRepository.getCurrentWidgetFeatureState().collect { isChecked ->
+                if(isChecked) {
+                    useCase.checkOverlayOptions()
+                } else {
+                    _isWidgetChecked.value = isChecked
+                }
+            }
+        }
     }
 
     fun deleteFloatingButton() {

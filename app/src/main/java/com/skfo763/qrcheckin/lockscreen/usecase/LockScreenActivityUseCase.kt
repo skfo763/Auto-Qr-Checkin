@@ -1,15 +1,17 @@
 package com.skfo763.qrcheckin.lockscreen.usecase
 
+import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -17,6 +19,7 @@ import com.skfo763.base.BaseActivityUseCase
 import com.skfo763.component.extensions.parsedUri
 import com.skfo763.component.playcore.InAppUpdateManager
 import com.skfo763.qrcheckin.R
+import com.skfo763.qrcheckin.extension.requestOverlayOptions
 import com.skfo763.qrcheckin.lockscreen.activity.LockScreenActivity
 import com.skfo763.storage.gps.isLocationPermissionGranted
 
@@ -26,6 +29,7 @@ class LockScreenActivityUseCase constructor(
 
     companion object {
         const val REQ_CODE_OPEN_OTHER_APP = 1000
+        const val ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 1001
     }
 
     var isActivityForeground: Boolean = false
@@ -35,6 +39,8 @@ class LockScreenActivityUseCase constructor(
     val isLocationPermissionGranted: Boolean get() = activity.isLocationPermissionGranted
 
     var snackBarWindow: View? = null
+
+    val isOverlayPermissionDenied: Boolean get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(activity)
 
     fun openUrl(url: String?) {
         try {
@@ -89,6 +95,18 @@ class LockScreenActivityUseCase constructor(
         activity.firebaseTracker.sendUserProperties(key, value)
     }
 
+    @SuppressLint("NewApi")
+    fun checkOverlayOptions() {
+        if (isOverlayPermissionDenied) {
+            showOverlayPermissionDialog {
+                activity.requestOverlayOptions()
+            }
+            activity.viewModel.setWidgetDataToCurrentSwitchState(false)
+        } else {
+            activity.viewModel.setWidgetDataToCurrentSwitchState(true)
+        }
+    }
+
     fun startActivityForResult(openLink: String?) {
         openLink?.let {
             try {
@@ -108,12 +126,28 @@ class LockScreenActivityUseCase constructor(
                 activity.viewModel.setQrCheckIn()
                 true
             }
+            ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE -> {
+                checkOverlayOptions()
+                true
+            }
             InAppUpdateManager.REQUEST_APP_UPDATE -> {
                 onActivityInAppUpdateResult?.invoke(resultCode, data)
                 true
             }
             else -> return super.onActivityResult(requestCode, resultCode, data)
         }
+    }
+
+    private fun showOverlayPermissionDialog(doOnPositiveClicked: () -> Unit) {
+        AlertDialog.Builder(activity)
+            .setTitle(R.string.permission_title)
+            .setMessage(R.string.permission_message)
+            .setCancelable(false)
+            .setPositiveButton(activity.getString(R.string.confirm)) { _, _ ->
+                doOnPositiveClicked.invoke()
+            }.setNegativeButton(activity.getString(R.string.cancel)) { dialog, _ ->
+                dialog.dismiss()
+            }.show()
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)

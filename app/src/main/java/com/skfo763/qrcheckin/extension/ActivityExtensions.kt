@@ -9,7 +9,7 @@ import android.provider.Settings
 import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import com.skfo763.qrcheckin.lockscreen.activity.LockScreenActivity.Companion.ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE
+import com.skfo763.qrcheckin.lockscreen.usecase.LockScreenActivityUseCase.Companion.ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE
 
 fun AppCompatActivity.requestDismissKeyGuard() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
