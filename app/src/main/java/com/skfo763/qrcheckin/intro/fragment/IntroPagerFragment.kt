@@ -6,6 +6,8 @@ import android.view.MenuItem
 import android.view.View
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.activityViewModels
+import com.google.android.youtube.player.YouTubePlayer
+import com.google.android.youtube.player.YouTubePlayerView
 import com.gun0912.tedpermission.PermissionListener
 import com.skfo763.base.BaseFragment
 import com.skfo763.qrcheckin.R
@@ -106,6 +108,29 @@ class OtherSettingsFragment : IntroPagerFragment<FragmentIntroOtherSettingBindin
                 true
             }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private val playbackListener = object: YouTubePlayer.PlaybackEventListener {
+
+        override fun onPlaying() {
+
+        }
+
+        override fun onPaused() {
+            TODO("Not yet implemented")
+        }
+
+        override fun onStopped() {
+            TODO("Not yet implemented")
+        }
+
+        override fun onBuffering(p0: Boolean) {
+            TODO("Not yet implemented")
+        }
+
+        override fun onSeekTo(newPositionMillis: Int) {
+            TODO("Not yet implemented")
         }
     }
 

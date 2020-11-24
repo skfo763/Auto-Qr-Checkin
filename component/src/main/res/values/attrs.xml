@@ -11,4 +11,9 @@
         <attr name="num_icon_tv_title" format="reference|string"/>
         <attr name="num_icon_tv_subtitle" format="reference|string"/>
     </declare-styleable>
+
+    <declare-styleable name="YouTubePlayerView">
+        <attr name="videoId" format="string|reference" />
+        <attr name="fragment" format="string|reference" />
+    </declare-styleable>
 </resources>

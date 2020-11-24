@@ -15,6 +15,7 @@ android {
 }
 
 dependencies {
+    implementation(fileTree("libs") { include("*.jar") })
     implementation(project(":util"))
     implementation(project(":base"))
 

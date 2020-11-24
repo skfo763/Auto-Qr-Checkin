@@ -3,6 +3,7 @@ package com.skfo763.component.bixbysetting
 import android.content.Context
 import android.content.res.Resources
 import android.content.res.TypedArray
+import android.graphics.Color
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.annotation.DrawableRes
@@ -23,6 +24,11 @@ class NumberIconTextView @JvmOverloads constructor(
         val subTitle: String,
         @DrawableRes val numberResId: Int
     )
+
+    enum class ViewState {
+        ON_AIR,
+        PLAIN
+    }
 
     private val binding: LayoutNumberIconTextViewBinding =
         LayoutNumberIconTextViewBinding.inflate(LayoutInflater.from(context), this, true)
@@ -59,6 +65,19 @@ class NumberIconTextView @JvmOverloads constructor(
             logException(e)
         } catch (e: Exception) {
             logMessage(e.message)
+        }
+    }
+
+    fun setViewState(viewState: ViewState) {
+        when(viewState) {
+            ViewState.ON_AIR -> {
+                binding.numberIconTextViewTitle.setTextColor(Color.parseColor("#FF9800"))
+                binding.numberIconTextViewSubtitle.setTextColor(Color.parseColor("#CD9643"))
+            }
+            ViewState.PLAIN -> {
+                binding.numberIconTextViewTitle.setTextColor(Color.parseColor("#323232"))
+                binding.numberIconTextViewSubtitle.setTextColor(Color.parseColor("#919191"))
+            }
         }
     }
 
