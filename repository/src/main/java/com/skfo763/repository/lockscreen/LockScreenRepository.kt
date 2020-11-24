@@ -30,4 +30,6 @@ interface LockScreenRepository {
 
     suspend fun setAutoCheckInState(checked: Boolean)
 
+    suspend fun resetInitializationState(doInitialize: Boolean)
+
 }

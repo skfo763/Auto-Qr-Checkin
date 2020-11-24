@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="confirm">확인</string>
+    <string name="cancel">취소</string>
     <string name="update_complete">업데이트가 완료되었습니다. 앱을 다시 실행해주세요.</string>
     <string name="restart_app">다시 시작하기</string>
+    <string name="permission_state_view_subtitle">GPS 사용, 현재 위치를 통해 QR 체크인 장소를 기록합니다.</string>
+    <string name="permission_state_view_title">위치 정보 접근 권한</string>
 </resources>

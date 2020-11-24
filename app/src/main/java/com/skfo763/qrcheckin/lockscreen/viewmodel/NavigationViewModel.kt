@@ -79,8 +79,11 @@ class NavigationViewModel(
         }
     }
 
-    fun openAppUsageHelperView() {
-
+    fun openAppResetInitializing() {
+        viewModelScope.launch {
+            lockScreenRepository.resetInitializationState(true)
+            useCase.finishActivity()
+        }
     }
 
     fun openAutoCheckInHelperView() {

@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.map
 
 class AppDataStore(context: Context) {
 
-
     private val LANGUAGE = preferencesKey<String>("language")
     private val IS_FEATURE_ON = preferencesKey<Boolean>("is_feature_on")
     private val INIT_SETTING = preferencesKey<Boolean>("should_init_setting")
@@ -30,7 +29,7 @@ class AppDataStore(context: Context) {
         it[LANGUAGE] ?: "korean"
     }
 
-    val initSettingStateFlow: Flow<Boolean> = initSettingState.data.map { it[INIT_SETTING] ?: false }
+    val initSettingStateFlow: Flow<Boolean> = initSettingState.data.map { it[INIT_SETTING] ?: true }
 
     val autoCheckInStateFlow: Flow<Boolean> = autoCheckInState.data.map { it[DO_AUTO_CHECKIN] ?: true }
 

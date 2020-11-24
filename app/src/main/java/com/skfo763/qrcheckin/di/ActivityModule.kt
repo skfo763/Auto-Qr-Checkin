@@ -3,10 +3,13 @@ package com.skfo763.qrcheckin.di
 import android.app.Activity
 import android.os.Handler
 import android.os.Looper
+import androidx.fragment.app.FragmentActivity
 import com.skfo763.component.bixbysetting.BixbyLandingManager
 import com.skfo763.component.playcore.InAppReviewManager
 import com.skfo763.component.playcore.InAppUpdateManager
 import com.skfo763.qrcheckin.admob.AdMobManager
+import com.skfo763.qrcheckin.intro.activity.IntroActivity
+import com.skfo763.qrcheckin.intro.adapter.IntroPagerAdapter
 import com.skfo763.qrcheckin.lockscreen.receiver.AddressResultReceiver
 import com.skfo763.remote.NetworkManager
 import com.skfo763.remote.api.NaverMapApi
@@ -62,6 +65,11 @@ abstract class ActivityModule {
         @Provides
         fun provideBixbyLandingManager(activity: Activity): BixbyLandingManager {
             return BixbyLandingManager(activity)
+        }
+
+        @Provides
+        fun provideIntroPagerAdapter(activity: FragmentActivity): IntroPagerAdapter {
+            return IntroPagerAdapter(activity)
         }
     }
 }

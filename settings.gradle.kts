@@ -1,4 +1,3 @@
-include(":home")
 include(":remote")
 include(":repository")
 include(":storage")

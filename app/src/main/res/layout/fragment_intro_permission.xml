@@ -1,18 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
             name="parentViewModel"
             type="com.skfo763.qrcheckin.intro.viewmodel.IntroViewModel" />
+        <variable
+            name="requestOverlayPermission"
+            type="android.view.View.OnClickListener" />
+        <variable
+            name="requestLocationPermission"
+            type="android.view.View.OnClickListener" />
     </data>
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#123456">
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/intro_permission_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/intro_permission_title_text"
+            android:textColor="#323232"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:layout_marginTop="28dp"
+            android:layout_marginStart="20dp"
+            app:layout_constraintVertical_bias="0.0"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/intro_permission_subtitle"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="20dp" />
+
+        <androidx.appcompat.widget.AppCompatCheckedTextView
+            android:id="@+id/intro_permission_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/intro_permission_subtitle_text"
+            android:textColor="#919191"
+            android:layout_marginStart="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintBottom_toTopOf="@+id/permission_state_overlay_view"
+            app:layout_constraintTop_toBottomOf="@+id/intro_permission_title"
+            tools:layout_editor_absoluteX="20dp" />
+
+        <com.skfo763.component.permissionstateview.PermissionStateView
+            android:id="@+id/permission_state_overlay_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:foreground="?attr/selectableItemBackground"
+            android:onClick="@{requestOverlayPermission}"
+            app:layout_constraintBottom_toTopOf="@+id/permission_state_location_view"
+            app:layout_constraintTop_toBottomOf="@+id/intro_permission_subtitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:psv_icon="@drawable/ic_baseline_fiber_smart_record_24"
+            app:psv_subtitle="@string/psv_overlay_subtitle"
+            app:psv_title="@string/psv_overlay_title"
+            permissionState="@{parentViewModel.overlayPermissionGranted}"
+            tools:layout_editor_absoluteX="-16dp"
+            tools:layout_height="80dp" />
+
+        <com.skfo763.component.permissionstateview.PermissionStateView
+            android:id="@+id/permission_state_location_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:foreground="?attr/selectableItemBackground"
+            android:onClick="@{requestLocationPermission}"
+            app:psv_title="@string/psv_location_title"
+            app:psv_subtitle="@string/psv_location_subtitle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/permission_state_overlay_view"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            permissionState="@{parentViewModel.locationPermissionGranted}"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_height="80dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

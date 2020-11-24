@@ -73,6 +73,10 @@ class LockScreenRepositoryImpl @Inject constructor(
         appDataStore.setDoAutoCheckInState(checked)
     }
 
+    override suspend fun resetInitializationState(doInitialize: Boolean) {
+        appDataStore.setInitSettingState(doInitialize)
+    }
+
     private val mappingLanguageState: (String) -> LanguageState = {
         when(it) {
             LanguageState.KOREAN.value -> LanguageState.KOREAN

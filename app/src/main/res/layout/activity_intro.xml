@@ -6,12 +6,29 @@
         <variable
             name="viewModel"
             type="com.skfo763.qrcheckin.intro.viewmodel.IntroViewModel" />
-
+        <variable
+            name="onNextButtonClicked"
+            type="android.view.View.OnClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/intro_toolbar"
+            android:layout_width="0dp"
+            android:layout_height="?attr/actionBarSize"
+            android:gravity="center_vertical"
+            android:background="#FFFFFF"
+            android:orientation="horizontal"
+            app:menu="@menu/intro_toolbar_menu"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/intro_view_pager"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+        </androidx.appcompat.widget.Toolbar>
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/intro_view_pager"
@@ -19,7 +36,22 @@
             android:layout_height="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/intro_toolbar"
             app:layout_constraintBottom_toTopOf="@id/intro_ad_view_container" />
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/intro_go_next_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="24dp"
+            android:theme="@style/AppTheme"
+            android:text="@string/intro_floating_action_title"
+            android:onClick="@{onNextButtonClicked}"
+            app:layout_constraintBottom_toTopOf="@id/intro_ad_view_container"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:backgroundTint="#BEDFFF"
+            app:icon="@drawable/ic_baseline_skip_next_24"
+            app:iconPadding="4dp" />
 
         <FrameLayout
             android:id="@+id/intro_ad_view_container"

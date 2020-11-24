@@ -5,7 +5,9 @@ import com.skfo763.qrcheckin.intro.activity.IntroActivity
 
 class IntroActivityUseCase(private val activity : IntroActivity) : BaseActivityUseCase(activity) {
 
-
+    fun goToPreviousInitFlow() {
+        activity.goToPrevFlow()
+    }
 
 
 }

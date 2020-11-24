@@ -4,9 +4,7 @@ import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -19,7 +17,9 @@ import com.skfo763.base.BaseActivityUseCase
 import com.skfo763.component.extensions.parsedUri
 import com.skfo763.component.playcore.InAppUpdateManager
 import com.skfo763.qrcheckin.R
+import com.skfo763.qrcheckin.extension.isOverlayPermissionGranted
 import com.skfo763.qrcheckin.extension.requestOverlayOptions
+import com.skfo763.qrcheckin.extension.showOverlayPermissionDialog
 import com.skfo763.qrcheckin.lockscreen.activity.LockScreenActivity
 import com.skfo763.storage.gps.isLocationPermissionGranted
 
@@ -39,8 +39,6 @@ class LockScreenActivityUseCase constructor(
     val isLocationPermissionGranted: Boolean get() = activity.isLocationPermissionGranted
 
     var snackBarWindow: View? = null
-
-    val isOverlayPermissionDenied: Boolean get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(activity)
 
     fun openUrl(url: String?) {
         try {
@@ -97,10 +95,8 @@ class LockScreenActivityUseCase constructor(
 
     @SuppressLint("NewApi")
     fun checkOverlayOptions() {
-        if (isOverlayPermissionDenied) {
-            showOverlayPermissionDialog {
-                activity.requestOverlayOptions()
-            }
+        if (!activity.isOverlayPermissionGranted) {
+            activity.showOverlayPermissionDialog()
             activity.viewModel.navigationViewModel.setWidgetDataToCurrentSwitchState(false)
         } else {
             activity.viewModel.navigationViewModel.setWidgetDataToCurrentSwitchState(true)
@@ -136,18 +132,6 @@ class LockScreenActivityUseCase constructor(
             }
             else -> return super.onActivityResult(requestCode, resultCode, data)
         }
-    }
-
-    private fun showOverlayPermissionDialog(doOnPositiveClicked: () -> Unit) {
-        AlertDialog.Builder(activity)
-            .setTitle(R.string.permission_title)
-            .setMessage(R.string.permission_message)
-            .setCancelable(false)
-            .setPositiveButton(activity.getString(R.string.confirm)) { _, _ ->
-                doOnPositiveClicked.invoke()
-            }.setNegativeButton(activity.getString(R.string.cancel)) { dialog, _ ->
-                dialog.dismiss()
-            }.show()
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)

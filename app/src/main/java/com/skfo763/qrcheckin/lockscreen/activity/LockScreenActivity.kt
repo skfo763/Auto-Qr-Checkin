@@ -1,5 +1,7 @@
 package com.skfo763.qrcheckin.lockscreen.activity
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.WindowManager
@@ -29,6 +31,13 @@ class LockScreenActivity (
     override val layoutResId: Int = R.layout.activity_lock_screen,
     override val navHostResId: Int? = R.id.lock_screen_nav_host_fragment
 ): BaseActivity<ActivityLockScreenBinding, LockScreenViewModel, LockScreenActivityUseCase>() {
+
+    companion object {
+        @JvmStatic
+        fun getIntent(context: Context): Intent {
+            return Intent(context, LockScreenActivity::class.java)
+        }
+    }
 
     override val viewModel: LockScreenViewModel by viewModels()
     override var useCase = LockScreenActivityUseCase(this)

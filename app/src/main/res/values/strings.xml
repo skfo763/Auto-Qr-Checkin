@@ -44,5 +44,17 @@
     <string name="permission_denied_message">위치 권한이 거부되었습니다. 방문 기록 확인을 위해 권한을 동의해 주세요!</string>
     <string name="permission_goto_settings">설정으로 이동하기</string>
     <string name="nav_function_auto_checkin">자동 체크인 기능 사용</string>
-    <string name="nav_app_info_open_help">앱 사용설명서 열기</string>
+    <string name="nav_app_info_open_help">앱 재설정</string>
+    <string name="intro_floating_action_title">다음으로</string>
+    <string name="skip_initialize_title">기본 설정 건너뛰기</string>
+    <string name="skip_initialize_message">기본 설정을 완료하면 보다 편리하게 앱을 사용할 수 있습니다. 그래도 건너뛰시겠습니까?</string>
+    <string name="intro_permission_title_text">앱 사용을 위해 권한이 필요해요</string>
+    <string name="intro_permission_subtitle_text">아래의 권한 사용에 동의해주세요!\n권한에 동의하지 않을 시 일부 기능을 사용하지 못할 수 있습니다.</string>
+    <string name="psv_overlay_subtitle">위젯 버튼을 띄우기 위해서 해당 권한이 필요합니다.</string>
+    <string name="psv_overlay_title">다른 앱 위에 표시하기 권한</string>
+    <string name="psv_location_title">위치 정보 접근 권한</string>
+    <string name="psv_location_subtitle">GPS 사용하여 현재 위치를 검색해 QR 체크인 장소를 기록합니다.</string>
+    <string name="toolbar_menu_skip_initialize_title">건너뛰기</string>
+    <string name="skip_uncomplete_initialize_title">미완료 안내</string>
+    <string name="skip_uncomplete_initialize_message">설정이 아직 완료되지 않았습니다. 그래도 넘어가시겠습니까?</string>
 </resources>

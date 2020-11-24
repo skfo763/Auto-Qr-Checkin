@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="title"
+            type="String"/>
+    </data>
+
+    <merge
+        tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/permission_state_view_icon"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginStart="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/permission_state_view_title"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_baseline_location_on_24" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/permission_state_view_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:text="@string/permission_state_view_title"
+            android:textColor="#323232"
+            android:textSize="16sp"
+            app:layout_constraintVertical_chainStyle="packed"
+            android:layout_marginBottom="6dp"
+            app:layout_constraintBottom_toTopOf="@+id/permission_state_view_subtitle"
+            app:layout_constraintEnd_toStartOf="@+id/permission_state_image"
+            app:layout_constraintStart_toEndOf="@+id/permission_state_view_icon"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/permission_state_view_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/permission_state_view_subtitle"
+            android:textColor="#919191"
+            android:textSize="13sp"
+            app:layout_constrainedWidth="true"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/permission_state_image"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/permission_state_view_title"
+            app:layout_constraintTop_toBottomOf="@+id/permission_state_view_title" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/permission_state_image"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_baseline_clear_24" />
+
+    </merge>
+
+</layout>

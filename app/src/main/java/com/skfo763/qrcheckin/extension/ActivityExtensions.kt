@@ -8,7 +8,10 @@ import android.os.Build
 import android.provider.Settings
 import android.view.WindowManager
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
+import com.skfo763.qrcheckin.R
 import com.skfo763.qrcheckin.lockscreen.usecase.LockScreenActivityUseCase.Companion.ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE
 
 fun AppCompatActivity.requestDismissKeyGuard() {
@@ -45,8 +48,22 @@ fun AppCompatActivity.clearScreenOnLocked() {
     }
 }
 
+fun FragmentActivity.showOverlayPermissionDialog() {
+    AlertDialog.Builder(this)
+        .setTitle(R.string.permission_title)
+        .setMessage(R.string.permission_message)
+        .setCancelable(false)
+        .setPositiveButton(getString(R.string.confirm)) { _, _ ->
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestOverlayOptions()
+            }
+        }.setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
+            dialog.dismiss()
+        }.show()
+}
+
 @RequiresApi(Build.VERSION_CODES.M)
-fun AppCompatActivity.requestOverlayOptions() {
+fun FragmentActivity.requestOverlayOptions() {
     val uri: Uri = Uri.fromParts("package", packageName, null)
     val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, uri)
     startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE)

@@ -227,13 +227,13 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/nav_app_info_open_help"
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:orientation="horizontal"
-            android:onClick="@{(v) -> viewModel.openAppUsageHelperView()}"
+            android:visibility="gone"
+            android:onClick="@{(v) -> viewModel.openAppResetInitializing()}"
             android:foreground="?attr/selectableItemBackground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/nav_app_info_share">

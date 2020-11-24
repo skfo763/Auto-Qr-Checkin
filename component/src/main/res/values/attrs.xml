@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="PermissionStateView">
+        <attr name="psv_title" format="reference|string"/>
+        <attr name="psv_subtitle" format="reference|string"/>
+        <attr name="psv_icon" format="reference"/>
+    </declare-styleable>
+</resources>
