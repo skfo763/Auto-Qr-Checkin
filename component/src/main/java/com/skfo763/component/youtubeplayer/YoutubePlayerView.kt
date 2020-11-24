@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
 import com.google.android.youtube.player.YouTubePlayerAndroidxFragment
+import com.google.android.youtube.player.YouTubePlayerView
 import com.skfo763.component.R
 
 class YouTubePlayerView @JvmOverloads constructor(
@@ -22,6 +23,7 @@ class YouTubePlayerView @JvmOverloads constructor(
     private var videoId: String? = null
     private var fragmentName: String? = null
     var onInitializedListener: OnInitializedListener? = null
+    var playbackEventListener: YouTubePlayer.PlaybackEventListener? = null
     private val fragmentManager: FragmentManager
     private val youTubePlayerAndroidxFragment = YouTubePlayerAndroidxFragment()
 
@@ -72,7 +74,6 @@ class YouTubePlayerView @JvmOverloads constructor(
             ?: throw IllegalArgumentException("You have to extend FragmentActivity or AppCompatActivity")
     }
 
-
     fun play(videoId: String, listener: OnInitializedListener? = null) {
         listener?.let { this.onInitializedListener = it }
 
@@ -87,7 +88,9 @@ class YouTubePlayerView @JvmOverloads constructor(
                     if (!wasRestored) {
                         player.cueVideo(videoId)
                     }
-
+                    playbackEventListener?.let {
+                        player.setPlaybackEventListener(it)
+                    }
                     onInitializedListener?.onInitializationSuccess(provider, player, wasRestored)
                 }
 

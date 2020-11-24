@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <kr.co.prnd.YouTubePlayerView
+        <com.skfo763.component.youtubeplayer.YouTubePlayerView
             android:id="@+id/intro_other_youtube_player_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -23,8 +23,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/intro_other_youtube_player_view"
-            app:fragment="com.skfo763.qrcheckin.intro.fragment.OtherSettingsFragment"
-            app:videoId="8Sv9gOb6MHw"/>
+            app:fragment="com.skfo763.qrcheckin.intro.fragment.OtherSettingsFragment" />
 
         <ScrollView
             android:id="@+id/intro_other_scrollview"

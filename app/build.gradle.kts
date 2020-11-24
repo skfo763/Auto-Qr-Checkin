@@ -62,6 +62,4 @@ dependencies {
     networkDependency()
     naverMapDependency()
     roomDependency()
-
-    additionalUiComponentDependency()
 }

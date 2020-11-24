@@ -2,14 +2,17 @@ package com.skfo763.qrcheckin.intro.fragment
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.google.android.youtube.player.YouTubePlayer
-import com.google.android.youtube.player.YouTubePlayerView
+import com.skfo763.component.youtubeplayer.YouTubePlayerView
 import com.gun0912.tedpermission.PermissionListener
 import com.skfo763.base.BaseFragment
+import com.skfo763.base.extension.logMessage
 import com.skfo763.qrcheckin.R
 import com.skfo763.qrcheckin.databinding.FragmentIntroOtherSettingBinding
 import com.skfo763.qrcheckin.databinding.FragmentIntroPermissionBinding
@@ -18,6 +21,7 @@ import com.skfo763.qrcheckin.extension.requestLocationPermissions
 import com.skfo763.qrcheckin.extension.showOverlayPermissionDialog
 import com.skfo763.qrcheckin.intro.usecase.IntroActivityUseCase
 import com.skfo763.qrcheckin.intro.viewmodel.IntroViewModel
+import com.skfo763.qrcheckin.intro.viewmodel.OtherSettingsViewModel
 import com.skfo763.qrcheckin.lockscreen.usecase.LockScreenActivityUseCase.Companion.ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE
 
 sealed class IntroPagerFragment<T: ViewDataBinding> : BaseFragment<T, IntroViewModel, IntroActivityUseCase>()
@@ -89,16 +93,24 @@ class PermissionFragment: IntroPagerFragment<FragmentIntroPermissionBinding>() {
     }
 }
 
-class OtherSettingsFragment : IntroPagerFragment<FragmentIntroOtherSettingBinding>() {
+class OtherSettingsFragment : IntroPagerFragment<FragmentIntroOtherSettingBinding>(), YouTubePlayer.PlaybackEventListener  {
 
     override val layoutResId: Int = R.layout.fragment_intro_other_setting
 
     override val parentViewModel: IntroViewModel by activityViewModels()
 
+    private val viewModel: OtherSettingsViewModel by viewModels()
+
     override val useCase: IntroActivityUseCase by lazy { parentViewModel.useCase }
 
     override val bindingVariable: (FragmentIntroOtherSettingBinding) -> Unit = {
         it.parentViewModel = parentViewModel
+        initPlayerView(it.introOtherYoutubePlayerView)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        observeLiveData()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -111,27 +123,42 @@ class OtherSettingsFragment : IntroPagerFragment<FragmentIntroOtherSettingBindin
         }
     }
 
-    private val playbackListener = object: YouTubePlayer.PlaybackEventListener {
-
-        override fun onPlaying() {
-
+    private fun initPlayerView(playerView: YouTubePlayerView) {
+        playerView.onInitializedListener = viewModel
+        playerView.playbackEventListener = this
+        parentViewModel.videoInfo?.id?.let {
+            playerView.play(it)
         }
+    }
 
-        override fun onPaused() {
-            TODO("Not yet implemented")
-        }
+    private fun observeLiveData() {
+        viewModel.videoTimeMillis.observe(viewLifecycleOwner, {
+            logMessage("hellohello = $it")
+        })
+    }
 
-        override fun onStopped() {
-            TODO("Not yet implemented")
-        }
+    override fun onPlaying() {
+        viewModel.startTracking()
+    }
 
-        override fun onBuffering(p0: Boolean) {
-            TODO("Not yet implemented")
-        }
+    override fun onPaused() {
+        viewModel.stopTracking()
+    }
 
-        override fun onSeekTo(newPositionMillis: Int) {
-            TODO("Not yet implemented")
+    override fun onStopped() {
+        viewModel.stopTracking()
+    }
+
+    override fun onBuffering(isBuffering: Boolean) {
+        if(isBuffering) {
+            viewModel.startTracking()
+        } else {
+            viewModel.stopTracking()
         }
+    }
+
+    override fun onSeekTo(newPositionMillis: Int) {
+        viewModel.setVideoTimeMillis(newPositionMillis)
     }
 
 }

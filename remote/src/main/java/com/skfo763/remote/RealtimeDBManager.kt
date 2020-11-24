@@ -5,6 +5,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.skfo763.remote.data.IntroYoutube
 import com.skfo763.remote.data.QrApiUrl
 import com.skfo763.remote.data.QrCheckInError
 import kotlinx.coroutines.Dispatchers
@@ -18,9 +19,8 @@ class RealtimeDBManager {
 
     private val database = Firebase.database
 
-
     @ExperimentalCoroutinesApi
-    val naverQrApiUrl = callbackFlow<QrApiUrl> {
+    val naverQrApiUrl get() = callbackFlow<QrApiUrl> {
         val dbRef = database.getReference("availableServer").child("naver")
         val listener = dbRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -43,12 +43,32 @@ class RealtimeDBManager {
     }
 
     @ExperimentalCoroutinesApi
-    val playStoreUrl = callbackFlow<String> {
+    val playStoreUrl get() = callbackFlow<String> {
         val dbRef = database.getReference("playStore").child("url")
         val listener = dbRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val url = snapshot.getValue(String::class.java) ?: BuildConfig.QR_CHECKIN_URL_NAVER
                 this@callbackFlow.sendBlocking(url)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                this@callbackFlow.close(error.toException())
+            }
+        })
+
+        awaitClose {
+            dbRef.removeEventListener(listener)
+        }
+    }
+
+    @ExperimentalCoroutinesApi
+    val introVideoInfo get() = callbackFlow<IntroYoutube> {
+        val dbRef = database.getReference("intro").child("youtube_video")
+        val listener = dbRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val id = snapshot.child("id").getValue(String::class.java)
+                val checkPointList = snapshot.child("checkpoint").children.toCustomDataTypeList(Int::class.java, 0)
+                this@callbackFlow.sendBlocking(IntroYoutube(id, checkPointList))
             }
 
             override fun onCancelled(error: DatabaseError) {

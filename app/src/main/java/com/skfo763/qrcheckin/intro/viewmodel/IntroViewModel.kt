@@ -10,7 +10,10 @@ import com.gun0912.tedpermission.PermissionListener
 import com.skfo763.base.BaseViewModel
 import com.skfo763.qrcheckin.intro.usecase.IntroActivityUseCase
 import com.skfo763.qrcheckin.lockscreen.activity.LockScreenActivity
+import com.skfo763.remote.data.IntroYoutube
 import com.skfo763.repository.intro.IntroRepository
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class IntroViewModel @ViewModelInject constructor(
@@ -23,6 +26,11 @@ class IntroViewModel @ViewModelInject constructor(
 
     val overlayPermissionGranted: LiveData<Boolean> = _overlayPermissionGranted
     val locationPermissionGranted: LiveData<Boolean> = _locationPermissionGranted
+    var videoInfo: IntroYoutube? = null
+
+    init {
+        getIntroVideoInfo()
+    }
 
     fun setOverlayPermissionState(isGranted: Boolean) {
         _overlayPermissionGranted.value = isGranted
@@ -37,6 +45,14 @@ class IntroViewModel @ViewModelInject constructor(
             repository.saveInitializeState(false)
             useCase.startActivity(LockScreenActivity::class.java)
             useCase.finishActivity()
+        }
+    }
+
+    private fun getIntroVideoInfo() {
+        viewModelScope.launch {
+            repository.getIntroVideoInfo().collect {
+                videoInfo = it
+            }
         }
     }
 

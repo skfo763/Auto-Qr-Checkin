@@ -29,10 +29,6 @@ object PlayCoreLib {
     const val playCore = "com.google.android.play:core:${Versions.playCore}"
 }
 
-object OtherUiComponentLib {
-    const val youtubePlayer = "kr.co.prnd:youtube-player-view:${Versions.youtubePlayer}"
-}
-
 fun DependencyHandler.lifecycleDependency() {
     implementation(LifeCycleLib.lifeCycleExt)
     implementation(LifeCycleLib.lifecycleKtx)
@@ -56,8 +52,4 @@ fun DependencyHandler.navigationDependency() {
 
 fun DependencyHandler.playCoreDependency() {
     implementation(PlayCoreLib.playCore)
-}
-
-fun DependencyHandler.additionalUiComponentDependency() {
-    implementation(OtherUiComponentLib.youtubePlayer)
 }
