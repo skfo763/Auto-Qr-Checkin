@@ -3,10 +3,8 @@ package com.skfo763.component.permissionstateview
 import android.content.Context
 import android.content.res.Resources
 import android.content.res.TypedArray
-import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.View.inflate
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.skfo763.base.extension.logException
 import com.skfo763.base.extension.logMessage

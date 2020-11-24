@@ -5,4 +5,10 @@
         <attr name="psv_subtitle" format="reference|string"/>
         <attr name="psv_icon" format="reference"/>
     </declare-styleable>
+
+    <declare-styleable name="NumberIconTextView">
+        <attr name="num_icon_tv_number" format="integer"/>
+        <attr name="num_icon_tv_title" format="reference|string"/>
+        <attr name="num_icon_tv_subtitle" format="reference|string"/>
+    </declare-styleable>
 </resources>

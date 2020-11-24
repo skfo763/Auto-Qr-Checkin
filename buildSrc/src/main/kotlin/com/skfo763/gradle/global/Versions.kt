@@ -39,6 +39,7 @@ object Versions {
     const val stetho = "1.5.1"
     const val loggingInterceptor = "4.9.0"
     const val tedPermission = "2.2.3"
+    const val youtubePlayer = "1.3.0"
 }
 
 object TestVersions {

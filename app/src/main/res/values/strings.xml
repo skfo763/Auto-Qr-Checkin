@@ -57,4 +57,11 @@
     <string name="toolbar_menu_skip_initialize_title">건너뛰기</string>
     <string name="skip_uncomplete_initialize_title">미완료 안내</string>
     <string name="skip_uncomplete_initialize_message">설정이 아직 완료되지 않았습니다. 그래도 넘어가시겠습니까?</string>
+    <string name="intro_other_setting_title">빅스비 버튼으로 앱 실행하기</string>
+    <string name="bixby_step_2_subtitle">빅스비 버튼의 설정을 \'두 번 눌러서 빅스비 열기\' 로 변경해주세요.</string>
+    <string name="bixby_step_2_title">빅스비 버튼 설정 변경하기</string>
+    <string name="bixby_step_1_title">설정화면 진입하기</string>
+    <string name="bixby_step_1_subtitle">첫 번째로 설정/유용한 기능 항목으로 진입해야 합니다.</string>
+    <string name="intro_bixby_step_3_title">한 번 누르기 사용</string>
+    <string name="intro_bixby_step_3_subtitle">빅스비 버튼을 한 번 눌렀을 때 QR 체크인 앱을 실행하도록 선택해주세요.</string>
 </resources>

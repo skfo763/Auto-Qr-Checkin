@@ -6,4 +6,6 @@
     <string name="restart_app">다시 시작하기</string>
     <string name="permission_state_view_subtitle">GPS 사용, 현재 위치를 통해 QR 체크인 장소를 기록합니다.</string>
     <string name="permission_state_view_title">위치 정보 접근 권한</string>
+    <string name="number_icon_text_view_title">설정 화면 이동</string>
+    <string name="number_icon_text_view_subtitle">설정창에 진입해 빅스비 버튼 기능을 커스터마이징합니다.</string>
 </resources>
