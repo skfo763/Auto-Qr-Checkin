@@ -13,6 +13,8 @@ object AndroidCoreKtxLib {
 object RxJavaLib {
     const val rxJava = "io.reactivex.rxjava3:rxjava:${Versions.rxJava}"
     const val rxAndroid = "io.reactivex.rxjava3:rxandroid:${Versions.rxAndroid}"
+    const val rxBinding = "com.jakewharton.rxbinding4:rxbinding:4.0.0"
+    const val rxBindingCore = "com.jakewharton.rxbinding4:rxbinding-core:4.0.0"
 }
 
 object KotlinLib {
@@ -44,6 +46,8 @@ fun DependencyHandler.kotlinDependency() {
 fun DependencyHandler.rxJavaDependency() {
     implementation(RxJavaLib.rxJava)
     implementation(RxJavaLib.rxAndroid)
+    implementation(RxJavaLib.rxBinding)
+    implementation(RxJavaLib.rxBindingCore)
 }
 
 fun DependencyHandler.daggerHiltDependency() {

@@ -11,10 +11,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.gun0912.tedpermission.PermissionListener
 import com.skfo763.base.BaseViewModel
-import com.skfo763.base.extension.clicks
 import com.skfo763.base.extension.logException
-import com.skfo763.base.extension.logMessage
-import com.skfo763.base.extension.throttleFirst
 import com.skfo763.component.floatingwidget.FloatingWidgetService
 import com.skfo763.component.floatingwidget.FloatingWidgetView.Companion.CURR_X
 import com.skfo763.component.floatingwidget.FloatingWidgetView.Companion.CURR_Y
@@ -35,11 +32,10 @@ import io.reactivex.rxjava3.core.BackpressureStrategy
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.Subject
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.pow
@@ -104,8 +100,11 @@ class LockScreenViewModel @ViewModelInject constructor(
     }
 
     val onCheckInComplete: (String?) -> Unit = {
-        logMessage("doCheckIn - checkin flow start")
         subject.onNext(it ?: "")
+    }
+
+    val onCheckInButtonClicked: (View) -> Unit = {
+        saveCheckPoint()
     }
 
     init {
@@ -169,14 +168,6 @@ class LockScreenViewModel @ViewModelInject constructor(
         }
     }
 
-    @FlowPreview
-    @ExperimentalCoroutinesApi
-    fun checkInButtonClicked(view: View) {
-        view.clicks().throttleFirst(1000).onEach {
-            saveCheckPoint()
-        }.launchIn(viewModelScope)
-    }
-
     private suspend fun setCheckInUrlInfo(checkInUrl: CheckInUrl) {
         withContext(Dispatchers.Main) {
             _availableHost.value = checkInUrl.availableHost
@@ -230,8 +221,6 @@ class LockScreenViewModel @ViewModelInject constructor(
             if (navigationViewModel.isWidgetChecked.value == true) "true" else "false"
         )
     }
-
-
 
     private fun saveCheckPoint() {
         if(!useCase.isActivityForeground || !useCase.isLocationPermissionGranted) return

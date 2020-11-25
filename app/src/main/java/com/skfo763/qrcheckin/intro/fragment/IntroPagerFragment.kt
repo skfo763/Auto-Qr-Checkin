@@ -3,11 +3,14 @@ package com.skfo763.qrcheckin.intro.fragment
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.view.MenuItem
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.youtube.player.YouTubePlayer
 import com.skfo763.component.youtubeplayer.YouTubePlayerView
 import com.gun0912.tedpermission.PermissionListener
@@ -95,6 +98,15 @@ class PermissionFragment: IntroPagerFragment<FragmentIntroPermissionBinding>() {
 
 class OtherSettingsFragment : IntroPagerFragment<FragmentIntroOtherSettingBinding>(), YouTubePlayer.PlaybackEventListener  {
 
+    companion object {
+        private const val REQUEST_SETTINGS = 4874
+    }
+
+    enum class Style {
+        SETTING,
+        NEXT
+    }
+
     override val layoutResId: Int = R.layout.fragment_intro_other_setting
 
     override val parentViewModel: IntroViewModel by activityViewModels()
@@ -102,6 +114,14 @@ class OtherSettingsFragment : IntroPagerFragment<FragmentIntroOtherSettingBindin
     private val viewModel: OtherSettingsViewModel by viewModels()
 
     override val useCase: IntroActivityUseCase by lazy { parentViewModel.useCase }
+
+    private val onFabClickListener = View.OnClickListener {
+        if(viewModel.currentStyle == Style.SETTING) {
+            startActivityForResult(Intent(Settings.ACTION_SETTINGS), REQUEST_SETTINGS)
+        } else {
+            parentViewModel.completeOtherSettingFlow()
+        }
+    }
 
     private val numberTextViewSetter by lazy {
         NumberTextViewSetter(
@@ -112,6 +132,7 @@ class OtherSettingsFragment : IntroPagerFragment<FragmentIntroOtherSettingBindin
 
     override val bindingVariable: (FragmentIntroOtherSettingBinding) -> Unit = {
         it.parentViewModel = parentViewModel
+        it.introOtherFab.setOnClickListener(onFabClickListener)
         initPlayerView(it.introOtherYoutubePlayerView)
     }
 
@@ -167,6 +188,29 @@ class OtherSettingsFragment : IntroPagerFragment<FragmentIntroOtherSettingBindin
     override fun onSeekTo(newPositionMillis: Int) {
         viewModel.setVideoTimeMillis(newPositionMillis)
         viewModel.stopTracking()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when(requestCode) {
+            REQUEST_SETTINGS -> {
+                viewModel.currentStyle = Style.NEXT
+                binding.introOtherFab.setFab(Style.NEXT)
+            }
+            else -> super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
+
+    private fun ExtendedFloatingActionButton.setFab(style: Style) {
+        when(style) {
+            Style.SETTING -> {
+                this.icon = ContextCompat.getDrawable(context, R.drawable.ic_baseline_settings_24)
+                this.text = context.getString(R.string.intro_floating_other_title)
+            }
+            Style.NEXT -> {
+                this.icon = ContextCompat.getDrawable(context, R.drawable.ic_baseline_skip_next_24)
+                this.text = context.getString(R.string.intro_floating_next_title)
+            }
+        }
     }
 
 }

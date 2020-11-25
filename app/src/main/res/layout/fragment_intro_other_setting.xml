@@ -7,7 +7,9 @@
         <variable
             name="parentViewModel"
             type="com.skfo763.qrcheckin.intro.viewmodel.IntroViewModel" />
-
+        <variable
+            name="viewModel"
+            type="com.skfo763.qrcheckin.intro.viewmodel.OtherSettingsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -94,6 +96,19 @@
             </LinearLayout>
 
         </ScrollView>
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/intro_other_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="24dp"
+            android:theme="@style/AppTheme"
+            android:text="@string/intro_floating_other_title"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:backgroundTint="#BEDFFF"
+            app:icon="@drawable/ic_baseline_settings_24"
+            app:iconPadding="4dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

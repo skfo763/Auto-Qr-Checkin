@@ -10,6 +10,7 @@ import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
 import com.skfo763.base.extension.logMessage
 import com.skfo763.component.youtubeplayer.YouTubePlayerView
+import com.skfo763.qrcheckin.intro.fragment.OtherSettingsFragment
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
@@ -20,6 +21,8 @@ class OtherSettingsViewModel @ViewModelInject constructor(
 ): ViewModel(), YouTubePlayerView.OnInitializedListener {
 
     private var youTubePlayer: YouTubePlayer? = null
+
+    var currentStyle: OtherSettingsFragment.Style = OtherSettingsFragment.Style.SETTING
 
     val maxVideoTime: Int get() = youTubePlayer?.durationMillis ?: Int.MAX_VALUE
 

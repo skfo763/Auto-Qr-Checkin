@@ -8,14 +8,17 @@ import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import androidx.databinding.ViewDataBinding
 import androidx.viewpager2.widget.ViewPager2
 import com.skfo763.base.BaseActivity
+import com.skfo763.base.extension.logMessage
 import com.skfo763.component.bixbysetting.BixbyLandingManager
 import com.skfo763.qrcheckin.R
 import com.skfo763.qrcheckin.admob.AdMobManager
 import com.skfo763.qrcheckin.databinding.ActivityIntroBinding
 import com.skfo763.qrcheckin.extension.isOverlayPermissionGranted
 import com.skfo763.qrcheckin.intro.adapter.IntroPagerAdapter
+import com.skfo763.qrcheckin.intro.fragment.IntroPagerFragment
 import com.skfo763.qrcheckin.intro.fragment.OtherSettingsFragment
 import com.skfo763.qrcheckin.intro.fragment.PermissionFragment
 import com.skfo763.qrcheckin.intro.usecase.IntroActivityUseCase
@@ -43,13 +46,8 @@ class IntroActivity(
     @Inject lateinit var bixbyManager: BixbyLandingManager
     @Inject lateinit var introPagerAdapter: IntroPagerAdapter
 
-    private val onNextButtonClicked = View.OnClickListener {
-        goToNextFlow()
-    }
-
     override val bindingVariable: (ActivityIntroBinding) -> Unit = {
         it.viewModel = viewModel
-        it.onNextButtonClicked = onNextButtonClicked
         it.introViewPager.adapter = introPagerAdapter
         it.introViewPager.isUserInputEnabled = false
     }
@@ -90,23 +88,7 @@ class IntroActivity(
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
-    private fun goToNextFlow() {
-        binding.introViewPager.adapter ?: return
-        if(!binding.introViewPager.completeFragmentTask) {
-            AlertDialog.Builder(this)
-                .setTitle(R.string.skip_uncomplete_initialize_title)
-                .setMessage(R.string.skip_uncomplete_initialize_message)
-                .setPositiveButton(getString(R.string.confirm)) { _, _ ->
-                    moveToNextFlow()
-                }.setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
-                    dialog.dismiss()
-                }.show()
-        } else {
-            moveToNextFlow()
-        }
-    }
-
-    private fun moveToNextFlow() {
+    fun goToNextFlow() {
         if(binding.introViewPager.isLastItem) {
             viewModel.completeInitializeFlow()
         } else {
@@ -123,20 +105,12 @@ class IntroActivity(
         }
     }
 
-    private val ViewPager2.isFirstItem: Boolean get() = this.currentItem == 0
-
-    private val ViewPager2.isLastItem: Boolean get() = this.currentItem == (adapter?.itemCount ?: 0) - 1
-
-
-    private val ViewPager2.completeFragmentTask: Boolean get() {
-        val item = (adapter as? IntroPagerAdapter)?.getItem(currentItem) ?: return false
-        return when(item) {
-            is PermissionFragment -> {
-                viewModel.locationPermissionGranted.value == true && viewModel.overlayPermissionGranted.value == true
-            }
-            is OtherSettingsFragment -> {
-                false
-            }
-        }
+    private val ViewPager2.isLastItem: Boolean get() {
+        return currentItem >= adapter?.itemCount?.minus(1) ?: 0
     }
+
+    private val ViewPager2.isFirstItem: Boolean get() = currentItem <= 0
+
+    private val ViewPager2.currentFragment: IntroPagerFragment<out ViewDataBinding>?
+        get() = (adapter as? IntroPagerAdapter)?.getItem(currentItem)
 }

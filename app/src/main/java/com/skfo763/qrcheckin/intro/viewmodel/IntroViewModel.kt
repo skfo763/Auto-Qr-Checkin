@@ -48,6 +48,14 @@ class IntroViewModel @ViewModelInject constructor(
         }
     }
 
+    fun completePermissionFlow() {
+        useCase.completePermissionFlow()
+    }
+
+    fun completeOtherSettingFlow() {
+        useCase.completeOtherSettingFlow()
+    }
+
     private fun getIntroVideoInfo() {
         viewModelScope.launch {
             repository.getIntroVideoInfo().collect {

@@ -68,4 +68,6 @@
     <string name="bixby_step_3_subtitle">측면 버튼 혹은 빅스비 버튼을 눌렀을 때 QR 체크인 앱을 실행하도록 설정해주세요.</string>
     <string name="bixby_step_4_title">빅스비 버튼을 눌러 확인하기</string>
     <string name="bixby_step_4_subtitle">빅스비 버튼을 눌러서 앱이 정상적으로 실행되는지 확인하세요</string>
+    <string name="intro_floating_next_title">다음으로</string>
+    <string name="intro_floating_other_title">설정으로 이동하기</string>
 </resources>

@@ -8,4 +8,6 @@
     <string name="permission_state_view_title">위치 정보 접근 권한</string>
     <string name="number_icon_text_view_title">설정 화면 이동</string>
     <string name="number_icon_text_view_subtitle">설정창에 진입해 빅스비 버튼 기능을 커스터마이징합니다.</string>
+    <string name="checkin_button_title">현재 위치로 체크인</string>
+    <string name="check_in_button_text">버튼을 눌러 현재 위치를 기록하세요!</string>
 </resources>

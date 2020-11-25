@@ -20,6 +20,7 @@ dependencies {
     implementation(project(":base"))
 
     kotlinDependency()
+    rxJavaDependency()
     androidCoreKtxDependency()
     daggerHiltDependency()
     androidXUiDependency()

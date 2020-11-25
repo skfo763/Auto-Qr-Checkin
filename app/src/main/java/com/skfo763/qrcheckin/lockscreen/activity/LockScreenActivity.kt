@@ -77,6 +77,7 @@ class LockScreenActivity (
     }
 
     override fun onDestroy() {
+        binding.lockScreenCheckInButton.compositeDisposable.clear()
         window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         clearDismissKeyGuard()
         clearScreenOnLocked()
