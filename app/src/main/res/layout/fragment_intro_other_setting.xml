@@ -7,6 +7,7 @@
         <variable
             name="parentViewModel"
             type="com.skfo763.qrcheckin.intro.viewmodel.IntroViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -74,8 +75,8 @@
                     android:layout_height="wrap_content"
                     tools:layout_height="80dp"
                     app:num_icon_tv_number="3"
-                    app:num_icon_tv_title="@string/intro_bixby_step_3_title"
-                    app:num_icon_tv_subtitle="@string/intro_bixby_step_3_subtitle" />
+                    app:num_icon_tv_title="@string/bixby_step_3_title"
+                    app:num_icon_tv_subtitle="@string/bixby_step_3_subtitle" />
 
                 <com.skfo763.component.bixbysetting.NumberIconTextView
                     android:id="@+id/intro_bixby_step_4"
@@ -83,8 +84,8 @@
                     android:layout_height="wrap_content"
                     tools:layout_height="80dp"
                     app:num_icon_tv_number="4"
-                    app:num_icon_tv_title="빅스비 버튼을 눌러 확인하기"
-                    app:num_icon_tv_subtitle="빅스비 버튼을 눌러서 앱이 정상적으로 실행되는지 확인하세요" />
+                    app:num_icon_tv_title="@string/bixby_step_4_title"
+                    app:num_icon_tv_subtitle="@string/bixby_step_4_subtitle" />
 
                 <View
                     android:layout_width="match_parent"

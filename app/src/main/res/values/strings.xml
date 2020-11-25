@@ -50,6 +50,8 @@
     <string name="skip_initialize_message">기본 설정을 완료하면 보다 편리하게 앱을 사용할 수 있습니다. 그래도 건너뛰시겠습니까?</string>
     <string name="intro_permission_title_text">앱 사용을 위해 권한이 필요해요</string>
     <string name="intro_permission_subtitle_text">아래의 권한 사용에 동의해주세요!\n권한에 동의하지 않을 시 일부 기능을 사용하지 못할 수 있습니다.</string>
+    <string name="intro_permission_dialog_title">권한 동의 안내</string>
+    <string name="intro_permisison_dialog_message">아직 동의하지 않은 권한이 있어요! 권한에 동의하지 않을 시 일부 기능을 사용하지 못할 수 있습니다.</string>
     <string name="psv_overlay_subtitle">위젯 버튼을 띄우기 위해서 해당 권한이 필요합니다.</string>
     <string name="psv_overlay_title">다른 앱 위에 표시하기 권한</string>
     <string name="psv_location_title">위치 정보 접근 권한</string>
@@ -58,10 +60,12 @@
     <string name="skip_uncomplete_initialize_title">미완료 안내</string>
     <string name="skip_uncomplete_initialize_message">설정이 아직 완료되지 않았습니다. 그래도 넘어가시겠습니까?</string>
     <string name="intro_other_setting_title">빅스비 버튼으로 앱 실행하기</string>
-    <string name="bixby_step_2_subtitle">빅스비 버튼의 설정을 \'두 번 눌러서 빅스비 열기\' 로 변경해주세요.</string>
-    <string name="bixby_step_2_title">빅스비 버튼 설정 변경하기</string>
-    <string name="bixby_step_1_title">설정화면 진입하기</string>
-    <string name="bixby_step_1_subtitle">첫 번째로 설정/유용한 기능 항목으로 진입해야 합니다.</string>
-    <string name="intro_bixby_step_3_title">한 번 누르기 사용</string>
-    <string name="intro_bixby_step_3_subtitle">빅스비 버튼을 한 번 눌렀을 때 QR 체크인 앱을 실행하도록 선택해주세요.</string>
+    <string name="bixby_step_2_subtitle">유용한 기능 설정창의 측면 버튼 혹은 빅스비 버튼 항목을 클릭해주세요</string>
+    <string name="bixby_step_2_title">측면 버튼 설정 변경하기</string>
+    <string name="bixby_step_1_title">유용한 기능 설정화면 진입하기</string>
+    <string name="bixby_step_1_subtitle">설정 화면의 유용한 기능 버튼을 클릭해 유용한 기능 설정창으로 진입해주세요.</string>
+    <string name="bixby_step_3_title">측면 버튼을 눌러 앱을 실행하기</string>
+    <string name="bixby_step_3_subtitle">측면 버튼 혹은 빅스비 버튼을 눌렀을 때 QR 체크인 앱을 실행하도록 설정해주세요.</string>
+    <string name="bixby_step_4_title">빅스비 버튼을 눌러 확인하기</string>
+    <string name="bixby_step_4_subtitle">빅스비 버튼을 눌러서 앱이 정상적으로 실행되는지 확인하세요</string>
 </resources>

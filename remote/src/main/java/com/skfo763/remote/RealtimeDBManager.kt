@@ -8,19 +8,18 @@ import com.google.firebase.ktx.Firebase
 import com.skfo763.remote.data.IntroYoutube
 import com.skfo763.remote.data.QrApiUrl
 import com.skfo763.remote.data.QrCheckInError
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.sendBlocking
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.launchIn
 
 class RealtimeDBManager {
 
     private val database = Firebase.database
 
     @ExperimentalCoroutinesApi
-    val naverQrApiUrl get() = callbackFlow<QrApiUrl> {
+    val naverQrApiUrl  = callbackFlow<QrApiUrl> {
         val dbRef = database.getReference("availableServer").child("naver")
         val listener = dbRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -43,7 +42,7 @@ class RealtimeDBManager {
     }
 
     @ExperimentalCoroutinesApi
-    val playStoreUrl get() = callbackFlow<String> {
+    val playStoreUrl = callbackFlow<String> {
         val dbRef = database.getReference("playStore").child("url")
         val listener = dbRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -62,12 +61,12 @@ class RealtimeDBManager {
     }
 
     @ExperimentalCoroutinesApi
-    val introVideoInfo get() = callbackFlow<IntroYoutube> {
+    val introVideoInfo = callbackFlow<IntroYoutube> {
         val dbRef = database.getReference("intro").child("youtube_video")
         val listener = dbRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val id = snapshot.child("id").getValue(String::class.java)
-                val checkPointList = snapshot.child("checkpoint").children.toCustomDataTypeList(Int::class.java, 0)
+                val checkPointList = snapshot.child("checkpoints").children.toCustomDataTypeList(Int::class.java, 0)
                 this@callbackFlow.sendBlocking(IntroYoutube(id, checkPointList))
             }
 

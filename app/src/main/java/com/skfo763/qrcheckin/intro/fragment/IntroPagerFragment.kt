@@ -12,7 +12,7 @@ import com.google.android.youtube.player.YouTubePlayer
 import com.skfo763.component.youtubeplayer.YouTubePlayerView
 import com.gun0912.tedpermission.PermissionListener
 import com.skfo763.base.BaseFragment
-import com.skfo763.base.extension.logMessage
+import com.skfo763.component.bixbysetting.NumberTextViewSetter
 import com.skfo763.qrcheckin.R
 import com.skfo763.qrcheckin.databinding.FragmentIntroOtherSettingBinding
 import com.skfo763.qrcheckin.databinding.FragmentIntroPermissionBinding
@@ -103,6 +103,13 @@ class OtherSettingsFragment : IntroPagerFragment<FragmentIntroOtherSettingBindin
 
     override val useCase: IntroActivityUseCase by lazy { parentViewModel.useCase }
 
+    private val numberTextViewSetter by lazy {
+        NumberTextViewSetter(
+            listOf(binding.introBixbyStep1, binding.introBixbyStep2, binding.introBixbyStep3, binding.introBixbyStep4),
+            parentViewModel.videoInfo?.checkPointList ?: listOf()
+        )
+    }
+
     override val bindingVariable: (FragmentIntroOtherSettingBinding) -> Unit = {
         it.parentViewModel = parentViewModel
         initPlayerView(it.introOtherYoutubePlayerView)
@@ -132,8 +139,8 @@ class OtherSettingsFragment : IntroPagerFragment<FragmentIntroOtherSettingBindin
     }
 
     private fun observeLiveData() {
-        viewModel.videoTimeMillis.observe(viewLifecycleOwner, {
-            logMessage("hellohello = $it")
+        viewModel.videoTimeMillis.observe(viewLifecycleOwner, { videoTimeMillis ->
+            numberTextViewSetter.onVideoTimeMillis(videoTimeMillis, viewModel.maxVideoTime)
         })
     }
 
@@ -159,6 +166,7 @@ class OtherSettingsFragment : IntroPagerFragment<FragmentIntroOtherSettingBindin
 
     override fun onSeekTo(newPositionMillis: Int) {
         viewModel.setVideoTimeMillis(newPositionMillis)
+        viewModel.stopTracking()
     }
 
 }

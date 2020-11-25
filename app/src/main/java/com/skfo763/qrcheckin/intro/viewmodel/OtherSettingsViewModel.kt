@@ -21,6 +21,8 @@ class OtherSettingsViewModel @ViewModelInject constructor(
 
     private var youTubePlayer: YouTubePlayer? = null
 
+    val maxVideoTime: Int get() = youTubePlayer?.durationMillis ?: Int.MAX_VALUE
+
     private val _videoTimeMillis = MutableLiveData<Int>()
 
     val videoTimeMillis: LiveData<Int> = _videoTimeMillis
