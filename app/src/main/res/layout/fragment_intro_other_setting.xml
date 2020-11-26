@@ -104,6 +104,7 @@
             android:layout_margin="24dp"
             android:theme="@style/AppTheme"
             android:text="@string/intro_floating_other_title"
+            android:foreground="?attr/selectableItemBackground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:backgroundTint="#BEDFFF"

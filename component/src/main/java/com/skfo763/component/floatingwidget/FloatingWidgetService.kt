@@ -1,9 +1,12 @@
 package com.skfo763.component.floatingwidget
 
+import android.app.Notification
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
+import androidx.core.app.NotificationCompat
 import com.skfo763.base.extension.logException
 import com.skfo763.component.floatingwidget.FloatingWidgetView.Companion.CURR_X
 import com.skfo763.component.floatingwidget.FloatingWidgetView.Companion.CURR_Y
@@ -19,13 +22,21 @@ open class FloatingWidgetService @Inject constructor(): Service() {
 
     @Inject lateinit var floatingWidgetView: FloatingWidgetView
     @Inject lateinit var client: FloatingWidgetClient
+    @Inject lateinit var launchIntent: Intent
 
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onCreate() {
         super.onCreate()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForeground(WIDGET_PUSH_ID, client.getForegroundNotification(this))
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForeground(
+                    WIDGET_PUSH_ID,
+                    getProcessedNotification(client.getForegroundNotificationBuilder(this))
+                )
+            }
+        } catch (e: Exception) {
+            logException(e)
         }
     }
 
@@ -43,11 +54,21 @@ open class FloatingWidgetService @Inject constructor(): Service() {
     }
 
     override fun onDestroy() {
+        if(floatingWidgetView.isAttachedToWindow) {
+            client.mWindowManager.removeView(floatingWidgetView)
+        }
         super.onDestroy()
-        client.mWindowManager.removeView(floatingWidgetView)
     }
 
     private fun setListeners() {
         floatingWidgetView.setEventListener(client, this)
+    }
+
+    private fun getProcessedNotification(builder: NotificationCompat.Builder): Notification {
+        return builder.setContentIntent(getPendingIntent()).build()
+    }
+
+    private fun getPendingIntent(): PendingIntent {
+        return PendingIntent.getActivity(applicationContext, WIDGET_PUSH_ID, launchIntent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 }

@@ -49,7 +49,6 @@ class LockScreenActivity (
     override val bindingVariable: (ActivityLockScreenBinding) -> Unit = {
         it.viewModel = viewModel
         useCase.snackBarWindow = binding.lockScreenNavHostFragment
-        viewModel.setSwitchToSavedState()
         viewModel.navigationViewModel.useCase = useCase
     }
 
@@ -99,6 +98,7 @@ class LockScreenActivity (
 
     override fun onStart() {
         super.onStart()
+        viewModel.setSwitchToSavedState()
         viewModel.deleteFloatingButton()
         viewModel.sendCheckStateProperty()
     }

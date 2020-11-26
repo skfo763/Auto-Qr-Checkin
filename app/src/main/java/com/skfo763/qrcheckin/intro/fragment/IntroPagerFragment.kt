@@ -4,13 +4,13 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.youtube.player.YouTubePlayer
 import com.skfo763.component.youtubeplayer.YouTubePlayerView
 import com.gun0912.tedpermission.PermissionListener
@@ -60,6 +60,10 @@ class PermissionFragment: IntroPagerFragment<FragmentIntroPermissionBinding>() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.intro_permission_toolbar_menu, menu)
+    }
+
     override fun onStart() {
         super.onStart()
         checkOverlayOptions(true)
@@ -69,6 +73,10 @@ class PermissionFragment: IntroPagerFragment<FragmentIntroPermissionBinding>() {
         return when(item.itemId) {
             android.R.id.home -> {
                 useCase.goToPreviousInitFlow()
+                true
+            }
+            R.id.toolbar_menu_skip_initialize -> {
+                useCase.completePermissionFlow()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -102,11 +110,6 @@ class OtherSettingsFragment : IntroPagerFragment<FragmentIntroOtherSettingBindin
         private const val REQUEST_SETTINGS = 4874
     }
 
-    enum class Style {
-        SETTING,
-        NEXT
-    }
-
     override val layoutResId: Int = R.layout.fragment_intro_other_setting
 
     override val parentViewModel: IntroViewModel by activityViewModels()
@@ -116,11 +119,7 @@ class OtherSettingsFragment : IntroPagerFragment<FragmentIntroOtherSettingBindin
     override val useCase: IntroActivityUseCase by lazy { parentViewModel.useCase }
 
     private val onFabClickListener = View.OnClickListener {
-        if(viewModel.currentStyle == Style.SETTING) {
-            startActivityForResult(Intent(Settings.ACTION_SETTINGS), REQUEST_SETTINGS)
-        } else {
-            parentViewModel.completeOtherSettingFlow()
-        }
+        startActivityForResult(Intent(Settings.ACTION_SETTINGS), REQUEST_SETTINGS)
     }
 
     private val numberTextViewSetter by lazy {
@@ -136,6 +135,10 @@ class OtherSettingsFragment : IntroPagerFragment<FragmentIntroOtherSettingBindin
         initPlayerView(it.introOtherYoutubePlayerView)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.intro_other_toolbar_menu, menu)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeLiveData()
@@ -145,6 +148,10 @@ class OtherSettingsFragment : IntroPagerFragment<FragmentIntroOtherSettingBindin
         return when(item.itemId) {
             android.R.id.home -> {
                 useCase.goToPreviousInitFlow()
+                true
+            }
+            R.id.toolbar_menu_complete_initialize -> {
+                parentViewModel.completeOtherSettingFlow()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -193,23 +200,9 @@ class OtherSettingsFragment : IntroPagerFragment<FragmentIntroOtherSettingBindin
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when(requestCode) {
             REQUEST_SETTINGS -> {
-                viewModel.currentStyle = Style.NEXT
-                binding.introOtherFab.setFab(Style.NEXT)
+
             }
             else -> super.onActivityResult(requestCode, resultCode, data)
-        }
-    }
-
-    private fun ExtendedFloatingActionButton.setFab(style: Style) {
-        when(style) {
-            Style.SETTING -> {
-                this.icon = ContextCompat.getDrawable(context, R.drawable.ic_baseline_settings_24)
-                this.text = context.getString(R.string.intro_floating_other_title)
-            }
-            Style.NEXT -> {
-                this.icon = ContextCompat.getDrawable(context, R.drawable.ic_baseline_skip_next_24)
-                this.text = context.getString(R.string.intro_floating_next_title)
-            }
         }
     }
 

@@ -57,7 +57,7 @@ class LockScreenViewModel @ViewModelInject constructor(
     private var currLocation = Pair(0.0, 0.0)
     private val subject: Subject<String> = BehaviorSubject.create()
     val shouldReviewApp: Boolean get() = inAppReviewManager.shouldReviewApp(random)
-    val navigationViewModel = NavigationViewModel(viewModelScope, lockScreenRepository)
+    val navigationViewModel = NavigationViewModel(viewModelScope, lockScreenRepository, inAppUpdateManager, random)
 
     private val _availableHost = MutableLiveData<List<String>?>()
     private val _availablePath = MutableLiveData<List<String>?>()

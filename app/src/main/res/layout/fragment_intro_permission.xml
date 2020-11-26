@@ -94,6 +94,7 @@
             android:layout_margin="24dp"
             android:theme="@style/AppTheme"
             android:text="@string/intro_floating_action_title"
+            android:foreground="?attr/selectableItemBackground"
             android:onClick="@{(v) -> parentViewModel.completePermissionFlow()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

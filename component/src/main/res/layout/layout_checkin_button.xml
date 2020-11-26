@@ -18,6 +18,7 @@
             android:elevation="1dp"
             android:backgroundTint="#BEDFFF"
             android:theme="@style/AppTheme"
+            android:foreground="?attr/selectableItemBackground"
             android:text="@string/checkin_button_title"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="4dp"

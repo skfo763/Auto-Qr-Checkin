@@ -3,6 +3,8 @@ package com.skfo763.qrcheckin.lockscreen.viewmodel
 import android.widget.CompoundButton
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.skfo763.base.extension.logException
+import com.skfo763.component.playcore.InAppUpdateManager
 import com.skfo763.qrcheckin.BuildConfig
 import com.skfo763.qrcheckin.lockscreen.service.LockScreenService
 import com.skfo763.qrcheckin.lockscreen.usecase.LockScreenActivityUseCase
@@ -10,10 +12,13 @@ import com.skfo763.repository.lockscreen.LockScreenRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import java.util.*
 
 class NavigationViewModel(
     private val viewModelScope: CoroutineScope,
-    private val lockScreenRepository: LockScreenRepository
+    private val lockScreenRepository: LockScreenRepository,
+    private val inAppUpdateManager: InAppUpdateManager,
+    private val random: Random
 ) {
 
     lateinit var useCase: LockScreenActivityUseCase
@@ -132,6 +137,10 @@ class NavigationViewModel(
     }
 
     val onVersionClicked = {
-        // TODO(인앱 업데이트 로직 구현)
+        if(inAppUpdateManager.shouldUpdateApp(random)) {
+            inAppUpdateManager.launchUpdateFlow {
+                logException(it)
+            }
+        }
     }
 }

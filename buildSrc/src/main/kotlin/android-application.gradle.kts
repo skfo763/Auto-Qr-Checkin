@@ -28,13 +28,13 @@ android {
 
     buildTypes {
         getByName("release") {
-            val localDBName = gradleLocalProperties(rootDir).getProperty("local.database.name")
-
             isDebuggable = false
-            resValue("string", "DB_PASSWORD_$localDBName", "1027")
         }
 
         getByName("debug") {
+            val localDBName = gradleLocalProperties(rootDir).getProperty("local.database.name")
+            resValue("string", "DB_PASSWORD_$localDBName", "1027")
+
             isDebuggable = true
             applicationIdSuffix = ".debug"
             aaptOptions.cruncherEnabled = false

@@ -60,11 +60,6 @@ class IntroActivity(
         viewModel.setLocationPermissionState(isLocationPermissionGranted)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.intro_toolbar_menu, menu)
-        return true
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
             R.id.toolbar_menu_skip_initialize -> {

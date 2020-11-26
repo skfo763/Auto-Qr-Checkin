@@ -24,7 +24,7 @@ class CheckInMapViewModel @ViewModelInject constructor(
 ): ViewModel(), AddressResultReceiver.Listener {
 
     @SuppressLint("SimpleDateFormat")
-    private val dateFormat = SimpleDateFormat("yyyy년 MM월 dd일 hh시 mm분")
+    private val dateFormat = SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분")
 
     private val _location = MutableLiveData<Location>()
     private val _cameraScopeAddress = MutableLiveData<CheckInAddress?>()
