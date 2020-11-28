@@ -8,6 +8,6 @@ object Sdk {
 
 object AppVersion {
     const val applicationId = "com.skfo763.qrcheckin"
-    const val versionCode = 103001
-    const val versionName = "1.3.1"
+    const val versionCode = 103002
+    const val versionName = "1.3.2"
 }

@@ -7,8 +7,7 @@ import com.skfo763.qrcheckin.intro.fragment.PermissionFragment
 
 class IntroPagerAdapter(activity: FragmentActivity): FragmentStateAdapter(activity) {
     private val fragmentList = listOf(
-        PermissionFragment(),
-        OtherSettingsFragment()
+        PermissionFragment()
     )
 
     fun getItem(position: Int) = fragmentList[position]
