@@ -5,5 +5,26 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:forceDarkAllowed">true</item>
+    </style>
+
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash</item>
+    </style>
+
+    <style name="BottomNavStyle" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="backgroundTint">@color/bottom_nav_background</item>
+        <item name="itemIconTint">@color/bottom_nav_color</item>
+        <item name="itemTextColor">@color/bottom_nav_color</item>
+    </style>
+
+    <style name="ToolbarStyle" parent="AppTheme">
+        <item name="android:background">@color/toolbar_background</item>
+        <item name="android:textColor">@color/toolbar_title_color</item>
+        <item name="android:textColorSecondary">@color/toolbar_title_color</item>
+    </style>
+
+    <style name="ProgressbarStyle" parent="AppTheme">
+        <item name="colorAccent">@color/progressbar_color</item>
     </style>
 </resources>

@@ -16,14 +16,17 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:elevation="1dp"
-            android:backgroundTint="#BEDFFF"
+            android:backgroundTint="@color/checkin_button_background_tint"
             android:theme="@style/AppTheme"
             android:foreground="?attr/selectableItemBackground"
             android:text="@string/checkin_button_title"
+            android:textColor="@color/checkin_button_text_tint"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="4dp"
+            android:forceDarkAllowed="false"
             app:iconPadding="4dp"
             app:iconGravity="start"
+            app:iconTint="@color/checkin_button_text_tint"
             app:icon="@drawable/ic_baseline_location_on_24" />
 
     </merge>

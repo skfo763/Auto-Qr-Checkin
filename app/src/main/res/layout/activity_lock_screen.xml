@@ -31,8 +31,10 @@
                 android:layout_height="?attr/actionBarSize"
                 android:gravity="center_vertical"
                 android:elevation="4dp"
-                android:background="#FFFFFF"
                 android:orientation="horizontal"
+                android:minHeight="?attr/actionBarSize"
+                app:theme="@style/ToolbarStyle"
+                app:layout_scrollFlags="scroll|enterAlways"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/lock_screen_divider"
                 app:layout_constraintStart_toStartOf="parent"
@@ -56,7 +58,7 @@
                         android:gravity="center_vertical"
                         android:drawablePadding="8dp"
                         android:textSize="18sp"
-                        android:textColor="#323232"
+                        android:textColor="@color/toolbar_title_color"
                         android:text="@string/app_name_partial"/>
 
                 </LinearLayout>
@@ -67,7 +69,7 @@
                 android:id="@+id/lock_screen_divider"
                 android:layout_width="0dp"
                 android:layout_height="0.5dp"
-                android:background="#D8D8D8"
+                android:background="@color/toolbar_bottom_shadow"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/toolbar"
@@ -88,11 +90,12 @@
             <ProgressBar
                 android:layout_width="48dp"
                 android:layout_height="48dp"
+                android:theme="@style/ProgressbarStyle"
                 android:visibility="@{viewModel.isLoading ? View.VISIBLE : View.GONE}"
                 app:layout_constraintTop_toBottomOf="@id/toolbar"
                 app:layout_constraintBottom_toTopOf="@id/lock_screen_ad_view_container"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <com.skfo763.component.checkinbutton.CheckInButton
                 android:id="@+id/lock_screen_check_in_button"
@@ -122,7 +125,7 @@
                 android:id="@+id/lock_screen_bottom_navigation"
                 android:layout_width="0dp"
                 android:layout_height="?attr/actionBarSize"
-                android:background="#ffffff"
+                style="@style/BottomNavStyle"
                 app:menu="@menu/bottom_nav_menu"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

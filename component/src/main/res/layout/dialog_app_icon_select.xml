@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="androidx.lifecycle.LiveData"/>
+        <import type="java.util.List"/>
+        <import type="com.skfo763.component.bottomsheetdialog.AppIconSelectDialog.Icon"/>
+        <variable
+            name="itemList"
+            type="LiveData&lt;List&lt;Icon>>" />
+        <variable
+            name="title"
+            type="LiveData&lt;String>" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/dialogTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_app_icon_select_title"
+            android:textSize="18sp"
+            android:paddingTop="16dp"
+            android:paddingStart="20dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="16dp"
+            android:textStyle="bold"
+            android:textColor="#323232"
+            android:elevation="3dp"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintVertical_bias="1.0"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintBottom_toTopOf="@+id/dialogDivider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/dialogDivider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#E8E8E8"
+            app:layout_constraintTop_toBottomOf="@id/dialogTitle"
+            app:layout_constraintBottom_toTopOf="@id/dialogItem"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/dialogItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dialogDivider"
+            bind:dino_itemLayout="@{@layout/holder_dialog_app_icon_select_item}"
+            bind:dino_items="@{itemList}"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

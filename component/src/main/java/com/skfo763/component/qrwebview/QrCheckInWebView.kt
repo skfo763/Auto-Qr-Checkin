@@ -9,6 +9,8 @@ import android.webkit.CookieManager
 import android.webkit.WebSettings
 import android.webkit.WebView
 import androidx.appcompat.app.AlertDialog
+import androidx.webkit.WebSettingsCompat
+import androidx.webkit.WebViewFeature
 import com.skfo763.component.BuildConfig
 import com.skfo763.component.R
 
@@ -25,6 +27,10 @@ class QrCheckInWebView @JvmOverloads constructor(
     init {
         isFocusable = true
         isFocusableInTouchMode = true
+
+        if(WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
+            WebSettingsCompat.setForceDark(this.settings, WebSettingsCompat.FORCE_DARK_AUTO)
+        }
 
         uriChecker.showDialog = { uri, it -> showDialog(
             it.title,

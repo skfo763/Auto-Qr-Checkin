@@ -15,6 +15,8 @@ object UiLib {
     const val constraintLayout = "androidx.constraintlayout:constraintlayout:${Versions.constraintLayout}"
     const val material = "com.google.android.material:material:${Versions.material}"
     const val tedPermission = "gun0912.ted:tedpermission:${Versions.tedPermission}"
+    const val webKit = "androidx.webkit:webkit:${Versions.webKitVersion}"
+    const val simpleRV = "com.dino.library:simplerecyclerview:${Versions.simpleRV}"
 }
 
 object NavigationLib {
@@ -40,6 +42,8 @@ fun DependencyHandler.androidXUiDependency() {
     implementation(UiLib.constraintLayout)
     implementation(UiLib.material)
     implementation(UiLib.tedPermission)
+    implementation(UiLib.webKit)
+    implementation(UiLib.simpleRV)
 }
 
 fun DependencyHandler.navigationDependency() {

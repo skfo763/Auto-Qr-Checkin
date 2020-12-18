@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#4649FB</color>
+    <color name="colorPrimaryDark">#323232</color>
+    <color name="colorAccent">#91CEFF</color>o
+
+    <color name="splash_background">#252525</color>
+
+    <color name="toolbar_background">#373737</color>
+    <color name="toolbar_title_color">#E4E4E4</color>
+    <color name="toolbar_bottom_shadow">#333333</color>
+
+    <color name="bottom_nav_background">#373737</color>
+    <color name="bottom_nav_item_tint_selected">#F1DC28</color>
+    <color name="bottom_nav_item_tint_unselected">#D3D3D3</color>
+
+    <color name="floating_widget_text_color">#EDEDED</color>
+
+    <color name="progressbar_color">#F1DC28</color>
+
+    <color name="app_icon_select_dialog_light_background">#98A4EC</color>
+    <color name="app_icon_select_dialog_light_title">#272727</color>
+    <color name="app_icon_select_dialog_light_description">#424242</color>
+
+    <color name="app_icon_select_dialog_dark_background">#323232</color>
+    <color name="app_icon_select_dialog_dark_title">#EAEAEA</color>
+    <color name="app_icon_select_dialog_dark_description">#8A8A8A</color>
+</resources>

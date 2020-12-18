@@ -1,11 +1,14 @@
 package com.skfo763.qrcheckin.lockscreen.viewmodel
 
 import android.widget.CompoundButton
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.skfo763.base.extension.logException
+import com.skfo763.component.bottomsheetdialog.AppIconSelectDialog
 import com.skfo763.component.playcore.InAppUpdateManager
 import com.skfo763.qrcheckin.BuildConfig
+import com.skfo763.qrcheckin.launch.LaunchIconManager
 import com.skfo763.qrcheckin.lockscreen.service.LockScreenService
 import com.skfo763.qrcheckin.lockscreen.usecase.LockScreenActivityUseCase
 import com.skfo763.repository.lockscreen.LockScreenRepository
@@ -28,13 +31,14 @@ class NavigationViewModel(
     private val _isAutoCheckinChecked = MutableLiveData<Boolean>()
     private val _isLoading = MutableLiveData<Boolean>()
     private val _versionName = MutableLiveData(BuildConfig.VERSION_NAME)
+    private val _appIconResource = MutableLiveData<LaunchIconManager.Type>()
 
     val isLockScreenChecked: LiveData<Boolean> = _isLockScreenChecked
     val isWidgetChecked: LiveData<Boolean> = _isWidgetChecked
     val isAutoCheckInChecked: LiveData<Boolean> = _isAutoCheckinChecked
     val isLoading: LiveData<Boolean> = _isLoading
     val versionName: LiveData<String> = _versionName
-
+    val appIconResource: LiveData<LaunchIconManager.Type> = _appIconResource
 
     val onLockScreenSwitchStateChanged: (CompoundButton, Boolean) -> Unit = { _, isChecked ->
         setLockScreenDataToCurrentSwitchState(isChecked)
@@ -54,7 +58,6 @@ class NavigationViewModel(
             lockScreenRepository.setAutoCheckInState(isChecked)
         }
     }
-
 
     fun setLockScreenSavedState() {
         viewModelScope.launch {
@@ -84,6 +87,14 @@ class NavigationViewModel(
         }
     }
 
+    fun setAppIconSavedState() {
+        viewModelScope.launch {
+            lockScreenRepository.getAppIconState().collect {
+                _appIconResource.value = LaunchIconManager.getType(it, useCase.currentUiTheme)
+            }
+        }
+    }
+
     fun openAppResetInitializing() {
         viewModelScope.launch {
             lockScreenRepository.resetInitializationState(true)
@@ -92,7 +103,17 @@ class NavigationViewModel(
     }
 
     fun openAutoCheckInHelperView() {
+        useCase.showAutoCheckinDescription()
+    }
 
+    fun startAppLauncherIconChangeFlow() {
+        useCase.showAppIconSelectDialog()
+    }
+
+    fun setAppIconData(type: LaunchIconManager.Type) {
+        viewModelScope.launch {
+            lockScreenRepository.setAppIconType(type.manifestName)
+        }
     }
 
     val setLockScreenDataToCurrentSwitchState: (isChecked: Boolean) -> Unit = {

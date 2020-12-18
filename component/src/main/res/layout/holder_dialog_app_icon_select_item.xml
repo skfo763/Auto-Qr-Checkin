@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="com.skfo763.component.bottomsheetdialog.AppIconSelectDialog.Icon"/>
+        <variable
+            name="item"
+            type="com.skfo763.component.bottomsheetdialog.AppIconSelectDialog.Icon" />
+        <variable
+            name="itemClickListener"
+            type="android.view.View.OnClickListener"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@{item.backgroundColor}"
+        android:foreground="?attr/selectableItemBackground"
+        android:onClick="@{(v) -> item.onItemClicked.invoke(item)}"
+        android:forceDarkAllowed="false"
+        tools:background="#323232"
+        android:paddingTop="24dp"
+        android:paddingBottom="24dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/holder_app_icon_select_icon"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginBottom="8dp"
+            android:src="@{item.iconDrawable}"
+            android:forceDarkAllowed="false"
+            app:layout_constraintBottom_toTopOf="@+id/holder_app_icon_select_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@drawable/ic_baseline_location_on_24" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/holder_app_icon_select_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="@{item.name}"
+            android:textColor="@{item.nameTextColor}"
+            android:layout_marginBottom="4dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/holder_app_icon_select_desc"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/holder_app_icon_select_icon"
+            tools:textColor="#EAEAEA"
+            tools:text="일반 아이콘" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/holder_app_icon_select_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{item.description}"
+            android:textColor="@{item.descriptionTextColor}"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/holder_app_icon_select_title"
+            tools:textColor="#8A8A8A"
+            tools:text="밝은 색감의 아이콘을 사용해 산뜻한 느낌을 줍니다." />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

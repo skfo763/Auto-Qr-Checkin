@@ -3,23 +3,38 @@ package com.skfo763.qrcheckin.lockscreen.usecase
 import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
+import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
+import androidx.appcompat.widget.ThemeUtils
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.OnLifecycleEvent
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.skfo763.base.BaseActivityUseCase
+import com.skfo763.base.extension.safeColor
+import com.skfo763.base.theme.ThemeType
+import com.skfo763.base.theme.applyTheme
+import com.skfo763.base.theme.getTheme
+import com.skfo763.component.bottomsheetdialog.AppIconSelectDialog
+import com.skfo763.component.bottomsheetdialog.AutoCheckInDescDialog
 import com.skfo763.component.extensions.parsedUri
 import com.skfo763.component.playcore.InAppUpdateManager
 import com.skfo763.qrcheckin.R
 import com.skfo763.qrcheckin.extension.isOverlayPermissionGranted
-import com.skfo763.qrcheckin.extension.requestOverlayOptions
 import com.skfo763.qrcheckin.extension.showOverlayPermissionDialog
+import com.skfo763.qrcheckin.launch.LaunchIconManager
 import com.skfo763.qrcheckin.lockscreen.activity.LockScreenActivity
 import com.skfo763.storage.gps.isLocationPermissionGranted
 
@@ -32,6 +47,8 @@ class LockScreenActivityUseCase constructor(
         const val ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 1001
     }
 
+    val currentUiTheme: ThemeType get() = getTheme(activity)
+
     var isActivityForeground: Boolean = false
 
     var onActivityInAppUpdateResult: ((Int, Intent?) -> Unit)? = null
@@ -39,6 +56,42 @@ class LockScreenActivityUseCase constructor(
     val isLocationPermissionGranted: Boolean get() = activity.isLocationPermissionGranted
 
     var snackBarWindow: View? = null
+
+    private val onItemClicked: (AppIconSelectDialog.Icon) -> Unit = { icon ->
+        when(icon.name) {
+            res.getString(R.string.icon_light_title) -> {
+                activity.launchIconManager.setIcon(LaunchIconManager.Type.LIGHT)
+                activity.viewModel.navigationViewModel.setAppIconData(LaunchIconManager.Type.LIGHT)
+            }
+            res.getString(R.string.icon_dark_title) -> {
+                activity.launchIconManager.setIcon(LaunchIconManager.Type.DARK)
+                activity.viewModel.navigationViewModel.setAppIconData(LaunchIconManager.Type.DARK)
+            }
+        }
+    }
+
+    private val appIconList by lazy {
+        listOf(
+            AppIconSelectDialog.Icon(
+                getDrawable(R.drawable.launcher_icon_light),
+                getColor(R.color.app_icon_select_dialog_light_background),
+                getColor(R.color.app_icon_select_dialog_light_title),
+                getColor(R.color.app_icon_select_dialog_light_description),
+                activity.getString(R.string.icon_light_title),
+                activity.getString(R.string.icon_light_desc),
+                onItemClicked = onItemClicked
+            ),
+            AppIconSelectDialog.Icon(
+                getDrawable(R.drawable.launcher_icon_dark),
+                getColor(R.color.app_icon_select_dialog_dark_background),
+                getColor(R.color.app_icon_select_dialog_dark_title),
+                getColor(R.color.app_icon_select_dialog_dark_description),
+                activity.getString(R.string.icon_dark_title),
+                activity.getString(R.string.icon_dark_desc),
+                onItemClicked = onItemClicked
+            )
+        )
+    }
 
     fun openUrl(url: String?) {
         try {
@@ -142,6 +195,26 @@ class LockScreenActivityUseCase constructor(
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     fun setActivityForegroundStateStop() {
         isActivityForeground = false
+    }
+
+    fun getDrawable(@DrawableRes iconResId: Int): Drawable {
+        return ContextCompat.getDrawable(this.activity, iconResId) ?: ColorDrawable(Color.TRANSPARENT)
+    }
+
+    @ColorInt
+    fun getColor(@ColorRes colorResId: Int): Int {
+        return ContextCompat.getColor(this.activity, colorResId)
+    }
+
+    fun showAppIconSelectDialog() {
+        AppIconSelectDialog().apply {
+            setData(appIconList)
+            show(this@LockScreenActivityUseCase.activity.supportFragmentManager, null)
+        }
+    }
+
+    fun showAutoCheckinDescription() {
+        AutoCheckInDescDialog().show(activity.supportFragmentManager, null)
     }
 
 }

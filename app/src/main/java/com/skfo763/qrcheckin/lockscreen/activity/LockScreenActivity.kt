@@ -12,14 +12,15 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.navigation.NavigationView
 import com.skfo763.base.BaseActivity
 import com.skfo763.component.bixbysetting.BixbyLandingManager
+import com.skfo763.component.bottomsheetdialog.AppIconSelectDialog
 import com.skfo763.component.tracker.FirebaseTracker
 import com.skfo763.qrcheckin.R
 import com.skfo763.qrcheckin.admob.AdMobManager
 import com.skfo763.qrcheckin.databinding.ActivityLockScreenBinding
 import com.skfo763.qrcheckin.extension.*
+import com.skfo763.qrcheckin.launch.LaunchIconManager
 import com.skfo763.qrcheckin.lockscreen.usecase.LockScreenActivityUseCase
 import com.skfo763.qrcheckin.lockscreen.viewmodel.LockScreenViewModel
 import com.skfo763.storage.gps.isLocationPermissionGranted
@@ -45,6 +46,7 @@ class LockScreenActivity (
     @Inject lateinit var adMobManager: AdMobManager
     @Inject lateinit var firebaseTracker: FirebaseTracker
     @Inject lateinit var bixbyManager: BixbyLandingManager
+    @Inject lateinit var launchIconManager: LaunchIconManager
 
     override val bindingVariable: (ActivityLockScreenBinding) -> Unit = {
         it.viewModel = viewModel
@@ -117,11 +119,11 @@ class LockScreenActivity (
             adMobManager.shouldShowInterstitialAd -> {
                 adMobManager.showInterstitialAd()
             }
-            viewModel.shouldReviewApp -> {
-                viewModel.startReviewFlow { super.onBackPressed() }
+            viewModel.shouldReviewApp -> viewModel.startReviewFlow {
+                try { super.onBackPressed() } catch (e: Exception) { finish() }
             }
             else -> {
-                super.onBackPressed()
+                try { super.onBackPressed() } catch (e: Exception) { finish() }
             }
         }
     }

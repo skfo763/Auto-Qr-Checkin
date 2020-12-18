@@ -3,4 +3,7 @@
     <color name="colorPrimary">#4649FB</color>
     <color name="colorPrimaryDark">#0039E3</color>
     <color name="colorAccent">#91CEFF</color>
+
+    <color name="checkin_button_background_tint">#31364C</color>
+    <color name="checkin_button_text_tint">#EAEAEA</color>
 </resources>

@@ -12,6 +12,7 @@ import androidx.lifecycle.viewModelScope
 import com.gun0912.tedpermission.PermissionListener
 import com.skfo763.base.BaseViewModel
 import com.skfo763.base.extension.logException
+import com.skfo763.component.bottomsheetdialog.AppIconSelectDialog
 import com.skfo763.component.floatingwidget.FloatingWidgetService
 import com.skfo763.component.floatingwidget.FloatingWidgetView.Companion.CURR_X
 import com.skfo763.component.floatingwidget.FloatingWidgetView.Companion.CURR_Y
@@ -137,6 +138,7 @@ class LockScreenViewModel @ViewModelInject constructor(
             setLockScreenSavedState()
             setWidgetSavedState()
             setAutoCheckInSavedState()
+            setAppIconSavedState()
         }
     }
 

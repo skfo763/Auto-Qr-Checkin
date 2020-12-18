@@ -53,6 +53,10 @@ class LockScreenRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getAppIconState(): Flow<String> {
+        return appDataStore.appIconTypeFlow
+    }
+
     override suspend fun setLockFeatureState(isFeatureOn: Boolean) {
         lockScreenDataStore.setLockScreenFeatureState(isFeatureOn)
     }
@@ -75,6 +79,10 @@ class LockScreenRepositoryImpl @Inject constructor(
 
     override suspend fun resetInitializationState(doInitialize: Boolean) {
         appDataStore.setInitSettingState(doInitialize)
+    }
+
+    override suspend fun setAppIconType(type: String) {
+        appDataStore.setAppIconType(type)
     }
 
     private val mappingLanguageState: (String) -> LanguageState = {

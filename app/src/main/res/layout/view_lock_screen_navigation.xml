@@ -18,47 +18,52 @@
         android:background="@drawable/background_lock_screen_navigation"
         android:fitsSystemWindows="true">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                app:srcCompat="@mipmap/ic_launcher"/>
-
-            <androidx.appcompat.widget.AppCompatTextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="12dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:ellipsize="marquee"
-                android:singleLine="true"
-                android:textSize="16sp"
-                android:textColor="#222222"
-                android:text="@string/app_name_full" />
+                android:orientation="vertical">
 
-            <include
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                bind:viewModel="@{viewModel}"
-                layout="@layout/view_lock_screen_navigation_app_info" />
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    app:srcCompat="@mipmap/ic_launcher"/>
 
-            <include
-                layout="@layout/view_lock_screen_navigation_functions"
-                android:layout_marginTop="8dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                bind:viewModel="@{viewModel}" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:ellipsize="marquee"
+                    android:singleLine="true"
+                    android:textSize="16sp"
+                    android:textColor="#222222"
+                    android:text="@string/app_name_full" />
 
-        </LinearLayout>
+                <include
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    bind:viewModel="@{viewModel}"
+                    layout="@layout/view_lock_screen_navigation_app_info" />
 
+                <include
+                    layout="@layout/view_lock_screen_navigation_functions"
+                    android:layout_marginTop="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    bind:viewModel="@{viewModel}" />
+
+            </LinearLayout>
+
+        </ScrollView>
 
     </com.google.android.material.navigation.NavigationView>
 

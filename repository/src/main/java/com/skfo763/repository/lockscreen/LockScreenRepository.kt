@@ -20,6 +20,8 @@ interface LockScreenRepository {
 
     fun getLanguageState(): Flow<LanguageState>
 
+    fun getAppIconState(): Flow<String>
+
     suspend fun setLockFeatureState(isFeatureOn: Boolean)
 
     suspend fun setWidgetFeatureState(isFeatureOn: Boolean)
@@ -31,5 +33,7 @@ interface LockScreenRepository {
     suspend fun setAutoCheckInState(checked: Boolean)
 
     suspend fun resetInitializationState(doInitialize: Boolean)
+
+    suspend fun setAppIconType(type: String)
 
 }

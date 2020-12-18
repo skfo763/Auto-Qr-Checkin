@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/floating_button_title"
                 android:textSize="10sp"
-                android:textColor="#4e4e4e"
+                android:textColor="@color/floating_widget_text_color"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

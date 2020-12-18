@@ -46,13 +46,33 @@
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme"
             android:launchMode="singleTop">
+        </activity>
+        <activity-alias
+            android:name=".launch.LightIconLauncher"
+            android:targetActivity=".launch.LaunchActivity"
+            android:icon="@drawable/launcher_icon_light"
+            android:enabled="true"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name_full">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+        </activity-alias>
+        <activity-alias
+            android:name=".launch.DarkIconLauncher"
+            android:targetActivity=".launch.LaunchActivity"
+            android:icon="@drawable/launcher_icon_dark"
+            android:enabled="false"
+            android:label="@string/app_name_full">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
         <activity
             android:name=".intro.activity.IntroActivity"
             android:configChanges="orientation|screenSize"

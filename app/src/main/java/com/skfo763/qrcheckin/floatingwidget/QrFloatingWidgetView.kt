@@ -14,7 +14,6 @@ import com.skfo763.component.floatingwidget.FloatingWidgetClient
 import com.skfo763.component.floatingwidget.FloatingWidgetView
 import dagger.hilt.android.scopes.ServiceScoped
 
-
 @ServiceScoped
 class QrFloatingWidgetView @JvmOverloads constructor(
     context: Context,
