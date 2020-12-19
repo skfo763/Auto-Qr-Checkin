@@ -116,6 +116,7 @@
                 android:layout_height="wrap_content"
                 tools:layout_height="50dp"
                 tools:background="#123456"
+                android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@id/lock_screen_nav_host_fragment"
                 app:layout_constraintBottom_toTopOf="@id/lock_screen_bottom_navigation"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -17,6 +17,7 @@ object UiLib {
     const val tedPermission = "gun0912.ted:tedpermission:${Versions.tedPermission}"
     const val webKit = "androidx.webkit:webkit:${Versions.webKitVersion}"
     const val simpleRV = "com.dino.library:simplerecyclerview:${Versions.simpleRV}"
+    const val glide = "com.github.bumptech.glide:glide:${Versions.glide}"
 }
 
 object NavigationLib {
@@ -44,6 +45,7 @@ fun DependencyHandler.androidXUiDependency() {
     implementation(UiLib.tedPermission)
     implementation(UiLib.webKit)
     implementation(UiLib.simpleRV)
+    implementation(UiLib.glide)
 }
 
 fun DependencyHandler.navigationDependency() {

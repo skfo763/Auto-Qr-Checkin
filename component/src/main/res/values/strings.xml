@@ -11,4 +11,7 @@
     <string name="checkin_button_title">현재 위치로 체크인</string>
     <string name="check_in_button_text">버튼을 눌러 현재 위치를 기록하세요!</string>
     <string name="dialog_app_icon_select_title">앱 아이콘을 선택하세요!</string>
+    <string name="dialog_autocheckin_title">자동 체크인 기능을 사용하세요!</string>
+    <string name="dialog_autocheckin_desc">QR 코드를 불러온 이후 3초 뒤 자동으로 현재 위치를 기록합니다. 방문 위치는 \'방문 기록\' 탭에서 확인하실 수 있습니다.</string>
+    <string name="dialog_autocheckin_privacy_desc">모든 데이터는 휴대전화 내부에 저장됩니다.</string>
 </resources>

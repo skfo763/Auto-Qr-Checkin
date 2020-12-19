@@ -42,6 +42,7 @@ object Versions {
     const val webKitVersion = "1.3.0"
     const val simpleRV = "0.7.0"
     const val youtubePlayer = "1.3.0"
+    const val glide = "4.11.0"
 }
 
 object TestVersions {
