@@ -2,6 +2,7 @@ package com.skfo763.qrcheckin.lockscreen.activity
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.WindowManager
@@ -126,6 +127,11 @@ class LockScreenActivity (
                 try { super.onBackPressed() } catch (e: Exception) { finish() }
             }
         }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        viewModel.handleUiModeChange(newConfig.uiMode)
+        super.onConfigurationChanged(newConfig)
     }
 
 }

@@ -5,6 +5,7 @@
     <color name="colorAccent">#91CEFF</color>o
 
     <color name="splash_background">#252525</color>
+    <color name="qr_webview_background_color">#000000</color>
 
     <color name="toolbar_background">#373737</color>
     <color name="toolbar_title_color">#E4E4E4</color>

@@ -16,6 +16,7 @@ import com.skfo763.component.databinding.DialogAppIconSelectBinding
 class AppIconSelectDialog : BottomSheetDialogFragment() {
 
     data class Icon(
+        val type: String,
         val iconDrawable: Drawable,
         @ColorInt val backgroundColor: Int,
         @ColorInt val nameTextColor: Int,
@@ -46,7 +47,7 @@ class AppIconSelectDialog : BottomSheetDialogFragment() {
     fun setData(itemList: List<Icon>) {
         itemList.forEach {
             it.recyclerItemClicked = { icon ->
-                this?.dismiss()
+                dismiss()
                 it.onItemClicked(icon)
             }
         }

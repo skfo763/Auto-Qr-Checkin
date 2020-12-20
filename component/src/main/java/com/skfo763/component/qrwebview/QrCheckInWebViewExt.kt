@@ -1,13 +1,14 @@
 package com.skfo763.component.qrwebview
 
+import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
-import com.skfo763.component.qrwebview.QrCheckInWebView
 
 @BindingAdapter("checkInUrl")
 fun QrCheckInWebView.loadCheckInUrl(url: String?) {
     url?.let {
         uriChecker.checkInUrl = it
         loadUrl(url)
+        isVisible = true
     }
 }
 

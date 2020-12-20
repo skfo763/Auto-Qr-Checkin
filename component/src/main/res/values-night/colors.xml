@@ -6,4 +6,6 @@
 
     <color name="checkin_button_background_tint">#B6DBFF</color>
     <color name="checkin_button_text_tint">#323232</color>
+
+    <color name="auto_checkin_desc_gif_placholder">#454545</color>
 </resources>

@@ -5,6 +5,7 @@
     <color name="colorAccent">#91CEFF</color>
 
     <color name="splash_background">#B7C2FF</color>
+    <color name="qr_webview_background_color">#FFFFFF</color>
 
     <color name="toolbar_background">#FFFFFF</color>
     <color name="toolbar_title_color">#323232</color>
@@ -16,7 +17,7 @@
 
     <color name="floating_widget_text_color">#4E4E4E</color>
 
-    <color name="progressbar_color">#4649FB</color>
+    <color name="progressbar_color">#696CFF</color>
 
     <color name="app_icon_select_dialog_light_background">#98A4EC</color>
     <color name="app_icon_select_dialog_light_title">#272727</color>

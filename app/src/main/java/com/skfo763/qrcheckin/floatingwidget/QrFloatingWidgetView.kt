@@ -7,6 +7,7 @@ import android.content.Intent
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.core.view.isVisible
+import com.skfo763.base.extension.logException
 import com.skfo763.qrcheckin.databinding.ViewFloatingButtonBinding
 import com.skfo763.qrcheckin.lockscreen.activity.LockScreenActivity
 import com.skfo763.component.extensions.vibrateOneShot
@@ -24,13 +25,13 @@ class QrFloatingWidgetView @JvmOverloads constructor(
     private val binding = ViewFloatingButtonBinding
         .inflate(LayoutInflater.from(context), this, true)
 
-    var isLoading: Boolean = false
-     set(value) {
-         binding.floatingWidgetProgess.isVisible = value
-         binding.floatingWidgetOpen.isVisible = !value
-         binding.floatingWidgetText.isVisible = !value
-         field = value
-     }
+    private var isLoading: Boolean = false
+         set(value) {
+             binding.floatingWidgetProgess.isVisible = value
+             binding.floatingWidgetOpen.isVisible = !value
+             binding.floatingWidgetText.isVisible = !value
+             field = value
+         }
 
     init {
         isLoading = false
@@ -42,7 +43,6 @@ class QrFloatingWidgetView @JvmOverloads constructor(
             service.stopSelf()
         } else {
             isLoading = true
-
             val intent = Intent(service.applicationContext, LockScreenActivity::class.java).apply {
                 putExtra(CURR_X, currentX)
                 putExtra(CURR_Y, currentY)
@@ -58,6 +58,8 @@ class QrFloatingWidgetView @JvmOverloads constructor(
                 pendingIntent.send()
             } catch (e: PendingIntent.CanceledException) {
                 service.startActivity(intent)
+            } catch (e: Exception) {
+                logException(e)
             }
         }
     }

@@ -58,21 +58,17 @@ class LockScreenActivityUseCase constructor(
     var snackBarWindow: View? = null
 
     private val onItemClicked: (AppIconSelectDialog.Icon) -> Unit = { icon ->
-        when(icon.name) {
-            res.getString(R.string.icon_light_title) -> {
-                activity.launchIconManager.setIcon(LaunchIconManager.Type.LIGHT)
-                activity.viewModel.navigationViewModel.setAppIconData(LaunchIconManager.Type.LIGHT)
-            }
-            res.getString(R.string.icon_dark_title) -> {
-                activity.launchIconManager.setIcon(LaunchIconManager.Type.DARK)
-                activity.viewModel.navigationViewModel.setAppIconData(LaunchIconManager.Type.DARK)
-            }
+        val launchType = LaunchIconManager.getType(icon.type, currentUiTheme)
+        if(launchType != activity.viewModel.navigationViewModel.appIconResource.value) {
+            activity.launchIconManager.setIcon(launchType)
+            activity.viewModel.navigationViewModel.setAppIconData(launchType)
         }
     }
 
     private val appIconList by lazy {
         listOf(
             AppIconSelectDialog.Icon(
+                LaunchIconManager.Type.LIGHT.manifestName,
                 getDrawable(R.drawable.launcher_icon_light),
                 getColor(R.color.app_icon_select_dialog_light_background),
                 getColor(R.color.app_icon_select_dialog_light_title),
@@ -82,6 +78,7 @@ class LockScreenActivityUseCase constructor(
                 onItemClicked = onItemClicked
             ),
             AppIconSelectDialog.Icon(
+                LaunchIconManager.Type.DARK.manifestName,
                 getDrawable(R.drawable.launcher_icon_dark),
                 getColor(R.color.app_icon_select_dialog_dark_background),
                 getColor(R.color.app_icon_select_dialog_dark_title),

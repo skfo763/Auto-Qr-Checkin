@@ -13,12 +13,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/lock_screen_fragment_parent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/qr_webview_background_color">
 
         <com.skfo763.component.qrwebview.QrCheckInWebView
             android:id="@+id/lock_screen_fragment_qr_webview"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:visibility="invisible"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

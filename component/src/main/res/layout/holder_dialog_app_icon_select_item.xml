@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:background="@{item.backgroundColor}"
         android:foreground="?attr/selectableItemBackground"
-        android:onClick="@{(v) -> item.onItemClicked.invoke(item)}"
+        android:onClick="@{(v) -> item.recyclerItemClicked.invoke(item)}"
         android:forceDarkAllowed="false"
         tools:background="#323232"
         android:paddingTop="24dp"

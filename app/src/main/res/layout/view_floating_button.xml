@@ -3,11 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <merge
         android:id="@+id/layout_floating_widget"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#00000000">
+        android:background="#00000000"
+        tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/floating_widget_parent"
@@ -54,7 +55,7 @@
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:visibility="gone"
-                android:indeterminateTint="#323232"
+                android:indeterminateTint="@color/toolbar_title_color"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -66,8 +67,8 @@
             android:id="@+id/floating_widget_close"
             android:layout_width="16dp"
             android:layout_height="16dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginBottom="40dp"
+            android:layout_marginStart="42dp"
+            android:layout_marginBottom="42dp"
             android:elevation="4dp"
             android:padding="4dp"
             android:visibility="gone"
@@ -76,7 +77,6 @@
             app:layout_constraintStart_toStartOf="@id/floating_widget_parent"
             app:layout_constraintBottom_toBottomOf="@id/floating_widget_parent"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
+    </merge>
 
 </layout>
