@@ -27,7 +27,7 @@ import javax.inject.Inject
 @ActivityScoped
 class InAppUpdateManager @Inject constructor(private val activity: Activity) {
     companion object {
-        const val REQUEST_APP_UPDATE = 32145064
+        const val REQUEST_APP_UPDATE = 5064
     }
 
     val appUpdateManager = AppUpdateManagerFactory.create(activity)

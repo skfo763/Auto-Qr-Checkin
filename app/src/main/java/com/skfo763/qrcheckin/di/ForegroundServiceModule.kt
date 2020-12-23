@@ -6,6 +6,8 @@ import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import com.skfo763.base.theme.ThemeType
+import com.skfo763.base.theme.getTheme
 import com.skfo763.qrcheckin.R
 import dagger.Module
 import dagger.Provides
@@ -36,10 +38,10 @@ abstract class ForegroundServiceModule {
                 notificationManager.createNotificationChannel(notificationChannel)
             }
             return NotificationCompat.Builder(service.applicationContext, channelId).apply {
-                setSmallIcon(R.mipmap.ic_launcher)
+                setSmallIcon(R.drawable.launcher_icon_light)
                 setDefaults(Notification.DEFAULT_ALL)
                 setAutoCancel(false)
-                setContentTitle(service.getString(R.string.app_name_full))
+                setContentTitle(service.getString(R.string.app_name_partial))
                 setContentText(service.getString(R.string.service_notification_text))
             }
         }

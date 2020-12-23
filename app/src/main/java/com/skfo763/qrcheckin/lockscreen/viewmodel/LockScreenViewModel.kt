@@ -86,7 +86,7 @@ class LockScreenViewModel @ViewModelInject constructor(
     val startTrackingLocationListener = object: PermissionListener {
         override fun onPermissionGranted() {
             viewModelScope.launch {
-                startInAppUpdateFlow()
+                // startInAppUpdateFlow()
                 checkInMapRepository.startTrackingLocation()
             }
         }
