@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.widget.ThemeUtils
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
@@ -37,6 +38,7 @@ import com.skfo763.qrcheckin.extension.showOverlayPermissionDialog
 import com.skfo763.qrcheckin.launch.LaunchIconManager
 import com.skfo763.qrcheckin.lockscreen.activity.LockScreenActivity
 import com.skfo763.storage.gps.isLocationPermissionGranted
+import org.jetbrains.annotations.TestOnly
 
 class LockScreenActivityUseCase constructor(
     private val activity: LockScreenActivity
@@ -90,7 +92,7 @@ class LockScreenActivityUseCase constructor(
         )
     }
 
-    fun openUrl(url: String?) {
+    fun openMarketUrl(url: String?) {
         try {
             val intent = Intent(Intent.ACTION_VIEW, url?.parsedUri ?: run {
                 Uri.parse("market://details?id=${activity.packageName}")
@@ -103,6 +105,16 @@ class LockScreenActivityUseCase constructor(
                     Uri.parse("https://play.google.com/store/apps/details?id=${activity.packageName}")
                 )
             )
+        }
+    }
+
+    @TestOnly
+    fun openKakaoUrl(url: String = "kakaotalk://inappbrowser?url=https://accounts.kakao.com/qr_check_in") {
+        try {
+            val intent = Intent(Intent.ACTION_VIEW, url.parsedUri)
+            activity.startActivity(intent)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 

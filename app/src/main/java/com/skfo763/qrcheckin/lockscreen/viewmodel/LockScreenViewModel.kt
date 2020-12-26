@@ -141,7 +141,6 @@ class LockScreenViewModel @ViewModelInject constructor(
         }
     }
 
-
     fun deleteFloatingButton() {
         if(navigationViewModel.isWidgetChecked.value == true) {
             useCase.stopService(FloatingWidgetService::class.java)
@@ -160,6 +159,8 @@ class LockScreenViewModel @ViewModelInject constructor(
 
     fun setQrCheckIn() {
         _isLoading.value = true
+        useCase.openKakaoUrl()
+        /*
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 lockScreenRepository.getNaverQrCheckInUrl().collect {
@@ -167,6 +168,7 @@ class LockScreenViewModel @ViewModelInject constructor(
                 }
             }
         }
+         */
     }
 
     private suspend fun setCheckInUrlInfo(checkInUrl: CheckInUrl) {

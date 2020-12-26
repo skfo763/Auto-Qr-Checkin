@@ -1,11 +1,9 @@
 package com.skfo763.qrcheckin.lockscreen.viewmodel
 
 import android.widget.CompoundButton
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.skfo763.base.extension.logException
-import com.skfo763.component.bottomsheetdialog.AppIconSelectDialog
 import com.skfo763.component.playcore.InAppUpdateManager
 import com.skfo763.qrcheckin.BuildConfig
 import com.skfo763.qrcheckin.launch.LaunchIconManager
@@ -142,7 +140,7 @@ class NavigationViewModel(
         viewModelScope.launch {
             lockScreenRepository.getPlayStoreUrl().collect { url ->
                 _isLoading.value = false
-                useCase.openUrl(url)
+                useCase.openMarketUrl(url)
             }
         }
     }
