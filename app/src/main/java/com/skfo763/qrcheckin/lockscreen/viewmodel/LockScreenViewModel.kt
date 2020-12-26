@@ -24,7 +24,8 @@ import com.skfo763.qrcheckin.lockscreen.usecase.LockScreenActivityUseCase
 import com.skfo763.remote.data.QrCheckInError
 import com.skfo763.repository.checkinmap.CheckInMapRepository
 import com.skfo763.repository.lockscreen.LockScreenRepository
-import com.skfo763.repository.model.CheckInUrl
+import com.skfo763.repository.model.CheckInType
+import com.skfo763.repository.model.NaverCheckInUrl
 import com.skfo763.repository.model.CheckPoint
 import com.skfo763.storage.gps.GpsException
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -36,6 +37,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.lang.IllegalStateException
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.pow
@@ -55,7 +57,7 @@ class LockScreenViewModel @ViewModelInject constructor(
 
     private val random = Random()
     private var currLocation = Pair(0.0, 0.0)
-    private val subject: Subject<String> = BehaviorSubject.create()
+    val saveCheckPointSubject: Subject<String> = BehaviorSubject.create()
     val shouldReviewApp: Boolean get() = inAppReviewManager.shouldReviewApp(random)
     val navigationViewModel = NavigationViewModel(viewModelScope, lockScreenRepository, inAppUpdateManager, random)
 
@@ -65,6 +67,7 @@ class LockScreenViewModel @ViewModelInject constructor(
     private val _checkInButtonVisibility = MutableLiveData<Boolean>()
     private val _errorList = MutableLiveData<List<ErrorFormat>?>()
     private val _urlForCheckIn = MutableLiveData<String?>()
+    private val _kakaoCheckInViewVisibility = MutableLiveData<Boolean>()
     private val _isLoading = MutableLiveData<Boolean>()
 
     val availableHost: LiveData<List<String>?> = _availableHost
@@ -73,6 +76,7 @@ class LockScreenViewModel @ViewModelInject constructor(
     val checkInButtonVisibility: LiveData<Boolean> = _checkInButtonVisibility
     val errorList: LiveData<List<ErrorFormat>?> = _errorList
     val urlForCheckIn: LiveData<String?> = _urlForCheckIn
+    val kakaoCheckInViewVisibility: LiveData<Boolean> = _kakaoCheckInViewVisibility
     val isLoading: LiveData<Boolean> = _isLoading
 
     val onFailedUrlLoaded: (invalidUrl: String?) -> Unit = {
@@ -100,7 +104,7 @@ class LockScreenViewModel @ViewModelInject constructor(
     }
 
     val onCheckInComplete: (String?) -> Unit = {
-        subject.onNext(it ?: "")
+        saveCheckPointSubject.onNext(it ?: "")
     }
 
     val onCheckInButtonClicked: (View) -> Unit = {
@@ -112,7 +116,7 @@ class LockScreenViewModel @ViewModelInject constructor(
     }
 
     private fun observeCheckInFlowable() {
-        subject.toSerialized().toFlowable(BackpressureStrategy.BUFFER)
+        saveCheckPointSubject.toSerialized().toFlowable(BackpressureStrategy.BUFFER)
             .subscribeOn(Schedulers.io())
             .throttleFirst(2000L, TimeUnit.MILLISECONDS)
             .delay(5000L, TimeUnit.MILLISECONDS)
@@ -121,6 +125,9 @@ class LockScreenViewModel @ViewModelInject constructor(
                 when {
                     it.isNullOrEmpty() -> {
                         return@subscribe
+                    }
+                    it == CheckInType.KAKAO.type -> {
+                        showCheckInButton()
                     }
                     navigationViewModel.isAutoCheckInChecked.value == true -> {
                         saveCheckPoint()
@@ -159,8 +166,24 @@ class LockScreenViewModel @ViewModelInject constructor(
 
     fun setQrCheckIn() {
         _isLoading.value = true
-        useCase.openKakaoUrl()
-        /*
+        viewModelScope.launch {
+            lockScreenRepository.getCurrentQrCheckInType().collect {
+                _kakaoCheckInViewVisibility.value = it == CheckInType.KAKAO
+                setQrCheckInUrl(it)
+                _isLoading.value = false
+            }
+        }
+    }
+
+    private fun setQrCheckInUrl(type: CheckInType) {
+        when(type) {
+            CheckInType.NAVER -> setNaverQrCheckInUrl()
+            CheckInType.KAKAO -> setKakaoQrCheckInUrl()
+            CheckInType.UNKNOWN -> logException(IllegalStateException("Unknown checkin type : CheckInType.UNKNOWN"))
+        }
+    }
+
+    private fun setNaverQrCheckInUrl() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 lockScreenRepository.getNaverQrCheckInUrl().collect {
@@ -168,17 +191,25 @@ class LockScreenViewModel @ViewModelInject constructor(
                 }
             }
         }
-         */
     }
 
-    private suspend fun setCheckInUrlInfo(checkInUrl: CheckInUrl) {
+    fun setKakaoQrCheckInUrl() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                lockScreenRepository.getKakaoQrCheckInUrl().collect {
+                    useCase.openKakaoUrl(it)
+                }
+            }
+        }
+    }
+
+    private suspend fun setCheckInUrlInfo(naverCheckInUrl: NaverCheckInUrl) {
         withContext(Dispatchers.Main) {
-            _availableHost.value = checkInUrl.availableHost
-            _availablePath.value = checkInUrl.availablePath
-            _appLandingScheme.value = checkInUrl.appLandingScheme
-            _urlForCheckIn.value = checkInUrl.url
-            _errorList.value = convertToWebErrorFormat(checkInUrl.errorList)
-            _isLoading.value = false
+            _availableHost.value = naverCheckInUrl.availableHost
+            _availablePath.value = naverCheckInUrl.availablePath
+            _appLandingScheme.value = naverCheckInUrl.appLandingScheme
+            _urlForCheckIn.value = naverCheckInUrl.url
+            _errorList.value = convertToWebErrorFormat(naverCheckInUrl.errorList)
         }
     }
 

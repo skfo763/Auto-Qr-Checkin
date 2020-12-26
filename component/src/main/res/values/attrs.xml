@@ -16,4 +16,9 @@
         <attr name="videoId" format="string|reference" />
         <attr name="fragment" format="string|reference" />
     </declare-styleable>
+
+    <declare-styleable name="CheckStateLayout">
+        <attr name="nonCheckedBackground" format="color"/>
+        <attr name="checkedBackground" format="color"/>
+    </declare-styleable>
 </resources>

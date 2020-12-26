@@ -4,10 +4,12 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.skfo763.qrcheckin.intro.fragment.OtherSettingsFragment
 import com.skfo763.qrcheckin.intro.fragment.PermissionFragment
+import com.skfo763.qrcheckin.intro.fragment.QrCheckInSettingsFragment
 
 class IntroPagerAdapter(activity: FragmentActivity): FragmentStateAdapter(activity) {
     private val fragmentList = listOf(
-        PermissionFragment()
+        PermissionFragment(),
+        QrCheckInSettingsFragment()
     )
 
     fun getItem(position: Int) = fragmentList[position]

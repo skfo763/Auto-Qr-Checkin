@@ -20,7 +20,7 @@
             android:gravity="center_vertical"
             android:background="#FFFFFF"
             android:orientation="horizontal"
-            app:menu="@menu/intro_permission_toolbar_menu"
+            app:menu="@menu/intro_setting_normal_toolbar_menu"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/intro_view_pager"
             app:layout_constraintStart_toStartOf="parent"

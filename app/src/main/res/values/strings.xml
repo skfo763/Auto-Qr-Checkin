@@ -70,10 +70,18 @@
     <string name="bixby_step_4_subtitle">빅스비 버튼을 눌러서 앱이 정상적으로 실행되는지 확인하세요</string>
     <string name="intro_floating_next_title">다음으로</string>
     <string name="intro_floating_other_title">설정으로 이동하기</string>
-    <string name="toolbar_menu_complete_initialize">완료하기</string>
+    <string name="intro_floating_finalize_title">완료하기</string>
     <string name="nav_app_info_set_launcher_icon">앱 아이콘 설정하기</string>
     <string name="icon_light_title">일반 아이콘</string>
     <string name="icon_dark_title">다크 테마 아이콘</string>
     <string name="icon_light_desc">밝은 색감의 아이콘을 사용해 산뜻한 느낌을 줍니다.</string>
     <string name="icon_dark_desc">어두운 배경의 아이콘과 색 대비를 통해 눈의 피로를 풀어줍니다.</string>
+    <string name="intro_qr_checkin_setting_title">QR 체크인 방법을 선택해주세요</string>
+    <string name="intro_qr_checkin_setting_subtitle">QR 체크인을 위해 사용할 플랫폼(카카오톡, 네이버)을 선택해 주세요. QR 체크인 방법은 앱 사용 중 언제든 변경할 수 있습니다.</string>
+    <string name="intro_qr_checkin_setting_kakao_title">카카오 QR 체크인</string>
+    <string name="intro_qr_checkin_setting_kakao_subtitle">카카오 계정을 사용하여 QR 체크인합니다</string>
+    <string name="intro_qr_checkin_setting_naver_title">네이버 QR 체크인</string>
+    <string name="intro_qr_checkin_setting_naver_subtitle">네이버 계정을 사용하여 QR 체크인합니다</string>
+    <string name="lock_screen_kakao_view_desc">QR 체크인을 위해 카카오톡 앱을 실행합니다</string>
+    <string name="lock_screen_kakao_btn">카카오 QR 체크인</string>
 </resources>

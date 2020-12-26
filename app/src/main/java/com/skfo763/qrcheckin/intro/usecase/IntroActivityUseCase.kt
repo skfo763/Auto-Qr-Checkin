@@ -32,5 +32,9 @@ class IntroActivityUseCase(private val activity : IntroActivity) : BaseActivityU
         activity.goToNextFlow()
     }
 
+    fun completeQrCheckInSettingFlow() {
+        activity.goToNextFlow()
+    }
+
 
 }

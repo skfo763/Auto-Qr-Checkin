@@ -2,9 +2,11 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     tools:context="com.skfo763.qrcheckin.lockscreen.activity.LockScreenActivity">
 
     <data>
+        <import type="android.view.View"/>
         <variable
             name="parentViewModel"
             type="com.skfo763.qrcheckin.lockscreen.viewmodel.LockScreenViewModel" />
@@ -15,6 +17,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/qr_webview_background_color">
+
+        <include
+            android:visibility="@{parentViewModel.kakaoCheckInViewVisibility ? View.VISIBLE : View.GONE}"
+            layout="@layout/view_lock_screen_fragment_kakao"
+            bind:viewModel="@{parentViewModel}"/>
 
         <com.skfo763.component.qrwebview.QrCheckInWebView
             android:id="@+id/lock_screen_fragment_qr_webview"

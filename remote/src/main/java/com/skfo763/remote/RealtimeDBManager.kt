@@ -6,20 +6,20 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.skfo763.remote.data.IntroYoutube
-import com.skfo763.remote.data.QrApiUrl
+import com.skfo763.remote.data.KakaoQrApiUrl
+import com.skfo763.remote.data.NaverQrApiUrl
 import com.skfo763.remote.data.QrCheckInError
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.sendBlocking
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.launchIn
 
 class RealtimeDBManager {
 
     private val database = Firebase.database
 
     @ExperimentalCoroutinesApi
-    val naverQrApiUrl  = callbackFlow<QrApiUrl> {
+    val naverQrApiUrl  = callbackFlow<NaverQrApiUrl> {
         val dbRef = database.getReference("availableServer").child("naver")
         val listener = dbRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -28,9 +28,28 @@ class RealtimeDBManager {
                 val availablePaths = snapshot.child("path").children.toCustomDataTypeList(String::class.java, "")
                 val appLandingScheme = snapshot.child("landing").children.toCustomDataTypeList(String::class.java, "")
                 val errorList = snapshot.child("error").children.toCustomDataTypeList(QrCheckInError::class.java, QrCheckInError())
-                this@callbackFlow.sendBlocking(QrApiUrl(url, availableHosts, availablePaths, appLandingScheme, errorList))
+                this@callbackFlow.sendBlocking(NaverQrApiUrl(url, availableHosts, availablePaths, appLandingScheme, errorList))
             }
 
+            override fun onCancelled(error: DatabaseError) {
+                this@callbackFlow.close(error.toException())
+            }
+        })
+
+        awaitClose {
+            dbRef.removeEventListener(listener)
+        }
+    }
+
+    @ExperimentalCoroutinesApi
+    val kakaoQrApiUrl = callbackFlow<KakaoQrApiUrl> {
+        val dbRef = database.getReference("availableServer").child("kakao")
+        val listener = dbRef.addValueEventListener(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val url = snapshot.child("url").getValue(String::class.java)
+                val browseUrl = snapshot.child("params").child("url").getValue(String::class.java)
+                this@callbackFlow.sendBlocking(KakaoQrApiUrl(url, browseUrl))
+            }
             override fun onCancelled(error: DatabaseError) {
                 this@callbackFlow.close(error.toException())
             }

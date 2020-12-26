@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#0039E3</color>
     <color name="colorAccent">#91CEFF</color>
 
+    <color name="default_color_ffffff_000000">#000000</color>
+
     <color name="checkin_button_background_tint">#B6DBFF</color>
     <color name="checkin_button_text_tint">#323232</color>
 

@@ -1,12 +1,15 @@
 package com.skfo763.repository.lockscreen
 
-import com.skfo763.repository.model.CheckInUrl
+import com.skfo763.repository.model.CheckInType
+import com.skfo763.repository.model.NaverCheckInUrl
 import com.skfo763.repository.model.LanguageState
 import kotlinx.coroutines.flow.Flow
 
 interface LockScreenRepository {
 
-    fun getNaverQrCheckInUrl(): Flow<CheckInUrl>
+    fun getNaverQrCheckInUrl(): Flow<NaverCheckInUrl>
+
+    fun getKakaoQrCheckInUrl(): Flow<String>
 
     fun getPlayStoreUrl(): Flow<String>
 
@@ -21,6 +24,8 @@ interface LockScreenRepository {
     fun getLanguageState(): Flow<LanguageState>
 
     fun getAppIconState(): Flow<String>
+
+    fun getCurrentQrCheckInType(): Flow<CheckInType>
 
     suspend fun setLockFeatureState(isFeatureOn: Boolean)
 

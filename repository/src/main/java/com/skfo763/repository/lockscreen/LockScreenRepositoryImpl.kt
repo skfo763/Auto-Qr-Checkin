@@ -1,11 +1,13 @@
 package com.skfo763.repository.lockscreen
 
 import com.skfo763.remote.RealtimeDBManager
-import com.skfo763.repository.model.CheckInUrl
+import com.skfo763.repository.BuildConfig
+import com.skfo763.repository.model.CheckInType
+import com.skfo763.repository.model.NaverCheckInUrl
 import com.skfo763.repository.model.LanguageState
+import com.skfo763.repository.model.qrCheckInType
 import com.skfo763.storage.datastore.AppDataStore
 import com.skfo763.storage.datastore.LockScreenDataStore
-import com.skfo763.storage.gps.GpsManager
 import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -20,9 +22,20 @@ class LockScreenRepositoryImpl @Inject constructor(
 ) : LockScreenRepository {
 
     @ExperimentalCoroutinesApi
-    override fun getNaverQrCheckInUrl(): Flow<CheckInUrl> {
+    override fun getNaverQrCheckInUrl(): Flow<NaverCheckInUrl> {
         return realtimeDBManager.naverQrApiUrl.map {
-            CheckInUrl(it.url, it.availableHost, it.availablePath, it.appLandingScheme, it.errorList)
+            NaverCheckInUrl(it.url, it.availableHost, it.availablePath, it.appLandingScheme, it.errorList)
+        }
+    }
+
+    @ExperimentalCoroutinesApi
+    override fun getKakaoQrCheckInUrl(): Flow<String> {
+        return realtimeDBManager.kakaoQrApiUrl.map {
+            return@map if(it.intentUrl != null && it.browseUrl != null) {
+                it.intentUrl + "?url=" + it.browseUrl
+            } else {
+                BuildConfig.QR_CHECKIN_URL_KAKAO
+            }
         }
     }
 
@@ -55,6 +68,12 @@ class LockScreenRepositoryImpl @Inject constructor(
 
     override fun getAppIconState(): Flow<String> {
         return appDataStore.appIconTypeFlow
+    }
+
+    override fun getCurrentQrCheckInType(): Flow<CheckInType> {
+        return appDataStore.qrCheckinTypeFlow.map {
+            it.qrCheckInType
+        }
     }
 
     override suspend fun setLockFeatureState(isFeatureOn: Boolean) {

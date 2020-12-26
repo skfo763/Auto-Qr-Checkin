@@ -11,6 +11,7 @@ import android.view.View
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.google.android.youtube.player.YouTubePlayer
 import com.skfo763.component.youtubeplayer.YouTubePlayerView
 import com.gun0912.tedpermission.PermissionListener
@@ -19,6 +20,7 @@ import com.skfo763.component.bixbysetting.NumberTextViewSetter
 import com.skfo763.qrcheckin.R
 import com.skfo763.qrcheckin.databinding.FragmentIntroOtherSettingBinding
 import com.skfo763.qrcheckin.databinding.FragmentIntroPermissionBinding
+import com.skfo763.qrcheckin.databinding.FragmentIntroQrCheckinSettingBinding
 import com.skfo763.qrcheckin.extension.isOverlayPermissionGranted
 import com.skfo763.qrcheckin.extension.requestLocationPermissions
 import com.skfo763.qrcheckin.extension.showOverlayPermissionDialog
@@ -26,6 +28,8 @@ import com.skfo763.qrcheckin.intro.usecase.IntroActivityUseCase
 import com.skfo763.qrcheckin.intro.viewmodel.IntroViewModel
 import com.skfo763.qrcheckin.intro.viewmodel.OtherSettingsViewModel
 import com.skfo763.qrcheckin.lockscreen.usecase.LockScreenActivityUseCase.Companion.ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE
+import com.skfo763.repository.model.CheckInType
+import java.util.*
 
 sealed class IntroPagerFragment<T: ViewDataBinding> : BaseFragment<T, IntroViewModel, IntroActivityUseCase>()
 
@@ -61,7 +65,7 @@ class PermissionFragment: IntroPagerFragment<FragmentIntroPermissionBinding>() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.intro_permission_toolbar_menu, menu)
+        inflater.inflate(R.menu.intro_setting_normal_toolbar_menu, menu)
     }
 
     override fun onStart() {
@@ -104,6 +108,48 @@ class PermissionFragment: IntroPagerFragment<FragmentIntroPermissionBinding>() {
     }
 }
 
+class QrCheckInSettingsFragment : IntroPagerFragment<FragmentIntroQrCheckinSettingBinding>() {
+
+    override val layoutResId: Int = R.layout.fragment_intro_qr_checkin_setting
+
+    override val parentViewModel: IntroViewModel by activityViewModels()
+
+    override val bindingVariable: (FragmentIntroQrCheckinSettingBinding) -> Unit = {
+        it.parentViewModel = parentViewModel
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        parentViewModel.getCurrentQrCheckInSetting()
+
+        parentViewModel.qrCheckInType.observe(viewLifecycleOwner, {
+            binding.introQrCheckinSettingNaverContainer.isChecked = it == CheckInType.NAVER
+            binding.introQrCheckinSettingKakaoContainer.isChecked = it == CheckInType.KAKAO
+        })
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.intro_setting_finalize_toolbar_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            android.R.id.home -> {
+                useCase.goToPreviousInitFlow()
+                true
+            }
+            R.id.toolbar_menu_complete_initialize -> {
+                parentViewModel.completeQrCheckInSettingFlow()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override val useCase: IntroActivityUseCase by lazy { parentViewModel.useCase }
+}
+
+
 class OtherSettingsFragment : IntroPagerFragment<FragmentIntroOtherSettingBinding>(), YouTubePlayer.PlaybackEventListener  {
 
     companion object {
@@ -136,7 +182,7 @@ class OtherSettingsFragment : IntroPagerFragment<FragmentIntroOtherSettingBindin
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.intro_other_toolbar_menu, menu)
+        inflater.inflate(R.menu.intro_setting_finalize_toolbar_menu, menu)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

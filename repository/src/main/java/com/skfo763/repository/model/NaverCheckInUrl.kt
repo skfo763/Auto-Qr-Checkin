@@ -2,7 +2,7 @@ package com.skfo763.repository.model
 
 import com.skfo763.remote.data.QrCheckInError
 
-data class CheckInUrl(
+data class NaverCheckInUrl(
     val url: String,
     val availableHost: List<String>,
     val availablePath: List<String>,

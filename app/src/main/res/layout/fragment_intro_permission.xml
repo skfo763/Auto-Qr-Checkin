@@ -20,7 +20,7 @@
         android:layout_height="match_parent">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/intro_permission_title"
+            android:id="@+id/intro_qr_checkin_setting_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/intro_permission_title_text"
@@ -34,12 +34,12 @@
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/intro_permission_subtitle"
+            app:layout_constraintBottom_toTopOf="@+id/intro_qr_checkin_setting_subtitle"
             app:layout_constraintTop_toTopOf="parent"
             tools:layout_editor_absoluteX="20dp" />
 
         <androidx.appcompat.widget.AppCompatCheckedTextView
-            android:id="@+id/intro_permission_subtitle"
+            android:id="@+id/intro_qr_checkin_setting_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -50,7 +50,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintBottom_toTopOf="@+id/permission_state_overlay_view"
-            app:layout_constraintTop_toBottomOf="@+id/intro_permission_title"
+            app:layout_constraintTop_toBottomOf="@+id/intro_qr_checkin_setting_title"
             tools:layout_editor_absoluteX="20dp" />
 
         <com.skfo763.component.permissionstateview.PermissionStateView
@@ -61,7 +61,7 @@
             android:foreground="?attr/selectableItemBackground"
             android:onClick="@{requestOverlayPermission}"
             app:layout_constraintBottom_toTopOf="@+id/permission_state_location_view"
-            app:layout_constraintTop_toBottomOf="@+id/intro_permission_subtitle"
+            app:layout_constraintTop_toBottomOf="@+id/intro_qr_checkin_setting_subtitle"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:psv_icon="@drawable/ic_baseline_fiber_smart_record_24"

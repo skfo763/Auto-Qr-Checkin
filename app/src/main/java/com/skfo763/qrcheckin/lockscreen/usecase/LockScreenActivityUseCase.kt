@@ -37,6 +37,7 @@ import com.skfo763.qrcheckin.extension.isOverlayPermissionGranted
 import com.skfo763.qrcheckin.extension.showOverlayPermissionDialog
 import com.skfo763.qrcheckin.launch.LaunchIconManager
 import com.skfo763.qrcheckin.lockscreen.activity.LockScreenActivity
+import com.skfo763.repository.model.CheckInType
 import com.skfo763.storage.gps.isLocationPermissionGranted
 import org.jetbrains.annotations.TestOnly
 
@@ -47,6 +48,7 @@ class LockScreenActivityUseCase constructor(
     companion object {
         const val REQ_CODE_OPEN_OTHER_APP = 1000
         const val ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 1001
+        const val REQ_CODE_OPEN_KAKAO_CHECKIN = 1002
     }
 
     val currentUiTheme: ThemeType get() = getTheme(activity)
@@ -108,13 +110,15 @@ class LockScreenActivityUseCase constructor(
         }
     }
 
-    @TestOnly
-    fun openKakaoUrl(url: String = "kakaotalk://inappbrowser?url=https://accounts.kakao.com/qr_check_in") {
+    fun openKakaoUrl(url: String) {
         try {
             val intent = Intent(Intent.ACTION_VIEW, url.parsedUri)
-            activity.startActivity(intent)
+            activity.startActivityForResult(intent, REQ_CODE_OPEN_KAKAO_CHECKIN)
         } catch (e: Exception) {
-            e.printStackTrace()
+            activity.startActivity(Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("https://play.google.com/store/apps/details?id=com.kakao.talk")
+            ))
         }
     }
 
@@ -182,6 +186,10 @@ class LockScreenActivityUseCase constructor(
         return when(requestCode) {
             REQ_CODE_OPEN_OTHER_APP -> {
                 activity.viewModel.setQrCheckIn()
+                true
+            }
+            REQ_CODE_OPEN_KAKAO_CHECKIN -> {
+                activity.viewModel.saveCheckPointSubject.onNext(CheckInType.KAKAO.type)
                 true
             }
             ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE -> {

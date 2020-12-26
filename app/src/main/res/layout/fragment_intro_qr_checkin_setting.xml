@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="parentViewModel"
+            type="com.skfo763.qrcheckin.intro.viewmodel.IntroViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/intro_qr_checkin_setting_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/intro_qr_checkin_setting_title"
+            android:textColor="#323232"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:layout_marginTop="28dp"
+            android:layout_marginStart="20dp"
+            app:layout_constraintVertical_bias="0.0"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/intro_qr_checkin_setting_subtitle"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="20dp" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/intro_qr_checkin_setting_subtitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/intro_qr_checkin_setting_subtitle"
+            android:textColor="#919191"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintBottom_toTopOf="@+id/intro_qr_checkin_setting_naver_container"
+            app:layout_constraintTop_toBottomOf="@+id/intro_qr_checkin_setting_title"
+            tools:layout_editor_absoluteX="20dp" />
+
+        <com.skfo763.component.checkstatelayout.CheckStateLayout
+            android:id="@+id/intro_qr_checkin_setting_naver_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:padding="16dp"
+            android:onClick="@{(v) -> parentViewModel.setNaverQrCheckInSetting()}"
+            app:nonCheckedBackground="#FFFFFF"
+            app:checkedBackground="#DCDCDC"
+            app:layout_constraintTop_toBottomOf="@id/intro_qr_checkin_setting_subtitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/intro_qr_checkin_setting_kakao_container">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/intro_qr_checkin_naver_logo"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/naver_ci"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/intro_qr_checkin_naver_title"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/intro_qr_checkin_naver_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/intro_qr_checkin_setting_naver_title"
+                android:textSize="16sp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:textColor="#323232"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/intro_qr_checkin_naver_logo"
+                app:layout_constraintBottom_toTopOf="@id/intro_qr_checkin_naver_subtitle"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/intro_qr_checkin_naver_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/intro_qr_checkin_setting_naver_subtitle"
+                android:gravity="center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/intro_qr_checkin_naver_title"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </com.skfo763.component.checkstatelayout.CheckStateLayout>
+
+        <com.skfo763.component.checkstatelayout.CheckStateLayout
+            android:id="@+id/intro_qr_checkin_setting_kakao_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:padding="16dp"
+            android:onClick="@{(v) -> parentViewModel.setKakaoQrCheckInSetting()}"
+            app:nonCheckedBackground="#FFFFFF"
+            app:checkedBackground="#DCDCDC"
+            app:layout_constraintTop_toBottomOf="@id/intro_qr_checkin_setting_subtitle"
+            app:layout_constraintStart_toEndOf="@id/intro_qr_checkin_setting_naver_container"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/intro_qr_checkin_kakao_logo"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/kakao_ci"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/intro_qr_checkin_kakao_title"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/intro_qr_checkin_kakao_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/intro_qr_checkin_setting_kakao_title"
+                android:textColor="#323232"
+                android:textSize="16sp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/intro_qr_checkin_kakao_logo"
+                app:layout_constraintBottom_toTopOf="@id/intro_qr_checkin_kakao_subtitle"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/intro_qr_checkin_kakao_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/intro_qr_checkin_setting_kakao_subtitle"
+                android:gravity="center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/intro_qr_checkin_kakao_title"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </com.skfo763.component.checkstatelayout.CheckStateLayout>
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/intro_permission_go_next_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="24dp"
+            android:theme="@style/AppTheme"
+            android:text="@string/intro_floating_finalize_title"
+            android:foreground="?attr/selectableItemBackground"
+            android:onClick="@{(v) -> parentViewModel.completeQrCheckInSettingFlow()}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:backgroundTint="#BEDFFF"
+            app:icon="@drawable/ic_baseline_skip_next_24"
+            app:iconPadding="4dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

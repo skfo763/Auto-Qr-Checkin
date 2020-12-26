@@ -16,12 +16,14 @@ class AppDataStore(context: Context) {
     private val INIT_SETTING = preferencesKey<Boolean>("should_init_setting")
     private val DO_AUTO_CHECKIN = preferencesKey<Boolean>("do_auto_checkin")
     private val APP_ICON_TYPE = preferencesKey<String>("app_icon_type")
+    private val QR_CHECKIN_TYPE = preferencesKey<String>("qr_checkin_type")
 
     private val deleteAdsState: DataStore<Preferences> = context.createDataStore(name = "delete_ads_state")
     private val language: DataStore<Preferences> = context.createDataStore(name = "language")
     private val initSettingState: DataStore<Preferences> = context.createDataStore(name = "should_init_setting")
     private val autoCheckInState: DataStore<Preferences> = context.createDataStore(name = "auto_checkin_state")
     private val appIconType: DataStore<Preferences> = context.createDataStore(name = "app_icon_type")
+    private val qrCheckinType: DataStore<Preferences> = context.createDataStore(name = "qr_checkin_type")
 
     val deleteAdsStateFlow: Flow<Boolean> = deleteAdsState.data.map {
         it[IS_FEATURE_ON] ?: false
@@ -36,6 +38,8 @@ class AppDataStore(context: Context) {
     val autoCheckInStateFlow: Flow<Boolean> = autoCheckInState.data.map { it[DO_AUTO_CHECKIN] ?: true }
 
     val appIconTypeFlow: Flow<String> = appIconType.data.map { it[APP_ICON_TYPE] ?: "com.skfo763.qrcheckin.launch.LightIconLauncher" }
+
+    val qrCheckinTypeFlow: Flow<String> = qrCheckinType.data.map { it[QR_CHECKIN_TYPE] ?: "naver" }
 
     suspend fun setDeleteAdsState(isFeatureOn: Boolean) {
         deleteAdsState.edit {
@@ -64,6 +68,12 @@ class AppDataStore(context: Context) {
     suspend fun setAppIconType(type: String) {
         this.appIconType.edit {
             it[APP_ICON_TYPE] = type
+        }
+    }
+
+    suspend fun setQrCheckinType(type: String) {
+        this.qrCheckinType.edit {
+            it[QR_CHECKIN_TYPE] = type
         }
     }
 
