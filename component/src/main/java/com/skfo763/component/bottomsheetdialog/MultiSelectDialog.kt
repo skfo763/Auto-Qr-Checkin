@@ -11,9 +11,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.skfo763.component.R
-import com.skfo763.component.databinding.DialogAppIconSelectBinding
+import com.skfo763.component.databinding.DialogMultiSelectBinding
 
-class AppIconSelectDialog : BottomSheetDialogFragment() {
+class MultiSelectDialog : BottomSheetDialogFragment() {
 
     data class Icon(
         val type: String,
@@ -28,8 +28,9 @@ class AppIconSelectDialog : BottomSheetDialogFragment() {
         var recyclerItemClicked: ((Icon) -> Unit)? = null
     }
 
-    private lateinit var binding: DialogAppIconSelectBinding
+    private lateinit var binding: DialogMultiSelectBinding
 
+    val title = MutableLiveData<String>()
     val itemList = MutableLiveData<List<Icon>>()
 
     override fun onCreateView(
@@ -37,20 +38,22 @@ class AppIconSelectDialog : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.dialog_app_icon_select, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.dialog_multi_select, container, false)
         binding.lifecycleOwner = this
         binding.dialogItem.layoutManager = GridLayoutManager(context, 2)
+        binding.title = this.title
         binding.itemList = this.itemList
         return binding.root
     }
 
-    fun setData(itemList: List<Icon>) {
+    fun setData(title: String, itemList: List<Icon>) {
         itemList.forEach {
             it.recyclerItemClicked = { icon ->
                 dismiss()
                 it.onItemClicked(icon)
             }
         }
+        this.title.value = title
         this.itemList.value = itemList
     }
 }

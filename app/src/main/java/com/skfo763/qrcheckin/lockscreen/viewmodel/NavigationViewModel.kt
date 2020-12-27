@@ -10,6 +10,7 @@ import com.skfo763.qrcheckin.launch.LaunchIconManager
 import com.skfo763.qrcheckin.lockscreen.service.LockScreenService
 import com.skfo763.qrcheckin.lockscreen.usecase.LockScreenActivityUseCase
 import com.skfo763.repository.lockscreen.LockScreenRepository
+import com.skfo763.repository.model.CheckInType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -30,6 +31,7 @@ class NavigationViewModel(
     private val _isLoading = MutableLiveData<Boolean>()
     private val _versionName = MutableLiveData(BuildConfig.VERSION_NAME)
     private val _appIconResource = MutableLiveData<LaunchIconManager.Type>()
+    private val _qrCheckInType = MutableLiveData(CheckInType.NAVER)
 
     val isLockScreenChecked: LiveData<Boolean> = _isLockScreenChecked
     val isWidgetChecked: LiveData<Boolean> = _isWidgetChecked
@@ -37,6 +39,7 @@ class NavigationViewModel(
     val isLoading: LiveData<Boolean> = _isLoading
     val versionName: LiveData<String> = _versionName
     val appIconResource: LiveData<LaunchIconManager.Type> = _appIconResource
+    val qrCheckInType: LiveData<CheckInType> = _qrCheckInType
 
     val onLockScreenSwitchStateChanged: (CompoundButton, Boolean) -> Unit = { _, isChecked ->
         setLockScreenDataToCurrentSwitchState(isChecked)
@@ -93,6 +96,14 @@ class NavigationViewModel(
         }
     }
 
+    fun setQrCheckInTypeSavedState() {
+        viewModelScope.launch {
+            lockScreenRepository.getCurrentQrCheckInType().collect {
+                _qrCheckInType.value = it
+            }
+        }
+    }
+
     fun openAppResetInitializing() {
         viewModelScope.launch {
             lockScreenRepository.resetInitializationState(true)
@@ -108,9 +119,21 @@ class NavigationViewModel(
         useCase.showAppIconSelectDialog()
     }
 
+    fun startQrCheckInSettingFlowStart() {
+        useCase.showQrCheckInSettingDialog()
+    }
+
     fun setAppIconData(type: LaunchIconManager.Type) {
         viewModelScope.launch {
             lockScreenRepository.setAppIconType(type.manifestName)
+        }
+    }
+
+    fun setQrCheckInType(type: CheckInType) {
+        if(type == _qrCheckInType.value) return
+        useCase.finishActivity()
+        viewModelScope.launch {
+            lockScreenRepository.setQrCheckInType(type)
         }
     }
 

@@ -1,8 +1,8 @@
 package com.skfo763.gradle.global
 
 object Sdk {
-    const val compileSdk = 29
-    const val targetSdk = 29
+    const val compileSdk = 30
+    const val targetSdk = 30
     const val minSdk = 21
 }
 

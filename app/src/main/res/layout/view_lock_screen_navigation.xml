@@ -34,14 +34,14 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
                     android:forceDarkAllowed="false"
-                    appIconImg="@{viewModel.appIconResource}"
+                    appIconType="@{viewModel.appIconResource}"
                     tools:srcCompat="@mipmap/ic_launcher" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginBottom="16dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
                     android:ellipsize="marquee"

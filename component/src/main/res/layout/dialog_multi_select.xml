@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:bind="http://schemas.android.com/apk/res-auto">
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <import type="androidx.lifecycle.LiveData"/>
         <import type="java.util.List"/>
-        <import type="com.skfo763.component.bottomsheetdialog.AppIconSelectDialog.Icon"/>
-        <variable
-            name="itemList"
-            type="LiveData&lt;List&lt;Icon>>" />
+        <import type="com.skfo763.component.bottomsheetdialog.MultiSelectDialog.Icon"/>
         <variable
             name="title"
             type="LiveData&lt;String>" />
+        <variable
+            name="itemList"
+            type="LiveData&lt;List&lt;Icon>>" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,15 +24,16 @@
             android:id="@+id/dialogTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/dialog_app_icon_select_title"
+            android:text="@{title}"
             android:textSize="18sp"
             android:paddingTop="16dp"
             android:paddingStart="20dp"
-            android:paddingRight="20dp"
+            android:paddingEnd="20dp"
             android:paddingBottom="16dp"
             android:textStyle="bold"
             android:textColor="#323232"
             android:elevation="3dp"
+            tools:text="QR 체크인 방법을 선택해주세요"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintVertical_bias="1.0"
             app:layout_constraintVertical_chainStyle="packed"
@@ -57,7 +58,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/dialogDivider"
-            bind:dino_itemLayout="@{@layout/holder_dialog_app_icon_select_item}"
+            bind:dino_itemLayout="@{@layout/holder_dialog_multi_select_item}"
             bind:dino_items="@{itemList}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

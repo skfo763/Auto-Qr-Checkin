@@ -13,22 +13,16 @@ import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
-import androidx.annotation.VisibleForTesting
-import androidx.appcompat.widget.ThemeUtils
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.OnLifecycleEvent
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.skfo763.base.BaseActivityUseCase
-import com.skfo763.base.extension.safeColor
 import com.skfo763.base.theme.ThemeType
-import com.skfo763.base.theme.applyTheme
 import com.skfo763.base.theme.getTheme
-import com.skfo763.component.bottomsheetdialog.AppIconSelectDialog
+import com.skfo763.component.bottomsheetdialog.MultiSelectDialog
 import com.skfo763.component.bottomsheetdialog.AutoCheckInDescDialog
 import com.skfo763.component.extensions.parsedUri
 import com.skfo763.component.playcore.InAppUpdateManager
@@ -38,8 +32,8 @@ import com.skfo763.qrcheckin.extension.showOverlayPermissionDialog
 import com.skfo763.qrcheckin.launch.LaunchIconManager
 import com.skfo763.qrcheckin.lockscreen.activity.LockScreenActivity
 import com.skfo763.repository.model.CheckInType
+import com.skfo763.repository.model.qrCheckInType
 import com.skfo763.storage.gps.isLocationPermissionGranted
-import org.jetbrains.annotations.TestOnly
 
 class LockScreenActivityUseCase constructor(
     private val activity: LockScreenActivity
@@ -61,7 +55,7 @@ class LockScreenActivityUseCase constructor(
 
     var snackBarWindow: View? = null
 
-    private val onItemClicked: (AppIconSelectDialog.Icon) -> Unit = { icon ->
+    private val onAppIconSettingItemClicked: (MultiSelectDialog.Icon) -> Unit = { icon ->
         val launchType = LaunchIconManager.getType(icon.type, currentUiTheme)
         if(launchType != activity.viewModel.navigationViewModel.appIconResource.value) {
             activity.launchIconManager.setIcon(launchType)
@@ -69,9 +63,13 @@ class LockScreenActivityUseCase constructor(
         }
     }
 
+    private val onQrCheckInSettingItemClicked: ((MultiSelectDialog.Icon) -> Unit) = { icon ->
+        activity.viewModel.navigationViewModel.setQrCheckInType(icon.type.qrCheckInType)
+    }
+
     private val appIconList by lazy {
         listOf(
-            AppIconSelectDialog.Icon(
+            MultiSelectDialog.Icon(
                 LaunchIconManager.Type.LIGHT.manifestName,
                 getDrawable(R.drawable.launcher_icon_light),
                 getColor(R.color.app_icon_select_dialog_light_background),
@@ -79,9 +77,9 @@ class LockScreenActivityUseCase constructor(
                 getColor(R.color.app_icon_select_dialog_light_description),
                 activity.getString(R.string.icon_light_title),
                 activity.getString(R.string.icon_light_desc),
-                onItemClicked = onItemClicked
+                onItemClicked = onAppIconSettingItemClicked
             ),
-            AppIconSelectDialog.Icon(
+            MultiSelectDialog.Icon(
                 LaunchIconManager.Type.DARK.manifestName,
                 getDrawable(R.drawable.launcher_icon_dark),
                 getColor(R.color.app_icon_select_dialog_dark_background),
@@ -89,7 +87,32 @@ class LockScreenActivityUseCase constructor(
                 getColor(R.color.app_icon_select_dialog_dark_description),
                 activity.getString(R.string.icon_dark_title),
                 activity.getString(R.string.icon_dark_desc),
-                onItemClicked = onItemClicked
+                onItemClicked = onAppIconSettingItemClicked
+            )
+        )
+    }
+
+    private val qrCheckInList by lazy {
+        listOf(
+            MultiSelectDialog.Icon(
+                CheckInType.NAVER.type,
+                getDrawable(R.drawable.naver_ci),
+                getColor(R.color.app_icon_select_dialog_light_background),
+                getColor(R.color.app_icon_select_dialog_light_title),
+                getColor(R.color.app_icon_select_dialog_light_description),
+                activity.getString(R.string.intro_qr_checkin_setting_naver_title),
+                activity.getString(R.string.intro_qr_checkin_setting_naver_subtitle),
+                onItemClicked = onQrCheckInSettingItemClicked
+            ),
+            MultiSelectDialog.Icon(
+                CheckInType.KAKAO.type,
+                getDrawable(R.drawable.kakao_ci),
+                getColor(R.color.app_icon_select_dialog_dark_background),
+                getColor(R.color.app_icon_select_dialog_dark_title),
+                getColor(R.color.app_icon_select_dialog_dark_description),
+                activity.getString(R.string.intro_qr_checkin_setting_kakao_title),
+                activity.getString(R.string.intro_qr_checkin_setting_kakao_subtitle),
+                onItemClicked = onQrCheckInSettingItemClicked
             )
         )
     }
@@ -189,7 +212,7 @@ class LockScreenActivityUseCase constructor(
                 true
             }
             REQ_CODE_OPEN_KAKAO_CHECKIN -> {
-                activity.viewModel.saveCheckPointSubject.onNext(CheckInType.KAKAO.type)
+                activity.viewModel.saveCheckPointNowSubject.onNext(CheckInType.KAKAO.type)
                 true
             }
             ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE -> {
@@ -224,8 +247,17 @@ class LockScreenActivityUseCase constructor(
     }
 
     fun showAppIconSelectDialog() {
-        AppIconSelectDialog().apply {
-            setData(appIconList)
+        val title = activity.getString(R.string.dialog_app_icon_select_title)
+        MultiSelectDialog().apply {
+            setData(title, appIconList)
+            show(this@LockScreenActivityUseCase.activity.supportFragmentManager, null)
+        }
+    }
+
+    fun showQrCheckInSettingDialog() {
+        val title = activity.getString(R.string.intro_qr_checkin_setting_title)
+        MultiSelectDialog().apply {
+            setData(title, qrCheckInList)
             show(this@LockScreenActivityUseCase.activity.supportFragmentManager, null)
         }
     }

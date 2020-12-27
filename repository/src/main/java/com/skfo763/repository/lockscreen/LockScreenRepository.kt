@@ -41,4 +41,6 @@ interface LockScreenRepository {
 
     suspend fun setAppIconType(type: String)
 
+    suspend fun setQrCheckInType(type: CheckInType)
+
 }

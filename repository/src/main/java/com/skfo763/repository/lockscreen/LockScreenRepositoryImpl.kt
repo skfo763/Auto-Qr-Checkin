@@ -104,6 +104,10 @@ class LockScreenRepositoryImpl @Inject constructor(
         appDataStore.setAppIconType(type)
     }
 
+    override suspend fun setQrCheckInType(type: CheckInType) {
+        appDataStore.setQrCheckinType(type.type)
+    }
+
     private val mappingLanguageState: (String) -> LanguageState = {
         when(it) {
             LanguageState.KOREAN.value -> LanguageState.KOREAN

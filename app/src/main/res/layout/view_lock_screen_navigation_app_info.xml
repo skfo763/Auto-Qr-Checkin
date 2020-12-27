@@ -19,19 +19,20 @@
             android:id="@+id/nav_app_info_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawablePadding="4dp"
-            android:text="@string/nav_app_info_title"
-            android:textColor="#323232"
-            android:textSize="15sp"
-            android:gravity="center_vertical"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            app:layout_constraintVertical_chainStyle="packed"
+            android:drawablePadding="4dp"
+            android:gravity="center_vertical"
+            android:text="@string/nav_app_info_title"
+            android:textColor="#323232"
+            android:textSize="15sp"
             app:drawableStartCompat="@drawable/ic_baseline_touch_app_24"
             app:layout_constraintBottom_toTopOf="@+id/nav_app_info_divider"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:layout_constraintVertical_chainStyle="packed" />
 
         <View
             android:id="@+id/nav_app_info_divider"
@@ -261,7 +262,7 @@
             android:visibility="visible"
             android:onClick="@{(v) -> viewModel.startAppLauncherIconChangeFlow()}"
             android:foreground="?attr/selectableItemBackground"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/nav_app_info_set_qr_checkin_type"
             app:layout_constraintTop_toBottomOf="@+id/nav_app_info_open_help">
 
             <TextView
@@ -286,8 +287,8 @@
                 app:layout_constraintTop_toTopOf="@id/nav_app_info_set_launcher_icon_title"
                 app:layout_constraintBottom_toBottomOf="@id/nav_app_info_set_launcher_icon_title"
                 app:layout_constraintEnd_toStartOf="@id/nav_app_info_set_launcher_icon_info"
-                appIconImg="@{viewModel.appIconResource}"
-                tools:src="@mipmap/launcher_icon_light"/>
+                appIconType="@{viewModel.appIconResource}"
+                tools:src="@drawable/launcher_icon_light"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/nav_app_info_set_launcher_icon_info"
@@ -299,8 +300,60 @@
                 app:layout_constraintTop_toTopOf="@id/nav_app_info_set_launcher_icon_title"
                 app:layout_constraintBottom_toBottomOf="@id/nav_app_info_set_launcher_icon_title"
                 app:layout_constraintEnd_toEndOf="parent"
-                appIconText="@{viewModel.appIconResource}"
+                appIconType="@{viewModel.appIconResource}"
                 tools:text="@string/icon_light_title" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/nav_app_info_set_qr_checkin_type"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:orientation="horizontal"
+            android:visibility="visible"
+            android:onClick="@{(v) -> viewModel.startQrCheckInSettingFlowStart()}"
+            android:foreground="?attr/selectableItemBackground"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nav_app_info_set_launcher_icon">
+
+            <TextView
+                android:id="@+id/nav_app_info_set_qr_checkin_type_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:text="@string/nav_app_info_set_qr_checkin_type"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/nav_app_info_set_qr_checkin_type_img"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:padding="2dp"
+                android:layout_marginEnd="4dp"
+                android:forceDarkAllowed="false"
+                qrCheckInType="@{viewModel.qrCheckInType}"
+                app:layout_constraintTop_toTopOf="@id/nav_app_info_set_qr_checkin_type_title"
+                app:layout_constraintBottom_toBottomOf="@id/nav_app_info_set_qr_checkin_type_title"
+                app:layout_constraintEnd_toStartOf="@id/nav_app_info_set_qr_checkin_type_icon_info"
+                tools:src="@drawable/naver_ci"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/nav_app_info_set_qr_checkin_type_icon_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:textColor="#323232"
+                android:gravity="center"
+                qrCheckInType="@{viewModel.qrCheckInType}"
+                app:layout_constraintTop_toTopOf="@id/nav_app_info_set_qr_checkin_type_title"
+                app:layout_constraintBottom_toBottomOf="@id/nav_app_info_set_qr_checkin_type_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="@string/intro_qr_checkin_setting_naver_title" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

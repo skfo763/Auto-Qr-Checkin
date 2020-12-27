@@ -15,7 +15,6 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
 import com.skfo763.base.BaseActivity
 import com.skfo763.component.bixbysetting.BixbyLandingManager
-import com.skfo763.component.bottomsheetdialog.AppIconSelectDialog
 import com.skfo763.component.tracker.FirebaseTracker
 import com.skfo763.qrcheckin.R
 import com.skfo763.qrcheckin.admob.AdMobManager
@@ -130,7 +129,9 @@ class LockScreenActivity (
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
-        viewModel.handleUiModeChange(newConfig.uiMode)
+        if(!supportFragmentManager.isStateSaved) {
+            viewModel.handleUiModeChange(newConfig.uiMode)
+        }
         super.onConfigurationChanged(newConfig)
     }
 

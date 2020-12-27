@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="com.skfo763.component.bottomsheetdialog.AppIconSelectDialog.Icon"/>
+        <import type="com.skfo763.component.bottomsheetdialog.MultiSelectDialog.Icon"/>
         <variable
             name="item"
-            type="com.skfo763.component.bottomsheetdialog.AppIconSelectDialog.Icon" />
+            type="com.skfo763.component.bottomsheetdialog.MultiSelectDialog.Icon" />
         <variable
             name="itemClickListener"
             type="android.view.View.OnClickListener"/>

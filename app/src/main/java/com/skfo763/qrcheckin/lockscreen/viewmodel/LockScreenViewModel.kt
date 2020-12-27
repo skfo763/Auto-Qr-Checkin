@@ -57,7 +57,8 @@ class LockScreenViewModel @ViewModelInject constructor(
 
     private val random = Random()
     private var currLocation = Pair(0.0, 0.0)
-    val saveCheckPointSubject: Subject<String> = BehaviorSubject.create()
+    private val saveCheckPointDelayedSubject: Subject<String> = BehaviorSubject.create()
+    val saveCheckPointNowSubject: Subject<String> = BehaviorSubject.create()
     val shouldReviewApp: Boolean get() = inAppReviewManager.shouldReviewApp(random)
     val navigationViewModel = NavigationViewModel(viewModelScope, lockScreenRepository, inAppUpdateManager, random)
 
@@ -104,7 +105,7 @@ class LockScreenViewModel @ViewModelInject constructor(
     }
 
     val onCheckInComplete: (String?) -> Unit = {
-        saveCheckPointSubject.onNext(it ?: "")
+        saveCheckPointDelayedSubject.onNext(it ?: "")
     }
 
     val onCheckInButtonClicked: (View) -> Unit = {
@@ -116,25 +117,28 @@ class LockScreenViewModel @ViewModelInject constructor(
     }
 
     private fun observeCheckInFlowable() {
-        saveCheckPointSubject.toSerialized().toFlowable(BackpressureStrategy.BUFFER)
+        saveCheckPointDelayedSubject.toSerialized().toFlowable(BackpressureStrategy.BUFFER)
             .subscribeOn(Schedulers.io())
             .throttleFirst(2000L, TimeUnit.MILLISECONDS)
             .delay(5000L, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 when {
-                    it.isNullOrEmpty() -> {
-                        return@subscribe
-                    }
-                    it == CheckInType.KAKAO.type -> {
-                        showCheckInButton()
-                    }
-                    navigationViewModel.isAutoCheckInChecked.value == true -> {
-                        saveCheckPoint()
-                    }
-                    else -> {
-                        showCheckInButton()
-                    }
+                    it.isNullOrEmpty() -> return@subscribe
+                    navigationViewModel.isAutoCheckInChecked.value == true -> saveCheckPoint()
+                    else -> showCheckInButton()
+                }
+            }) { logException(Exception(it)) }
+
+        saveCheckPointNowSubject.toSerialized().toFlowable(BackpressureStrategy.BUFFER)
+            .subscribeOn(Schedulers.io())
+            .throttleFirst(2500L, TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                when {
+                    it.isNullOrEmpty() -> return@subscribe
+                    navigationViewModel.isAutoCheckInChecked.value == true -> saveCheckPoint()
+                    else -> showCheckInButton()
                 }
             }) { logException(Exception(it)) }
     }
@@ -145,6 +149,7 @@ class LockScreenViewModel @ViewModelInject constructor(
             setWidgetSavedState()
             setAutoCheckInSavedState()
             setAppIconSavedState()
+            setQrCheckInTypeSavedState()
         }
     }
 
@@ -300,7 +305,11 @@ class LockScreenViewModel @ViewModelInject constructor(
     }
 
     fun handleUiModeChange(uiMode: Int) {
-        navigationViewModel.startAppLauncherIconChangeFlow()
+        try {
+            navigationViewModel.startAppLauncherIconChangeFlow()
+        } catch (e: Exception) {
+            logException(e)
+        }
     }
 
 }

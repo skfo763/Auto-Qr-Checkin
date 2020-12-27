@@ -1,23 +1,16 @@
 package com.skfo763.qrcheckin.di
 
 import android.app.Activity
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Handler
 import android.os.Looper
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
-import com.skfo763.base.extension.safeColor
 import com.skfo763.component.bixbysetting.BixbyLandingManager
-import com.skfo763.component.bottomsheetdialog.AppIconSelectDialog
+import com.skfo763.component.bottomsheetdialog.MultiSelectDialog
 import com.skfo763.component.playcore.InAppReviewManager
 import com.skfo763.component.playcore.InAppUpdateManager
-import com.skfo763.qrcheckin.R
 import com.skfo763.qrcheckin.admob.AdMobManager
-import com.skfo763.qrcheckin.intro.activity.IntroActivity
 import com.skfo763.qrcheckin.intro.adapter.IntroPagerAdapter
 import com.skfo763.qrcheckin.launch.LaunchIconManager
-import com.skfo763.qrcheckin.lockscreen.activity.LockScreenActivity
 import com.skfo763.qrcheckin.lockscreen.receiver.AddressResultReceiver
 import com.skfo763.remote.NetworkManager
 import com.skfo763.remote.api.NaverMapApi
@@ -28,7 +21,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
-import dagger.hilt.android.components.FragmentComponent
 
 @Module
 @InstallIn(ActivityComponent::class)
@@ -56,8 +48,8 @@ abstract class ActivityModule {
         }
 
         @Provides
-        fun provideAppIconSelectDialog(activity: Activity): AppIconSelectDialog {
-            return AppIconSelectDialog()
+        fun provideAppIconSelectDialog(activity: Activity): MultiSelectDialog {
+            return MultiSelectDialog()
         }
 
         @Provides
