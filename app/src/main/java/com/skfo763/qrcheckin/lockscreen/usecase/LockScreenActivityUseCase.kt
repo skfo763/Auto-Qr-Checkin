@@ -55,6 +55,8 @@ class LockScreenActivityUseCase constructor(
 
     var snackBarWindow: View? = null
 
+    private var startKakaoActivityException: Exception? = null
+
     private val onAppIconSettingItemClicked: (MultiSelectDialog.Icon) -> Unit = { icon ->
         val launchType = LaunchIconManager.getType(icon.type, currentUiTheme)
         if(launchType != activity.viewModel.navigationViewModel.appIconResource.value) {
@@ -138,6 +140,7 @@ class LockScreenActivityUseCase constructor(
             val intent = Intent(Intent.ACTION_VIEW, url.parsedUri)
             activity.startActivityForResult(intent, REQ_CODE_OPEN_KAKAO_CHECKIN)
         } catch (e: Exception) {
+            startKakaoActivityException = e
             activity.startActivity(Intent(
                 Intent.ACTION_VIEW,
                 Uri.parse("https://play.google.com/store/apps/details?id=com.kakao.talk")
@@ -212,6 +215,7 @@ class LockScreenActivityUseCase constructor(
                 true
             }
             REQ_CODE_OPEN_KAKAO_CHECKIN -> {
+                if(startKakaoActivityException != null) return true
                 activity.viewModel.saveCheckPointNowSubject.onNext(CheckInType.KAKAO.type)
                 true
             }

@@ -35,7 +35,7 @@ class AppDataStore(context: Context) {
 
     val initSettingStateFlow: Flow<Boolean> = initSettingState.data.map { it[INIT_SETTING] ?: true }
 
-    val autoCheckInStateFlow: Flow<Boolean> = autoCheckInState.data.map { it[DO_AUTO_CHECKIN] ?: true }
+    val autoCheckInStateFlow: Flow<Boolean> = autoCheckInState.data.map { it[DO_AUTO_CHECKIN] ?: false }
 
     val appIconTypeFlow: Flow<String> = appIconType.data.map { it[APP_ICON_TYPE] ?: "com.skfo763.qrcheckin.launch.LightIconLauncher" }
 

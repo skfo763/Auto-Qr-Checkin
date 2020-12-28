@@ -291,7 +291,6 @@ class LockScreenViewModel @ViewModelInject constructor(
         }
     }
 
-
     private fun showCheckInConfirmSnackBar(checkIn: CheckPoint) {
         useCase.showSnackBar(
             useCase.res.getString(R.string.location_checkin_complete) +
