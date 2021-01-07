@@ -15,7 +15,7 @@ dependencies {
     implementation(gradleApi())
     implementation(localGroovy())
     implementation(group = "io.github.rybalkinsd", name = "kohttp", version = "0.11.1")
-    implementation(kotlin("gradle-plugin", "1.4.0"))
+    implementation(kotlin("gradle-plugin", "1.4.20"))
 
     implementation("com.google.guava:guava:28.2-jre")
     implementation("com.google.auth:google-auth-library-oauth2-http:0.20.0")

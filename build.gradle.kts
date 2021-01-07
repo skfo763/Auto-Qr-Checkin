@@ -1,6 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    val kotlin_version by extra("1.4.0")
+    val kotlin_version by extra("1.4.20")
     repositories {
         google()
         jcenter()
@@ -9,7 +9,6 @@ buildscript {
 
     dependencies {
         classpath(com.skfo763.gradle.global.GlobalDependencies.gradle)
-        classpath(com.skfo763.gradle.global.GlobalDependencies.kotlin)
         classpath(com.skfo763.gradle.global.GlobalDependencies.hilt)
         classpath(com.skfo763.gradle.global.GlobalDependencies.googleService)
         classpath(com.skfo763.gradle.global.GlobalDependencies.firebaseCrashlytics)

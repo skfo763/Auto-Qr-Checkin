@@ -10,7 +10,7 @@ import android.os.Parcelable
 import android.os.ResultReceiver
 import com.skfo763.base.model.ServiceResult
 import com.skfo763.qrcheckin.R
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.io.IOException
 import java.util.*
 

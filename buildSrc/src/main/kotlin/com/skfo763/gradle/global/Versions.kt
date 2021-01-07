@@ -2,7 +2,7 @@ package com.skfo763.gradle.global
 
 object Versions {
     const val gradle = "4.0.1"
-    const val kotlin = "1.4.0"
+    const val kotlin = "1.4.20"
     const val googleService = "4.3.4"
     const val crashlyticsGradle = "2.3.0"
 
