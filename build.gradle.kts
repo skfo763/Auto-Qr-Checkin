@@ -22,7 +22,7 @@ allprojects {
         jcenter()
 
         maven {
-            setUrl("https://navercorp.bintray.com/maps")
+            setUrl("https://naver.jfrog.io/artifactory/maven/")
         }
     }
 }
