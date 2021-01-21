@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.Handler
 import android.view.MenuItem
 import android.view.WindowManager
 import androidx.activity.viewModels
@@ -100,6 +101,10 @@ class LockScreenActivity (
                 ThemeDialogBuilder(this)
                     .setDialogTitle(getString(R.string.theme_select_dialog_title))
                     .setThemeItems(viewModel.currentUiTheme.value, useCase.themeDialogItems) {
+                        if(it.themeType == viewModel.currentUiTheme.value) {
+                            return@setThemeItems
+                        }
+                        applyTheme(it.themeType)
                         viewModel.saveThemeState(it.themeType)
                         recreate()
                     }.setNegativeButton(R.string.cancel) { dialog, _ ->

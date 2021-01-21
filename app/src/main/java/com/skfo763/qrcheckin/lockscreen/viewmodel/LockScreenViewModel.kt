@@ -315,7 +315,6 @@ class LockScreenViewModel @ViewModelInject constructor(
     }
 
     fun saveThemeState(themeType: ThemeType) = viewModelScope.launch {
-        applyTheme(themeType)
         lockScreenRepository.setCurrentUiTheme(themeType)
     }
 }

@@ -4,15 +4,13 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.AttributeSet
-import android.util.Log
 import android.webkit.CookieManager
 import android.webkit.WebSettings
 import android.webkit.WebView
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewFeature
+import com.skfo763.base.theme.ThemeType
 import com.skfo763.component.BuildConfig
 import com.skfo763.component.R
 
@@ -29,10 +27,6 @@ class QrCheckInWebView @JvmOverloads constructor(
     init {
         isFocusable = true
         isFocusableInTouchMode = true
-
-        if(WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
-            WebSettingsCompat.setForceDark(this.settings, WebSettingsCompat.FORCE_DARK_AUTO)
-        }
 
         uriChecker.showDialog = { uri, it -> showDialog(
             it.title,
@@ -56,6 +50,22 @@ class QrCheckInWebView @JvmOverloads constructor(
 
         if(BuildConfig.DEBUG) {
             setWebContentsDebuggingEnabled(true)
+        }
+    }
+
+    fun setWebViewForceDarkState(themeType: ThemeType) {
+        if(WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
+            when(themeType) {
+                ThemeType.DEFAULT_MODE -> {
+                    WebSettingsCompat.setForceDark(this.settings, WebSettingsCompat.FORCE_DARK_AUTO)
+                }
+                ThemeType.DARK_MODE -> {
+                    WebSettingsCompat.setForceDark(this.settings, WebSettingsCompat.FORCE_DARK_ON)
+                }
+                ThemeType.LIGHT_MODE -> {
+                    WebSettingsCompat.setForceDark(this.settings, WebSettingsCompat.FORCE_DARK_OFF)
+                }
+            }
         }
     }
 
