@@ -91,7 +91,7 @@ class NavigationViewModel(
     fun setAppIconSavedState() {
         viewModelScope.launch {
             lockScreenRepository.getAppIconState().collect {
-                _appIconResource.value = LaunchIconManager.getType(it, useCase.currentUiTheme)
+                _appIconResource.value = LaunchIconManager.getType(it, useCase.isDarkMode)
             }
         }
     }

@@ -5,6 +5,12 @@ import android.content.res.Configuration
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
 
+fun getAvailableTheme() = listOf(
+    ThemeType.LIGHT_MODE,
+    ThemeType.DARK_MODE,
+    ThemeType.DEFAULT_MODE
+)
+
 fun applyTheme(theme: ThemeType) {
     when(theme) {
         ThemeType.LIGHT_MODE -> {
@@ -23,10 +29,14 @@ fun applyTheme(theme: ThemeType) {
     }
 }
 
-fun getTheme(context: Context): ThemeType {
-    return when(context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+fun getTheme(configuration: Configuration): ThemeType {
+    return when(configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
         Configuration.UI_MODE_NIGHT_NO -> ThemeType.LIGHT_MODE
         Configuration.UI_MODE_NIGHT_YES -> ThemeType.DARK_MODE
-        else -> ThemeType.LIGHT_MODE
+        else -> ThemeType.DEFAULT_MODE
     }
+}
+
+fun isDarkTheme(configuration: Configuration): Boolean {
+    return configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
 }

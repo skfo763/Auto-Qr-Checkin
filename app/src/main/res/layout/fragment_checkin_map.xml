@@ -27,7 +27,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             location="@{viewModel.location}"
-            markerLists="@{viewModel.checkPointList}"/>
+            markerLists="@{viewModel.checkPointList}"
+            isDarkModeEnabled="@{viewModel.isDarkModeEnabled}"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/checkin_map_current_address"

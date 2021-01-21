@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Lifecycle
@@ -24,6 +25,7 @@ import com.skfo763.base.theme.ThemeType
 import com.skfo763.base.theme.getTheme
 import com.skfo763.component.bottomsheetdialog.MultiSelectDialog
 import com.skfo763.component.bottomsheetdialog.AutoCheckInDescDialog
+import com.skfo763.component.cbalertdialog.ThemeDialogBuilder
 import com.skfo763.component.extensions.parsedUri
 import com.skfo763.component.playcore.InAppUpdateManager
 import com.skfo763.qrcheckin.R
@@ -45,7 +47,13 @@ class LockScreenActivityUseCase constructor(
         const val REQ_CODE_OPEN_KAKAO_CHECKIN = 1002
     }
 
-    val currentUiTheme: ThemeType get() = getTheme(activity)
+    val themeDialogItems by lazy { listOf(
+        ThemeDialogBuilder.Item(getString(R.string.theme_select_dialog_light), ThemeType.LIGHT_MODE),
+        ThemeDialogBuilder.Item(getString(R.string.theme_select_dialog_dark), ThemeType.DARK_MODE),
+        ThemeDialogBuilder.Item(getString(R.string.theme_select_dialog_system), ThemeType.DEFAULT_MODE)
+    ) }
+
+    val isDarkMode: ThemeType get() = getTheme(activity.resources.configuration)
 
     var isActivityForeground: Boolean = false
 
@@ -58,7 +66,7 @@ class LockScreenActivityUseCase constructor(
     private var startKakaoActivityException: Exception? = null
 
     private val onAppIconSettingItemClicked: (MultiSelectDialog.Icon) -> Unit = { icon ->
-        val launchType = LaunchIconManager.getType(icon.type, currentUiTheme)
+        val launchType = LaunchIconManager.getType(icon.type, isDarkMode)
         if(launchType != activity.viewModel.navigationViewModel.appIconResource.value) {
             activity.launchIconManager.setIcon(launchType)
             activity.viewModel.navigationViewModel.setAppIconData(launchType)
@@ -248,6 +256,10 @@ class LockScreenActivityUseCase constructor(
     @ColorInt
     fun getColor(@ColorRes colorResId: Int): Int {
         return ContextCompat.getColor(this.activity, colorResId)
+    }
+
+    fun getString(@StringRes stringRes: Int): String {
+        return activity.getString(stringRes)
     }
 
     fun showAppIconSelectDialog() {

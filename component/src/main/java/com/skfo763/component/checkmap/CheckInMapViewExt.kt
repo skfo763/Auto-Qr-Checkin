@@ -5,6 +5,9 @@ import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.overlay.Marker
+import com.skfo763.base.theme.ThemeType
+import com.skfo763.base.theme.getTheme
+import com.skfo763.base.theme.isDarkTheme
 
 object CheckInMapViewExt {
 
@@ -28,6 +31,12 @@ object CheckInMapViewExt {
                 tag = it.checkInTimeString
             }
         }
+    }
+
+    @JvmStatic
+    @BindingAdapter("isDarkModeEnabled")
+    fun CheckInMapView.setDarkModeState(isDarkModeEnabled: Boolean? = null) {
+        this.isNightModeEnabledState = isDarkModeEnabled
     }
 
     /**

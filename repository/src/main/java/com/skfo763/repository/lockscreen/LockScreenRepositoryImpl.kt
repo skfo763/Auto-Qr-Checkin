@@ -1,5 +1,6 @@
 package com.skfo763.repository.lockscreen
 
+import com.skfo763.base.theme.ThemeType
 import com.skfo763.remote.RealtimeDBManager
 import com.skfo763.repository.BuildConfig
 import com.skfo763.repository.model.CheckInType
@@ -76,6 +77,10 @@ class LockScreenRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getCurrentUiTheme(): Flow<ThemeType> {
+        return appDataStore.uiThemeTypeFlow
+    }
+
     override suspend fun setLockFeatureState(isFeatureOn: Boolean) {
         lockScreenDataStore.setLockScreenFeatureState(isFeatureOn)
     }
@@ -106,6 +111,10 @@ class LockScreenRepositoryImpl @Inject constructor(
 
     override suspend fun setQrCheckInType(type: CheckInType) {
         appDataStore.setQrCheckinType(type.type)
+    }
+
+    override suspend fun setCurrentUiTheme(type: ThemeType) {
+        appDataStore.setCurrentUiTheme(type)
     }
 
     private val mappingLanguageState: (String) -> LanguageState = {

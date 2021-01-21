@@ -40,6 +40,16 @@ class CheckInMapView @JvmOverloads constructor(
             field = value
         }
 
+    var isNightModeEnabledState: Boolean? = null
+        set(value) {
+            value?.let {
+                getMapAsync { map ->
+                    map.isNightModeEnabled = it
+                }
+            }
+            field = value
+        }
+
     private val infoWindow = InfoWindow().apply {
         adapter = object: InfoWindow.DefaultTextAdapter(context) {
             override fun getText(window: InfoWindow): CharSequence = window.marker?.tag as? CharSequence ?: ""
@@ -58,6 +68,7 @@ class CheckInMapView @JvmOverloads constructor(
         getMapAsync { map ->
             map.minZoom = 8.0
             map.maxZoom = 18.0
+            map.mapType = NaverMap.MapType.Navi
             map.setOnMapClickListener { _: PointF, _: LatLng -> infoWindow.close() }
             map.addOnCameraChangeListener(this)
             map.addOnCameraIdleListener(this)

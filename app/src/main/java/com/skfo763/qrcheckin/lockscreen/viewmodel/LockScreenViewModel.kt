@@ -12,6 +12,8 @@ import androidx.lifecycle.viewModelScope
 import com.gun0912.tedpermission.PermissionListener
 import com.skfo763.base.BaseViewModel
 import com.skfo763.base.extension.logException
+import com.skfo763.base.theme.ThemeType
+import com.skfo763.base.theme.applyTheme
 import com.skfo763.component.floatingwidget.FloatingWidgetService
 import com.skfo763.component.floatingwidget.FloatingWidgetView.Companion.CURR_X
 import com.skfo763.component.floatingwidget.FloatingWidgetView.Companion.CURR_Y
@@ -69,6 +71,7 @@ class LockScreenViewModel @ViewModelInject constructor(
     private val _errorList = MutableLiveData<List<ErrorFormat>?>()
     private val _urlForCheckIn = MutableLiveData<String?>()
     private val _kakaoCheckInViewVisibility = MutableLiveData<Boolean>()
+    private val _currentUiTheme = MutableLiveData(ThemeType.DEFAULT_MODE)
     private val _isLoading = MutableLiveData<Boolean>()
 
     val availableHost: LiveData<List<String>?> = _availableHost
@@ -78,6 +81,7 @@ class LockScreenViewModel @ViewModelInject constructor(
     val errorList: LiveData<List<ErrorFormat>?> = _errorList
     val urlForCheckIn: LiveData<String?> = _urlForCheckIn
     val kakaoCheckInViewVisibility: LiveData<Boolean> = _kakaoCheckInViewVisibility
+    val currentUiTheme: LiveData<ThemeType> = _currentUiTheme
     val isLoading: LiveData<Boolean> = _isLoading
 
     val onFailedUrlLoaded: (invalidUrl: String?) -> Unit = {
@@ -114,6 +118,13 @@ class LockScreenViewModel @ViewModelInject constructor(
 
     init {
         observeCheckInFlowable()
+        initializeAppTheme()
+    }
+
+    private fun initializeAppTheme() = viewModelScope.launch {
+        lockScreenRepository.getCurrentUiTheme().collect {
+            _currentUiTheme.value = it
+        }
     }
 
     private fun observeCheckInFlowable() {
@@ -303,12 +314,8 @@ class LockScreenViewModel @ViewModelInject constructor(
         return sqrt(latDistance + lngDistance) <= minDistance
     }
 
-    fun handleUiModeChange(uiMode: Int) {
-        try {
-            navigationViewModel.startAppLauncherIconChangeFlow()
-        } catch (e: Exception) {
-            logException(e)
-        }
+    fun saveThemeState(themeType: ThemeType) = viewModelScope.launch {
+        applyTheme(themeType)
+        lockScreenRepository.setCurrentUiTheme(themeType)
     }
-
 }

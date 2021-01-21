@@ -7,6 +7,8 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.naver.maps.geometry.LatLng
 import com.skfo763.base.extension.logException
+import com.skfo763.base.theme.ThemeType
+import com.skfo763.base.theme.isDarkTheme
 import com.skfo763.component.checkmap.NaverMapMarker
 import com.skfo763.qrcheckin.lockscreen.receiver.AddressResultReceiver
 import com.skfo763.repository.checkinmap.CheckInMapException
@@ -29,13 +31,19 @@ class CheckInMapViewModel @ViewModelInject constructor(
     private val _location = MutableLiveData<Location>()
     private val _cameraScopeAddress = MutableLiveData<CheckInAddress?>()
     private val _checkPointList = MutableLiveData<List<NaverMapMarker>>(listOf())
+    private val _isDarkModeEnabled = MutableLiveData<Boolean>()
 
     val location: LiveData<Location> = _location
     val cameraScopeAddress: LiveData<CheckInAddress?> = _cameraScopeAddress
     val checkPointList: LiveData<List<NaverMapMarker>> = _checkPointList
+    val isDarkModeEnabled: LiveData<Boolean> = _isDarkModeEnabled
 
     init {
         this.resultReceiver.listener = this
+    }
+
+    fun setDarkModeEnabledState(isDarkTheme: Boolean) {
+        _isDarkModeEnabled.value = isDarkTheme
     }
 
     fun requestLastKnownLocation() {

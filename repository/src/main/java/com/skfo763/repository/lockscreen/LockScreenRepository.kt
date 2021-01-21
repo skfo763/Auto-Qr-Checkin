@@ -1,5 +1,6 @@
 package com.skfo763.repository.lockscreen
 
+import com.skfo763.base.theme.ThemeType
 import com.skfo763.repository.model.CheckInType
 import com.skfo763.repository.model.NaverCheckInUrl
 import com.skfo763.repository.model.LanguageState
@@ -27,6 +28,8 @@ interface LockScreenRepository {
 
     fun getCurrentQrCheckInType(): Flow<CheckInType>
 
+    fun getCurrentUiTheme(): Flow<ThemeType>
+
     suspend fun setLockFeatureState(isFeatureOn: Boolean)
 
     suspend fun setWidgetFeatureState(isFeatureOn: Boolean)
@@ -42,5 +45,7 @@ interface LockScreenRepository {
     suspend fun setAppIconType(type: String)
 
     suspend fun setQrCheckInType(type: CheckInType)
+
+    suspend fun setCurrentUiTheme(type: ThemeType)
 
 }

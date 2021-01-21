@@ -1,6 +1,7 @@
 package com.skfo763.qrcheckin.lockscreen.fragment
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.location.Geocoder
 import android.os.Bundle
 import android.view.Menu
@@ -13,6 +14,9 @@ import androidx.fragment.app.viewModels
 import com.gun0912.tedpermission.PermissionListener
 import com.naver.maps.geometry.LatLng
 import com.skfo763.base.BaseFragment
+import com.skfo763.base.theme.ThemeType
+import com.skfo763.base.theme.getTheme
+import com.skfo763.base.theme.isDarkTheme
 import com.skfo763.component.checkmap.CheckInMapViewExt.shouldUseNaverMapOnly
 import com.skfo763.qrcheckin.R
 import com.skfo763.qrcheckin.databinding.FragmentCheckinMapBinding
@@ -48,15 +52,13 @@ class CheckInMapFragment : BaseFragment<FragmentCheckinMapBinding, LockScreenVie
         override fun onPermissionGranted() {
             viewModel.requestLastKnownLocation()
         }
-
-        override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
-
-        }
+        override fun onPermissionDenied(deniedPermissions: MutableList<String>?) = Unit
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewLifecycleOwner.lifecycle.addObserver(binding.checkinMapView)
+        viewModel.setDarkModeEnabledState(darkThemeEnabled(parentViewModel.currentUiTheme.value))
         binding.checkinMapView.onCreate(savedInstanceState)
         context?.requestLocationPermissions(permissionListener)
     }
@@ -108,5 +110,18 @@ class CheckInMapFragment : BaseFragment<FragmentCheckinMapBinding, LockScreenVie
             }
             activity?.startService(intent)
         }
+    }
+
+    private fun darkThemeEnabled(themeType: ThemeType?) = when(themeType) {
+        ThemeType.DARK_MODE -> true
+        ThemeType.LIGHT_MODE -> false
+        ThemeType.DEFAULT_MODE -> isDarkTheme(requireContext().resources.configuration)
+        else -> isDarkTheme(requireContext().resources.configuration)
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        val theme = getTheme(newConfig)
+        viewModel.setDarkModeEnabledState(darkThemeEnabled(theme))
     }
 }

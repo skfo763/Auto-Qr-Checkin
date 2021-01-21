@@ -6,6 +6,7 @@ import androidx.datastore.preferences.Preferences
 import androidx.datastore.preferences.createDataStore
 import androidx.datastore.preferences.edit
 import androidx.datastore.preferences.preferencesKey
+import com.skfo763.base.theme.ThemeType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -17,6 +18,7 @@ class AppDataStore(context: Context) {
     private val DO_AUTO_CHECKIN = preferencesKey<Boolean>("do_auto_checkin")
     private val APP_ICON_TYPE = preferencesKey<String>("app_icon_type")
     private val QR_CHECKIN_TYPE = preferencesKey<String>("qr_checkin_type")
+    private val UI_THEME = preferencesKey<String>("ui_theme")
 
     private val deleteAdsState: DataStore<Preferences> = context.createDataStore(name = "delete_ads_state")
     private val language: DataStore<Preferences> = context.createDataStore(name = "language")
@@ -24,6 +26,7 @@ class AppDataStore(context: Context) {
     private val autoCheckInState: DataStore<Preferences> = context.createDataStore(name = "auto_checkin_state")
     private val appIconType: DataStore<Preferences> = context.createDataStore(name = "app_icon_type")
     private val qrCheckinType: DataStore<Preferences> = context.createDataStore(name = "qr_checkin_type")
+    private val currentUiTheme: DataStore<Preferences> = context.createDataStore(name = "current_ui_theme")
 
     val deleteAdsStateFlow: Flow<Boolean> = deleteAdsState.data.map {
         it[IS_FEATURE_ON] ?: false
@@ -40,6 +43,11 @@ class AppDataStore(context: Context) {
     val appIconTypeFlow: Flow<String> = appIconType.data.map { it[APP_ICON_TYPE] ?: "com.skfo763.qrcheckin.launch.LightIconLauncher" }
 
     val qrCheckinTypeFlow: Flow<String> = qrCheckinType.data.map { it[QR_CHECKIN_TYPE] ?: "naver" }
+
+    val uiThemeTypeFlow: Flow<ThemeType> = currentUiTheme.data.map {
+        val themeTypeString = it[UI_THEME] ?: ThemeType.DEFAULT_MODE.name
+        return@map ThemeType.valueOf(themeTypeString)
+    }
 
     suspend fun setDeleteAdsState(isFeatureOn: Boolean) {
         deleteAdsState.edit {
@@ -74,6 +82,12 @@ class AppDataStore(context: Context) {
     suspend fun setQrCheckinType(type: String) {
         this.qrCheckinType.edit {
             it[QR_CHECKIN_TYPE] = type
+        }
+    }
+
+    suspend fun setCurrentUiTheme(type: ThemeType) {
+        this.currentUiTheme.edit {
+            it[UI_THEME] = type.name
         }
     }
 

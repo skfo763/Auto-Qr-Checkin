@@ -14,7 +14,9 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
 import com.skfo763.base.BaseActivity
+import com.skfo763.base.theme.applyTheme
 import com.skfo763.component.bixbysetting.BixbyLandingManager
+import com.skfo763.component.cbalertdialog.ThemeDialogBuilder
 import com.skfo763.component.tracker.FirebaseTracker
 import com.skfo763.qrcheckin.R
 import com.skfo763.qrcheckin.admob.AdMobManager
@@ -94,6 +96,18 @@ class LockScreenActivity (
                 val navController = navHostResId?.let { findNavController(this, it) } ?: return super.onSupportNavigateUp()
                 return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
             }
+            R.id.toolbar_menu_theme -> {
+                ThemeDialogBuilder(this)
+                    .setDialogTitle(getString(R.string.theme_select_dialog_title))
+                    .setThemeItems(viewModel.currentUiTheme.value, useCase.themeDialogItems) {
+                        viewModel.saveThemeState(it.themeType)
+                        recreate()
+                    }.setNegativeButton(R.string.cancel) { dialog, _ ->
+                        dialog.dismiss()
+                    }.create()
+                    .show()
+                return false
+            }
             else -> return super.onOptionsItemSelected(item)
         }
     }
@@ -126,13 +140,6 @@ class LockScreenActivity (
                 try { super.onBackPressed() } catch (e: Exception) { finish() }
             }
         }
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        if(!supportFragmentManager.isStateSaved) {
-            viewModel.handleUiModeChange(newConfig.uiMode)
-        }
-        super.onConfigurationChanged(newConfig)
     }
 
 }
