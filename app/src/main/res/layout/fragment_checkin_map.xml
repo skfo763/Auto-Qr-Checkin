@@ -9,6 +9,9 @@
             name="viewModel"
             type="com.skfo763.qrcheckin.lockscreen.viewmodel.CheckInMapViewModel" />
         <variable
+            name="currentUiTheme"
+            type="com.skfo763.base.theme.ThemeType" />
+        <variable
             name="gotoCurrentButtonListener"
             type="android.view.View.OnClickListener"/>
     </data>
@@ -27,8 +30,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             location="@{viewModel.location}"
-            markerLists="@{viewModel.checkPointList}"
-            isDarkModeEnabled="@{viewModel.isDarkModeEnabled}"/>
+            markerLists="@{viewModel.checkPointList}" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/checkin_map_current_address"

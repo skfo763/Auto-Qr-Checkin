@@ -8,7 +8,8 @@
         <item name="android:forceDarkAllowed">true</item>
     </style>
 
-    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="SplashTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:windowBackground">@drawable/splash</item>
     </style>
 
@@ -18,7 +19,7 @@
         <item name="itemTextColor">@color/bottom_nav_color</item>
     </style>
 
-    <style name="ToolbarStyle" parent="AppTheme">
+    <style name="ToolbarStyle">
         <item name="android:background">@color/toolbar_background</item>
         <item name="android:textColor">@color/toolbar_title_color</item>
         <item name="android:textColorSecondary">@color/toolbar_title_color</item>

@@ -78,15 +78,17 @@
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait"
-            android:launchMode="singleTop">
+            android:launchMode="standard">
         </activity>
         <activity
             android:name="com.skfo763.qrcheckin.lockscreen.activity.LockScreenActivity"
-            android:configChanges="orientation|screenSize|uiMode"
+            android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait"
-            android:launchMode="singleTop"
-            android:hardwareAccelerated="true">
+            android:launchMode="standard"
+            android:forceDarkAllowed="true"
+            android:hardwareAccelerated="true"
+            tools:targetApi="q">
         </activity>
     </application>
 

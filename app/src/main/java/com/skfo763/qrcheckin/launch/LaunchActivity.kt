@@ -2,6 +2,7 @@ package com.skfo763.qrcheckin.launch
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.skfo763.base.theme.applyTheme
 import com.skfo763.qrcheckin.intro.activity.IntroActivity
 import com.skfo763.qrcheckin.lockscreen.activity.LockScreenActivity
 import com.skfo763.storage.datastore.AppDataStore

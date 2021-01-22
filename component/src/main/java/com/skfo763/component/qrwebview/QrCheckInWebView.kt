@@ -1,5 +1,6 @@
 package com.skfo763.component.qrwebview
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
@@ -51,21 +52,19 @@ class QrCheckInWebView @JvmOverloads constructor(
         if(BuildConfig.DEBUG) {
             setWebContentsDebuggingEnabled(true)
         }
+
+        if(WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
+            WebSettingsCompat.setForceDark(this.settings, WebSettingsCompat.FORCE_DARK_AUTO)
+        }
     }
 
-    fun setWebViewForceDarkState(themeType: ThemeType) {
+    fun setWebViewForceDarkState(isDarkModeAllowed: Boolean) {
         if(WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
-            when(themeType) {
-                ThemeType.DEFAULT_MODE -> {
-                    WebSettingsCompat.setForceDark(this.settings, WebSettingsCompat.FORCE_DARK_AUTO)
-                }
-                ThemeType.DARK_MODE -> {
-                    WebSettingsCompat.setForceDark(this.settings, WebSettingsCompat.FORCE_DARK_ON)
-                }
-                ThemeType.LIGHT_MODE -> {
-                    WebSettingsCompat.setForceDark(this.settings, WebSettingsCompat.FORCE_DARK_OFF)
-                }
-            }
+            WebSettingsCompat.setForceDark(
+                this.settings,
+                if(isDarkModeAllowed) WebSettingsCompat.FORCE_DARK_ON
+                else WebSettingsCompat.FORCE_DARK_OFF
+            )
         }
     }
 

@@ -58,7 +58,7 @@ class CheckInMapFragment : BaseFragment<FragmentCheckinMapBinding, LockScreenVie
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewLifecycleOwner.lifecycle.addObserver(binding.checkinMapView)
-        viewModel.setDarkModeEnabledState(darkThemeEnabled(parentViewModel.currentUiTheme.value))
+        binding.checkinMapView.isNightModeEnabledState = isDarkTheme(requireContext().resources.configuration)
         binding.checkinMapView.onCreate(savedInstanceState)
         context?.requestLocationPermissions(permissionListener)
     }
@@ -112,16 +112,4 @@ class CheckInMapFragment : BaseFragment<FragmentCheckinMapBinding, LockScreenVie
         }
     }
 
-    private fun darkThemeEnabled(themeType: ThemeType?) = when(themeType) {
-        ThemeType.DARK_MODE -> true
-        ThemeType.LIGHT_MODE -> false
-        ThemeType.DEFAULT_MODE -> isDarkTheme(requireContext().resources.configuration)
-        else -> isDarkTheme(requireContext().resources.configuration)
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        val theme = getTheme(newConfig)
-        viewModel.setDarkModeEnabledState(darkThemeEnabled(theme))
-    }
 }

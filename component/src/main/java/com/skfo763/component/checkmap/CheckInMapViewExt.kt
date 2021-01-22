@@ -33,12 +33,6 @@ object CheckInMapViewExt {
         }
     }
 
-    @JvmStatic
-    @BindingAdapter("isDarkModeEnabled")
-    fun CheckInMapView.setDarkModeState(isDarkModeEnabled: Boolean? = null) {
-        this.isNightModeEnabledState = isDarkModeEnabled
-    }
-
     /**
      * 세종특별자치시 주소를 구글 Reverse geocoding 에서 제공하지 않는 관계로,
      * 해당 좌표에 한해서는 "반드시" 네이버 reverse geocoding api를 사용해야 합니다.

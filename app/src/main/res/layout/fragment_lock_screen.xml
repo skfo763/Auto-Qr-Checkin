@@ -32,7 +32,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            uiTheme="@{parentViewModel.currentUiTheme}"
             availableHost="@{parentViewModel.availableHost}"
             availablePath="@{parentViewModel.availablePath}"
             appLandingScheme="@{parentViewModel.appLandingScheme}"

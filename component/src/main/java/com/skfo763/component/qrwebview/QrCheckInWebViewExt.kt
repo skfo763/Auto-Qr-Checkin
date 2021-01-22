@@ -3,6 +3,7 @@ package com.skfo763.component.qrwebview
 import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import com.skfo763.base.theme.ThemeType
+import com.skfo763.base.theme.isDarkTheme
 
 @BindingAdapter("checkInUrl")
 fun QrCheckInWebView.loadCheckInUrl(url: String?) {
@@ -54,9 +55,4 @@ fun QrCheckInWebView.setErrorCase(errorList: List<ErrorFormat>?) {
 @BindingAdapter("onCheckIn")
 fun QrCheckInWebView.setDoOnCheckIn(func: (url: String?) -> Unit) {
     uriChecker.doCheckIn = func
-}
-
-@BindingAdapter("uiTheme")
-fun QrCheckInWebView.setUiTheme(theme: ThemeType?) {
-    this.setWebViewForceDarkState(theme ?: ThemeType.DEFAULT_MODE)
 }

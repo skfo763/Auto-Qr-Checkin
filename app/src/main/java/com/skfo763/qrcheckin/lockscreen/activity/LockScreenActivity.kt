@@ -106,7 +106,6 @@ class LockScreenActivity (
                         }
                         applyTheme(it.themeType)
                         viewModel.saveThemeState(it.themeType)
-                        recreate()
                     }.setNegativeButton(R.string.cancel) { dialog, _ ->
                         dialog.dismiss()
                     }.create()
