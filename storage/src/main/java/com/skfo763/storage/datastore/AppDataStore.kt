@@ -12,12 +12,25 @@ import kotlinx.coroutines.flow.map
 
 class AppDataStore(context: Context) {
 
+    // 언어 설정 - 2021.01 현재 사용 안함
     private val LANGUAGE = preferencesKey<String>("language")
+
+    // 과금 여부 - 2021.01 현재 사용 안함
     private val IS_FEATURE_ON = preferencesKey<Boolean>("is_feature_on")
+
+    // 초기 세팅 최초 진입 여부
     private val INIT_SETTING = preferencesKey<Boolean>("should_init_setting")
+
+    // 자동 체크인 기능 사용 여부
     private val DO_AUTO_CHECKIN = preferencesKey<Boolean>("do_auto_checkin")
+
+    // 앱 아이콘 타입(다크/라이트)
     private val APP_ICON_TYPE = preferencesKey<String>("app_icon_type")
+
+    // QR 체크인 타입 (카카오/네이버)
     private val QR_CHECKIN_TYPE = preferencesKey<String>("qr_checkin_type")
+
+    // UI 테마(다크/라이트/시스템)
     private val UI_THEME = preferencesKey<String>("ui_theme")
 
     private val deleteAdsState: DataStore<Preferences> = context.createDataStore(name = "delete_ads_state")
